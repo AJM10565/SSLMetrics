@@ -1,6 +1,12 @@
 # SSLMetrics
 
-This is the public facing repo for the metrics command line app.
+## Data Visualization
 
-How to Run:
-TBD
+### How It Works
+data_vis.py Python script calls executable Electron JS app, which displays charts based on data in file.
+
+### Installation/Setup
+Run the following commands in your terminal in order:
+
+    npm run build
+    python data_vis.py
