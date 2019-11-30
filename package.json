@@ -4,10 +4,13 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . --all"
+    "build": "electron-packager ."
   },
   "devDependencies": {
     "electron": "^7.1.2",
     "electron-packager": "^14.1.1"
+  },
+  "dependencies": {
+    "chart.js": "^2.9.3"
   }
 }
