@@ -6,7 +6,16 @@ let rawData = {}
 let headers = [];
 let dates = [];
 
-fs.createReadStream('SSLMetricsFakeData.csv')
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+fs.createReadStream('all_data.csv')
     .pipe(csv())
     .on('headers', (headersIn) => {
         headers = headersIn;
@@ -34,9 +43,12 @@ fs.createReadStream('SSLMetricsFakeData.csv')
 
         let chartDatasets = [];
         for (metric in rawData) {
+            let randomColor = getRandomColor()
             chartDatasets.push({
                 label: metric,
                 data: rawData[metric],
+                backgroundColor: randomColor,
+                borderColor: randomColor,
                 fill: false,
             });
         }
