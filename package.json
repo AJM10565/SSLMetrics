@@ -11,6 +11,7 @@
     "electron-packager": "^14.1.1"
   },
   "dependencies": {
-    "chart.js": "^2.9.3"
+    "chart.js": "^2.9.3",
+    "csv-parser": "^2.3.2"
   }
 }
