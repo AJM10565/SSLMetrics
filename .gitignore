@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+# pythoon stuff
+config.py
+__pycache__
+
+# ignore csv files 
+*.csv
+=======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -199,3 +207,4 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+>>>>>>> master
