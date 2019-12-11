@@ -67,7 +67,7 @@ fs.createReadStream('all_data.csv')
                 responsive: true,
                 title: {
                     display: true,
-                    text: 'SSL Metrics Fake Data'
+                    text: 'SSL Metrics'
                 },
                 tooltips: {
                     mode: 'index',
