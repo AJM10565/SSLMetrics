@@ -13,6 +13,7 @@ def central(username, repo_name):
     headers = {"Authorization": "token " + config.access_token}
 
     repo_details = requests.get("https://api.github.com/repos/" + username + "/" + repo_name, headers=headers)
+    print(repo_details.json())
 
     created_at = repo_details.json()['created_at']
 
