@@ -86,19 +86,21 @@ def Main(username, repo_name, headers):
                 writer.writerow({"user" : str(user), "user_id" : str(user_id), "pull_req_id" : str(pull_req_id), "comments_url" : str(comments_url), "node_id" : str(node_id), "number" : str(number), "title" : str(title), "labels": str(labels), "state" : str(state), "locked": str(locked), "assignee": str(assignee), 
                  "assignees" : str(assignees),"created_at" : str(created_at),"updated_at" : str(updated_at), "closed_at" :str(closed_at), "body" : str(body.encode("utf-8"))})
 
-            link = pull_requests.headers['link']
-            #print(link)
-            if "next" not in link:
-                pull_requests = False
+            if 'link' in pull_requests.headers:
+                link = pull_requests.headers['link']
+                #print(link)
+                if "next" not in link:
+                    pull_requests = False
 
-            # Should be a comma separated string of links
-            links = link.split(',')
+                # Should be a comma separated string of links
+                links = link.split(',')
 
-            for link in links:
-                # If there is a 'next' link return the URL between the angle brackets, or None
-                if 'rel="next"' in link:
-                    pull_requests = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
-                    #print((link[link.find("<")+1:link.find(">")]))
+                for link in links:
+                    # If there is a 'next' link return the URL between the angle brackets, or None
+                    if 'rel="next"' in link:
+                        pull_requests = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
+                        #print((link[link.find("<")+1:link.find(">")]))
+            break
 
     f.flush()
     f.close()
