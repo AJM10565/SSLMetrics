@@ -32,10 +32,10 @@ def central(username, repo_name):
         week_list.append(week_ago)
         num = num + 7
 
-    #Lines_Of_Code_And_Num_Of_Chars.Main(username, repo_name)
-    #Commits.Main(username, repo_name, headers)
-    #Pull_Requests.Main(username, repo_name, headers)
-    #Number_Of_Issues.Main(username, repo_name, headers)
+    Lines_Of_Code_And_Num_Of_Chars.Main(username, repo_name)
+    Commits.Main(username, repo_name, headers)
+    Pull_Requests.Main(username, repo_name, headers)
+    Number_Of_Issues.Main(username, repo_name, headers)
 
     # Get all data into a pandas data frame
     commits = pd.read_csv(str(repo_name) + "_commits.csv")

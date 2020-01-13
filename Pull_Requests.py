@@ -20,6 +20,7 @@ def Main(username, repo_name, headers):
 
         if not pull_requests.json():
             print("There are no pull_requests!")
+            break
 
         else:
             for x in pull_requests.json():
