@@ -35,7 +35,7 @@ def central(username, repo_name, c, conn):
     #Lines_Of_Code_And_Num_Of_Chars.Main(username, repo_name)
     Commits.Main(username, repo_name, headers, c, conn)
     #Pull_Requests.Main(username, repo_name, headers)
-    #Number_Of_Issues.Main(username, repo_name, headers)
+    Number_Of_Issues.Main(username, repo_name, headers, c, conn)
 
     # Get all data into a pandas data frame
     # commits = pd.read_csv(str(repo_name) + "_commits.csv")
