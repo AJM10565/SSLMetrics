@@ -6,19 +6,7 @@ from datetime import datetime
 import csv
 import config
 
-def Main(username, repo_name, headers):
-
-    f = open(str(repo_name) + "_commits.csv", "w", newline = "",encoding='utf-8')
-    writer = csv.DictWriter(f, fieldnames=["author" ,
-                "comments_url" ,
-                "author_date" ,
-                "commits_url" ,
-                "committer" ,
-                "committer_date" ,
-                "message" ,
-                "comment_count"])
-    writer.writeheader()
-    f.flush()
+def Main(username, repo_name, headers, c, conn):
 
     commits = requests.get("https://api.github.com/repos/" + username + "/" + repo_name + "/commits?state=all", headers=headers)
 
@@ -37,9 +25,6 @@ def Main(username, repo_name, headers):
                 committer_date = "None"
                 message = "None"
                 comment_count = "None"
-                
-                
-                #print("Issue")
 
                 author = x["commit"]["author"]["name"]
                 author_date = x["commit"]["author"]["date"]
@@ -62,9 +47,11 @@ def Main(username, repo_name, headers):
                 if not message:
                     message = "None"
 
+                sql = "INSERT INTO COMMITS (author, comments_url, author_date, commits_url, committer, committer_date, message, comment_count) VALUES (?,?,?,?,?,?,?,?)"
+                c.execute(sql, (str(author) , str(comments_url) , str(author_date) , str(commits_url) , str(committer) , str(committer_date) , str(message), str(comment_count)))
                 
-                writer.writerow({"author" : str(author), "author_date" : str(author_date), "comments_url" : str(comments_url), "committer" : str(committer), "committer_date" : str(committer_date), "message" : str(message), "comments_url" : str(comments_url), "comment_count": str(comment_count)})
-
+                conn.commit()
+               
             link = commits.headers['link']
             #print(link)
             if "next" not in link:
@@ -78,6 +65,3 @@ def Main(username, repo_name, headers):
                 if 'rel="next"' in link:
                     commits = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
                     #print((link[link.find("<")+1:link.find(">")]))
-
-    f.flush()
-    f.close()

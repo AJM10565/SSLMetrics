@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import pandas as pd
 import Master
+import sqlite_database
 
 # code takes a single git repo as input and generates an out.csv file
 arg_length = len(sys.argv)
@@ -17,13 +18,9 @@ f_loc = sys.argv[1][19:].find("/")
 username = sys.argv[1][19:19+f_loc]
 repo_name = sys.argv[1][20+f_loc:]
 
-data = Master.central(username, repo_name)
+cursor, conn = sqlite_database.open_connection(repo_name)
 
-## Build output as numpy array
-# Number_of_Metrics = 5
-
-# initialize list of lists
-# data = [[0,0,0,0,0]]
+Master.central(username, repo_name, cursor, conn)
 
 # Create the pandas DataFrame
 df = pd.DataFrame(data, columns=['Date', '# of Commits', '# of Issues', '# of Pull Requests'])
