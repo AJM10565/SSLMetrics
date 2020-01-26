@@ -1,7 +1,8 @@
 import sqlite3
 
+
 def open_connection(repo_name):
-    
+
     conn = sqlite3.connect('database/' + str(repo_name) + '_historical.db')
     c = conn.cursor()
 
@@ -15,7 +16,7 @@ def open_connection(repo_name):
             committer_date VARCHAR(300),
             message VARCHAR(3000),
             comment_count VARCHAR(300));''')
-    
+
     # Create table - ISSUES
     c.execute('''CREATE TABLE IF NOT EXISTS ISSUES
             (user VARCHAR(300) ,
@@ -45,5 +46,5 @@ def open_connection(repo_name):
                 comment_body VARCHAR(300)) ;''')
 
     conn.commit()
-    
+
     return c, conn

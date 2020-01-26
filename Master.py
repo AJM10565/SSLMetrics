@@ -12,7 +12,8 @@ import datetime as DT
 def central(username, repo_name, c, conn):
 
     headers = {"Authorization": "token " + config.access_token}
-
+    print(username)
+    print(repo_name)
     repo_details = requests.get(
         "https://api.github.com/repos/" + username + "/" + repo_name, headers=headers)
     # print(repo_details.json())
@@ -37,7 +38,7 @@ def central(username, repo_name, c, conn):
     Lines_Of_Code_And_Num_Of_Chars.Main(username, repo_name)
     Commits.Main(username, repo_name, headers)
     Pull_Requests.Main(username, repo_name, headers)
-    Number_Of_Issues.Main(username, repo_name, headers)
+    # Number_Of_Issues.Main(username, repo_name, headers, None, None)
     # old version
     # #Lines_Of_Code_And_Num_Of_Chars.Main(username, repo_name)
     # Commits.Main(username, repo_name, headers, c, conn)
