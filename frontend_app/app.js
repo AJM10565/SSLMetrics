@@ -1,12 +1,13 @@
 const axios = require("axios");
 const fs = require('fs')
 const Path = require('path')
+const csv = require('csv-parser');
 
 var express = require("express");
 var app = express();
 
-let data = "Data not yet retrieved from backend";
 let indexResponse = "Index response not yet retrieved from backend"
+let data = "";
 const path = Path.resolve(__dirname, 'all_data.csv')
 const writer = fs.createWriteStream(path)
 const url = "http://192.168.99.100:5000/"
@@ -20,8 +21,21 @@ app.get("/beindex", (req, res, next) => {
 });
 
 app.get("/data", (req, res, next) => {
-    res.send("Retrieving data...");
+    console.log(data)
+    res.send(data)
 });
+
+async function readCsv() {
+    await fs.createReadStream('all_data.csv')
+        .pipe(csv())
+        .on('data', (row) => {
+            data += JSON.stringify(row)
+            // console.log(row)
+        })
+        .on('end', () => {
+            console.log('CSV file successfully processed');
+        });
+}
 
 async function getData(url) {
     const response = await axios({
@@ -33,6 +47,7 @@ async function getData(url) {
     return new Promise((resolve, reject) => {
         writer.on('finish', resolve)
         writer.on('error', reject)
+        readCsv();
     })
 }
 
@@ -40,7 +55,7 @@ const getIndex = async url => {
     axios.get(url)
         .then((response) => {
             indexResponse = response.data;
-            console.log(data);
+            console.log(indexResponse);
         }, (error) => {
             console.log(error);
         });
