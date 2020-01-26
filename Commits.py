@@ -22,6 +22,8 @@ def Main(username, repo_name, headers):
     writer.writeheader()
     f.flush()
 
+# def Main(username, repo_name, headers, c, conn):
+
     commits = requests.get("https://api.github.com/repos/" + username +
                            "/" + repo_name + "/commits?state=all", headers=headers)
 
@@ -72,6 +74,16 @@ def Main(username, repo_name, headers):
                 # print(link)
                 if "next" not in link:
                     commits = False
+            # old version
+            #     sql = "INSERT INTO COMMITS (author, comments_url, author_date, commits_url, committer, committer_date, message, comment_count) VALUES (?,?,?,?,?,?,?,?)"
+            #     c.execute(sql, (str(author) , str(comments_url) , str(author_date) , str(commits_url) , str(committer) , str(committer_date) , str(message), str(comment_count)))
+                
+            #     conn.commit()
+               
+            # link = commits.headers['link']
+            # #print(link)
+            # if "next" not in link:
+            #     commits = False
 
                 # Should be a comma separated string of links
                 links = link.split(',')
@@ -86,3 +98,9 @@ def Main(username, repo_name, headers):
 
     f.flush()
     f.close()
+
+            # for link in links:
+            #     # If there is a 'next' link return the URL between the angle brackets, or None
+            #     if 'rel="next"' in link:
+            #         commits = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
+            #         #print((link[link.find("<")+1:link.find(">")]))

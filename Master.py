@@ -4,16 +4,18 @@ import Commits
 import Lines_Of_Code_And_Num_Of_Chars
 import config
 import requests
-from datetime import datetime 
+from datetime import datetime
 import pandas as pd
 import datetime as DT
 
-def central(username, repo_name):
+
+def central(username, repo_name, c, conn):
 
     headers = {"Authorization": "token " + config.access_token}
 
-    repo_details = requests.get("https://api.github.com/repos/" + username + "/" + repo_name, headers=headers)
-    print(repo_details.json())
+    repo_details = requests.get(
+        "https://api.github.com/repos/" + username + "/" + repo_name, headers=headers)
+    # print(repo_details.json())
 
     created_at = repo_details.json()['created_at']
 
@@ -21,7 +23,7 @@ def central(username, repo_name):
     created_at = created_at.replace("Z", "")
     created_at_day = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S")
 
-    #print(created_at_day)
+    # print(created_at_day)
 
     num = 7
     week_list = []
@@ -36,14 +38,19 @@ def central(username, repo_name):
     Commits.Main(username, repo_name, headers)
     Pull_Requests.Main(username, repo_name, headers)
     Number_Of_Issues.Main(username, repo_name, headers)
+    # old version
+    # #Lines_Of_Code_And_Num_Of_Chars.Main(username, repo_name)
+    # Commits.Main(username, repo_name, headers, c, conn)
+    # #Pull_Requests.Main(username, repo_name, headers)
+    # Number_Of_Issues.Main(username, repo_name, headers, c, conn)
 
     # Get all data into a pandas data frame
-    commits = pd.read_csv(str(repo_name) + "_commits.csv")
-    issues = pd.read_csv(str(repo_name) + "_issues.csv")
-    pr = pd.read_csv(str(repo_name) + "_pull_req.csv")
-    lines = pd.read_csv(str(repo_name) + "_lines_and_number.csv") 
+    # commits = pd.read_csv(str(repo_name) + "_commits.csv")
+    #issues = pd.read_csv(str(repo_name) + "_issues.csv")
+    #pr = pd.read_csv(str(repo_name) + "_pull_req.csv")
+    #lines = pd.read_csv(str(repo_name) + "_lines_and_number.csv")
 
-
+    """
     t_com = 0
     t_iss = 0
     t_pr = 0
@@ -74,6 +81,4 @@ def central(username, repo_name):
         t_pr = 0
         t_ln = 0
 
-    return ret
-        
-        
+    return ret """

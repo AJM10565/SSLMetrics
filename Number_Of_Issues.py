@@ -6,13 +6,7 @@ from datetime import datetime
 import csv
 import config
 
-def Main(username, repo_name, headers):
-
-    f = open(str(repo_name) + "_issues.csv", "w", newline = "",encoding='utf-8')
-    writer = csv.DictWriter(f, fieldnames=["user", "user_id", "issue_id", "comments_url", "node_id", "number", "title", "labels", "state", "locked",
-    "assignee", "assignees", "comments", "created_at","updated_at", "closed_at", "body"])
-    writer.writeheader()
-    f.flush()
+def Main(username, repo_name, headers, c, conn):
 
     issues = requests.get("https://api.github.com/repos/" + username + "/" + repo_name + "/issues?state=all", headers=headers)
 
@@ -49,8 +43,6 @@ def Main(username, repo_name, headers):
                 comment_created_at = "None"
                 comment_updated_at = "None"
                 comment_body = "None"
-                
-                #print("Issue")
 
                 user = x["user"]["login"]
                 user_id = x["user"]["id"]
@@ -86,7 +78,7 @@ def Main(username, repo_name, headers):
                 if not body:
                     body = "None"
 
-                
+           # old version
                 writer.writerow({"user" : str(user), "user_id" : str(user_id), "issue_id" : str(issue_id), "comments_url" : str(comments_url), "node_id" : str(node_id), "number" : str(number), "title" : str(title), "labels": str(labels), "state" : str(state), "locked": str(locked), "assignee": str(assignee), 
                  "assignees" : str(assignees), "comments" : str(comments), "created_at" : str(created_at),"updated_at" : str(updated_at), "closed_at" :str(closed_at), "body" : str(body.encode("utf-8"))})
 
@@ -95,10 +87,19 @@ def Main(username, repo_name, headers):
                 #print(link)
                 if "next" not in link:
                     issues = False
+            # new version
+            #     sql = "INSERT INTO ISSUES (user , user_id , issue_id , comments_url , node_id , number , title , labels , state , locked , assignee , assignees , comments , created_at , updated_at , closed_at , body , comment_user , comment_user_id , comment_id , issue_url , comment_node_id , comment_created_at , comment_updated_at ,comment_body) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+            #     c.execute(sql, (str(user) , str(user_id) , str(issue_id) , str(comments_url) , str(node_id) , str(number) , str(title) , str(labels) , str(state) , str(locked) , str(assignee) , str(assignees) , str(comments) , str(created_at) , str(updated_at) , str(closed_at) , str(body) , str(comment_user) , str(comment_user_id) , str(comment_id) , str(issue_url) , str(comment_node_id) , str(comment_created_at) , str(comment_updated_at) , str(comment_body)))
+                
+            # link = issues.headers['link']
+            # #print(link)
+            # if "next" not in link:
+            #     issues = False
 
                 # Should be a comma separated string of links
                 links = link.split(',')
 
+                # new version
                 for link in links:
                     # If there is a 'next' link return the URL between the angle brackets, or None
                     if 'rel="next"' in link:
@@ -108,3 +109,10 @@ def Main(username, repo_name, headers):
 
     f.flush()
     f.close()
+
+            # old version
+            # for link in links:
+            #     # If there is a 'next' link return the URL between the angle brackets, or None
+            #     if 'rel="next"' in link:
+            #         issues = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
+            #         #print((link[link.find("<")+1:link.find(">")]))
