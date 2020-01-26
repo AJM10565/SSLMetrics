@@ -1,12 +1,16 @@
 FROM python:3
 
-ADD Commits.py /
-ADD config.py /
-ADD Lines_Of_Code_And_Num_Of_Chars.py /
-ADD Master.py /
-ADD Number_Of_Issues.py /
-ADD Pull_Requests.py /
-ADD simple_cli.py /
+RUN mkdir -p /app
+
+COPY Commits.py /app
+COPY config.py /app
+COPY Lines_Of_Code_And_Num_Of_Chars.py /app
+COPY Master.py /app
+COPY Number_Of_Issues.py /app
+COPY Pull_Requests.py /app
+COPY simple_cli.py /app
+
+WORKDIR /app
 
 RUN pip install numpy
 RUN pip install pandas
