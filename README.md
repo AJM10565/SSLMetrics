@@ -31,7 +31,7 @@ Run the following commands in your terminal:
     python3 data_vis.py
     
 #### MacOS/Linux
-   1.Run the following command in your terminal:
+   1. Run the following command in your terminal:
     
       npm run build
      
@@ -41,5 +41,6 @@ Run the following commands in your terminal:
      
       -Execute data-vis
 
+      npm start
     
    
