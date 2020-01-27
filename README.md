@@ -33,14 +33,14 @@ Run the following commands in your terminal:
 #### MacOS/Linux
    1. Run the following command in your terminal:
     
-      npm run build
+    npm run build
      
    2. A folder titled data-vis-darwin-x64 will appear:
     
-      -Navigate to Contents->MacOS
+      Navigate to Contents->MacOS
      
-      -Execute data-vis
+      Execute data-vis
 
-      npm start
+    npm start
     
    
