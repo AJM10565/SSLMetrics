@@ -21,6 +21,10 @@ Python script, simple_cli.py, creates .csv file of information for a single repo
 `
 ### Data Visualization
 
+Run python file combine_csv.py:
+
+`python combine_csv.py`
+
 #### Windows
 Python script, data-vis, calls executable Electron JS app, which displays charts based on data in file.
 
