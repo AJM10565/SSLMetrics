@@ -15,7 +15,7 @@ function getRandomColor() {
     return color;
 }
 
-fs.createReadStream('all_data.csv')
+fs.createReadStream('combined_csv.csv')
     .pipe(csv())
     .on('headers', (headersIn) => {
         headers = headersIn;
