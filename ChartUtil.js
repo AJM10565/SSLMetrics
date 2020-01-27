@@ -1,6 +1,7 @@
 const { Chart } = require("chart.js")
 const csv = require('csv-parser');
 const fs = require('fs');
+//Chart.defaults.global.elements.point.pointStyle = 'star';
 
 let rawData = {}
 let headers = [];
@@ -49,6 +50,8 @@ fs.createReadStream('all_data.csv')
                 data: rawData[metric],
                 backgroundColor: randomColor,
                 borderColor: randomColor,
+                //borderDash: [10, 5],
+                pointStyle: 'star',
                 fill: false,
             });
         }
@@ -67,7 +70,7 @@ fs.createReadStream('all_data.csv')
                 responsive: true,
                 title: {
                     display: true,
-                    text: 'SSL Metrics'
+                    text: 'SSL Metrics Fake Data'
                 },
                 tooltips: {
                     mode: 'index',
