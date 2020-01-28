@@ -2,7 +2,7 @@ import sqlite3
 
 def open_connection(repo_name):
     
-    conn = sqlite3.connect('database/' + str(repo_name) + '_historical.db')
+    conn = sqlite3.connect(str(repo_name) + '_historical.db')
     c = conn.cursor()
 
     # Create table - COMMITS

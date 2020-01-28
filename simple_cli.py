@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import Master
 import sqlite_database
+import os
 
 # code takes a single git repo as input and generates an out.csv file
 arg_length = len(sys.argv)
@@ -17,6 +18,12 @@ print("Generating data on: " + sys.argv[1])
 f_loc = sys.argv[1][19:].find("/")
 username = sys.argv[1][19:19+f_loc]
 repo_name = sys.argv[1][20+f_loc:]
+
+s_loc = sys.argv[1][20+f_loc:].find(" ")
+t_loc = sys.argv[1][s_loc].find(" ")
+print(s_loc)
+print(t_loc)
+os.environ["TOKEN"] = sys.argv[1][20+f_loc:].find(" ")
 
 cursor, conn = sqlite_database.open_connection(repo_name)
 

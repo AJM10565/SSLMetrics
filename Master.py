@@ -2,15 +2,15 @@ import Pull_Requests
 import Number_Of_Issues
 import Commits
 import Lines_Of_Code_And_Num_Of_Chars
-import config
 import requests
 from datetime import datetime 
 import pandas as pd
 import datetime as DT
+import
 
 def central(username, repo_name, c, conn):
 
-    headers = {"Authorization": "token " + config.access_token}
+    headers = {"Authorization": "token " + os.environ["TOKEN"]}
 
     repo_details = requests.get("https://api.github.com/repos/" + username + "/" + repo_name, headers=headers)
     # print(repo_details.json())
