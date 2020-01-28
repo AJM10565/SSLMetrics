@@ -47,21 +47,25 @@ def Main(username, repo_name, headers, c, conn):
                 if not message:
                     message = "None"
 
-                sql = "INSERT INTO COMMITS (author, comments_url, author_date, commits_url, committer, committer_date, message, comment_count) VALUES (?,?,?,?,?,?,?,?)"
+                sql = "INSERT INTO COMMITS (author, comments_url, author_date, commits_url, committer, committer_date, message, comment_count) VALUES (?,?,?,?,?,?,?,?);"
                 c.execute(sql, (str(author) , str(comments_url) , str(author_date) , str(commits_url) , str(committer) , str(committer_date) , str(message), str(comment_count)))
                 
                 conn.commit()
                
-            link = commits.headers['link']
-            #print(link)
-            if "next" not in link:
+            try:
+                link = commits.headers['link']
+                #print(link)
+                if "next" not in link:
+                    commits = False
+
+                # Should be a comma separated string of links
+                links = link.split(',')
+
+                for link in links:
+                    # If there is a 'next' link return the URL between the angle brackets, or None
+                    if 'rel="next"' in link:
+                        commits = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
+                        #print((link[link.find("<")+1:link.find(">")]))
+            except Exception as e:
+                print(e)
                 commits = False
-
-            # Should be a comma separated string of links
-            links = link.split(',')
-
-            for link in links:
-                # If there is a 'next' link return the URL between the angle brackets, or None
-                if 'rel="next"' in link:
-                    commits = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
-                    #print((link[link.find("<")+1:link.find(">")]))
