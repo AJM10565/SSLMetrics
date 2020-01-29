@@ -23,10 +23,10 @@ cursor, conn = sqlite_database.open_connection(repo_name)
 Master.central(username, repo_name, cursor, conn)
 
 # Create the pandas DataFrame
-df = pd.DataFrame(data, columns=['Date', '# of Commits', '# of Issues', '# of Pull Requests'])
+# df = pd.DataFrame(data, columns=['Date', '# of Commits', '# of Issues', '# of Pull Requests'])
 
 # print dataframe.
-print(df)
+# print(df)
 
 
 

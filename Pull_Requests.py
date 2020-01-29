@@ -6,16 +6,10 @@ from datetime import datetime
 import csv
 import config
 
-def Main(username, repo_name, headers):
-
-    f = open(str(repo_name) + "_pull_req.csv", "w", newline = "",encoding='utf-8')
-    writer = csv.DictWriter(f, fieldnames=["user", "user_id", "pull_req_id", "comments_url", "node_id", "number", "title", "labels", "state", "locked",
-    "assignee", "assignees", "created_at","updated_at", "closed_at", "body"])
-    writer.writeheader()
-    f.flush()
+def Main(username, repo_name, headers, c, conn):
 
     pull_requests = requests.get("https://api.github.com/repos/" + username + "/" + repo_name + "/pulls?state=all", headers=headers)
-
+    
     while pull_requests:
 
         if not pull_requests.json():
@@ -23,31 +17,30 @@ def Main(username, repo_name, headers):
 
         else:
             for x in pull_requests.json():
-                user = "None"
-                user_id = "None"
-                pull_req_id = "None"
-                comments_url = "None"
-                node_id = "None"
-                number = "None"
-                title = "None"
-                labels = "None"
-                state = "None"
-                locked = "None"
-                assignee = "None"
-                assignees = "None"
-                created_at = "None"
-                updated_at = "None"
-                closed_at = "None"
-                body = "None"
-                comment_user = "None"
-                comment_user_id = "None"
-                comment_id = "None"
-                comment_node_id = "None"
-                comment_created_at = "None"
-                comment_updated_at = "None"
-                comment_body = "None"
+                user = "None" ,
+                user_id = "None" ,
+                pull_req_id = "None" ,
+                comments_url = "None",
+                node_id = "None" ,
+                number = "None" ,
+                title = "None" ,
+                labels = "None" ,
+                state = "None" ,
+                locked = "None" ,
+                assignee = "None" ,
+                assignees = "None" ,
+                created_at = "None" ,
+                updated_at = "None" ,
+                closed_at = "None" ,
+                body = "None" ,
+                comment_user = "None" ,
+                comment_user_id = "None" ,
+                comment_id = "None" ,
+                comment_node_id = "None" ,
+                comment_created_at = "None" ,
+                comment_updated_at = "None" ,
+                comment_body = "None" 
                 
-
                 user = x["user"]["login"]
                 user_id = x["user"]["id"]
                 pull_req_id = x["id"]
@@ -79,25 +72,28 @@ def Main(username, repo_name, headers):
                     pass
 
                 if not body:
-                    body = "None"
+                    body = "None",
 
                 
-                writer.writerow({"user" : str(user), "user_id" : str(user_id), "pull_req_id" : str(pull_req_id), "comments_url" : str(comments_url), "node_id" : str(node_id), "number" : str(number), "title" : str(title), "labels": str(labels), "state" : str(state), "locked": str(locked), "assignee": str(assignee), 
-                 "assignees" : str(assignees),"created_at" : str(created_at),"updated_at" : str(updated_at), "closed_at" :str(closed_at), "body" : str(body.encode("utf-8"))})
+                sql = "INSERT INTO PULLREQUESTS (user, user_id, pull_req_id, comments_url, node_id, number, title, labels, state, locked, assignee, assignees, created_at, updated_at, closed_at, body, comment_user, comment_user_id, comment_id, comment_node_id, comment_created_at, comment_updated_at, comment_body) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+                c.execute(sql, (str(user) , str(user_id) , str(pull_req_id) , str(comments_url) , str(node_id) , str(number) , str(title) , str(labels) , str(state) , str(locked) , str(assignee) , str(assignees) , str(created_at) , str(updated_at) , str(closed_at) , str(body) , str(comment_user) , str(comment_user_id), str(comment_id) , str(comment_node_id) , str(comment_created_at) , str(comment_updated_at) , str(comment_body)))
+            
+                conn.commit()
 
-            link = pull_requests.headers['link']
-            #print(link)
-            if "next" not in link:
+            try:
+                link = pull_requests.headers['link']
+                #print(link)
+                if "next" not in link:
+                    pull_requests = False
+
+                # Should be a comma separated string of links
+                links = link.split(',')
+
+                for link in links:
+                    # If there is a 'next' link return the URL between the angle brackets, or None
+                    if 'rel="next"' in link:
+                        pull_requests = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
+                        #print((link[link.find("<")+1:link.find(">")]))
+            except Exception as e:
+                print(e)
                 pull_requests = False
-
-            # Should be a comma separated string of links
-            links = link.split(',')
-
-            for link in links:
-                # If there is a 'next' link return the URL between the angle brackets, or None
-                if 'rel="next"' in link:
-                    pull_requests = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
-                    #print((link[link.find("<")+1:link.find(">")]))
-
-    f.flush()
-    f.close()
