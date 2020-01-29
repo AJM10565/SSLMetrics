@@ -213,3 +213,6 @@ fabric.properties
 
 # Pycharm
 .idea
+
+# VS Code
+.vscode
