@@ -26,6 +26,7 @@ Accepted arguements: GitHub Repository URL, GitHub personal Access Token""")
 		url = url[foo:]
 
 		splitURL = url.split("/")
+		
 		try:
 			username = splitURL[0]
 			repository = splitURL[1]
@@ -33,8 +34,7 @@ Accepted arguements: GitHub Repository URL, GitHub personal Access Token""")
 			print("ERROR: Invalid URL format. format ")
 
 		cursor, conn = sqlite_database.open_connection(repository)	# Unsure of what this code does due to lack of knowledge on how the database works
-		print(type(cursor))
-		print(type(conn))
+		
 		Master.central(username=username, repository=repository, token=token, cursor=cursor, connection=conn)
 
 	sys.exit(0)	# Exits the program successfully

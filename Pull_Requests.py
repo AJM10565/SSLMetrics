@@ -4,7 +4,6 @@ from collections import OrderedDict
 import re
 from datetime import datetime
 import csv
-import config
 
 def Main(username, repo_name, headers, c, conn):
 

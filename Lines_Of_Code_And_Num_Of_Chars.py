@@ -4,7 +4,6 @@ from collections import OrderedDict
 import re
 from datetime import datetime
 import csv
-import config
 
 # TODO - Make the data output into a CSV format #
 # TODO - Number of collaborators #
@@ -12,8 +11,10 @@ import config
 # TODO - CSV will have rows be times and columns be metrics #
 # TODO - Make python scripts for number of lines of code, commits, number of letters in code, and issues #
 
+token = None
+
 # Header with my token
-headers = {"Authorization": "token " + config.access_token}
+headers = {"Authorization": "token " + token}
 
 # A simple function to use requests.post to make the API call. Note the json= section.
 def run_query(query): 
