@@ -1,17 +1,17 @@
+from sqlite3 import Cursor, Connection
 import Pull_Requests
 import Number_Of_Issues
 import Commits
 import Lines_Of_Code_And_Num_Of_Chars
-import config
 import requests
 from datetime import datetime 
 import datetime as DT
 
-def central(username, repo_name, c, conn):
+def central(username:str=None, repository:str=None, token:str=None, cursor:Cursor=None, connection:Connection=None):
 
-    headers = {"Authorization": "token " + config.access_token}
+    headers = {"Authorization": "token " + token}
 
-    repo_details = requests.get("https://api.github.com/repos/" + username + "/" + repo_name, headers=headers)
+    repo_details = requests.get("https://api.github.com/repos/" + username + "/" + repository, headers=headers)
 
     created_at = repo_details.json()['created_at']
 
@@ -28,10 +28,10 @@ def central(username, repo_name, c, conn):
         day_list.append(day_ago)
         num = num + 1
 
-    #Lines_Of_Code_And_Num_Of_Chars.Main(username, repo_name)
-    Commits.Main(username, repo_name, headers, c, conn)
-    Pull_Requests.Main(username, repo_name, headers, c, conn)
-    Number_Of_Issues.Main(username, repo_name, headers, c, conn)
+    #Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
+    Commits.Main(username, repository, headers, c, conn)
+    Pull_Requests.Main(username, repository, headers, c, conn)
+    Number_Of_Issues.Main(username, repository, headers, c, conn)
     
     for x in day_list:
 
