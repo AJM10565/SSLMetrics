@@ -3,19 +3,23 @@ from sqlite3 import Cursor, Connection  # Need these for determining type
 
 class GitHubAPI:
 
-    def __init__(self, username:str=None, repository:str=None, token:str=None, cursor:Cursor=None, connection:Connection=None):
+    def __init__(self, username:str=None, repository:str=None, token:str=None, headers:dict=None, cursor:Cursor=None, connection:Connection=None):
         self.username = username
         self.repository = repository
         self.token = token
         self.cursor = cursor
         self.connection = connection
-        self.headers = {"Authorization": "token " + self.token}
         self.baseURL = "https://api.github.com/repos/" + self.username + "/" + self.repository
         
         # These are static
         self.commitsURL = self.baseURL + "/commits?state=all"
         self.issuesURL = self.baseURL + "/issues?state=all"
         self.pullsURL = self.baseURL + "/pulls?state=all"
+
+        if headers is not None:
+            self.headers = headers
+        else:
+            self.headers = {"Authorization": "token " + self.token}
 
     def set_Username(self, username:str=None):
         self.username = username
@@ -86,4 +90,3 @@ class GitHubAPI:
     def get_GitHubAPIJSON(self, url:str=None, headers:dict=None):
         foo = requests.get(url=url, headers=headers)
         return foo.json()
-    

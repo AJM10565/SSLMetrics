@@ -43,6 +43,7 @@ def central(username:str=None, repository:str=None, token:str=None, cursor:Curso
     Number_Of_Issues.Main(username, repository, headers, cursor, connection)
 
     # Adds all of the datetimes to the SQL database
+    # Bewary of changing
     for foo in datetimeList:
 
         cursor.execute("SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")

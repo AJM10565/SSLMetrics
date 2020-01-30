@@ -1,18 +1,19 @@
-# Import statements
-import requests
-from collections import OrderedDict
-import re
+from githubAPI import GitHubAPI 
 from datetime import datetime
+from sqlite3 import Cursor, Connection
+import requests
 import csv
 
-def Main(username, repo_name, headers, c, conn):
-
-    commits = requests.get("https://api.github.com/repos/" + username + "/" + repo_name + "/commits?state=all", headers=headers)
+def Main(username:str=None, repository:str=None, headers:dict=None, cursor:Cursor=None, connection:Connection=None):
+    # Commmunicates with the GitHub API to make a request
+    gha = GitHubAPI(username=username, repository=repository, token=None, cursor=cursor, connection=connection)
+    commits = gha.get_CommitsJSON()
 
     while commits:
 
         if not commits.json():
             print("There are no commits!")
+            break
 
         else:
             for x in commits.json():
@@ -41,15 +42,13 @@ def Main(username, repo_name, headers, c, conn):
                 committer_date = committer_date.replace("Z", " ")
                 committer_date = datetime.strptime(committer_date, "%Y-%m-%d %H:%M:%S ")
                 
-                
-
                 if not message:
                     message = "None"
 
                 sql = "INSERT INTO COMMITS (author, comments_url, author_date, commits_url, committer, committer_date, message, comment_count) VALUES (?,?,?,?,?,?,?,?);"
-                c.execute(sql, (str(author) , str(comments_url) , str(author_date) , str(commits_url) , str(committer) , str(committer_date) , str(message), str(comment_count)))
+                cursor.execute(sql, (str(author) , str(comments_url) , str(author_date) , str(commits_url) , str(committer) , str(committer_date) , str(message), str(comment_count)))
                 
-                conn.commit()
+                connection.commit()
                
             try:
                 link = commits.headers['link']

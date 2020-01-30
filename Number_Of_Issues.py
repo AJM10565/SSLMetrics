@@ -13,6 +13,7 @@ def Main(username, repo_name, headers, c, conn):
 
         if not issues.json():
             print("There are no issues!")
+            break
 
         else:
             for x in issues.json():
@@ -96,5 +97,5 @@ def Main(username, repo_name, headers, c, conn):
                     if 'rel="next"' in link:
                         issues = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
                         #print((link[link.find("<")+1:link.find(">")]))
-            except Exception as e:
+            except Exception:
                 issues = False
