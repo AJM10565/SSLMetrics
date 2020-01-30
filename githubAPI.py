@@ -1,4 +1,5 @@
 import requests
+from requests.models import Response
 from sqlite3 import Cursor, Connection  # Need these for determining type
 
 class GitHubAPI:
@@ -16,10 +17,10 @@ class GitHubAPI:
         self.issuesURL = self.baseURL + "/issues?state=all"
         self.pullsURL = self.baseURL + "/pulls?state=all"
 
-        if headers is not None:
-            self.headers = headers
-        else:
+        if headers is None:
             self.headers = {"Authorization": "token " + self.token}
+        else:
+            self.headers = headers
 
     def set_Username(self, username:str=None):
         self.username = username
@@ -75,18 +76,24 @@ class GitHubAPI:
         self.set_Connection(connection=connection)
         self.set_Headers(token=token)
 
-    def get_CommitsJSON(self):
+    def get_CommitsRequestObj(self):
         foo = requests.get(url=self.commitsURL, headers=self.headers)
-        return foo.json()
+        return foo
 
-    def get_IssuesJSON(self):
+    def get_IssuesRequestObj(self):
         foo = requests.get(url=self.issuesURL, headers=self.headers)
-        return foo.json()
+        return foo
 
-    def get_PullsJSON(self):
+    def get_PullsRequestObj(self):
         foo = requests.get(url=self.pullsURL, headers=self.headers)
-        return foo.json()
+        return foo
 
-    def get_GitHubAPIJSON(self, url:str=None, headers:dict=None):
+    def get_GitHubAPIRequestObj(self, url:str=None, headers:dict=None):
         foo = requests.get(url=url, headers=headers)
-        return foo.json()
+        return foo
+
+    def get_RequestObjJSON(self, requestsObj:Response=None):
+        return requestsObj.json()
+
+    def get_RequestObjHeaders(self, requestsObj:Response=None):
+        return requestsObj.headers

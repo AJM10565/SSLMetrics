@@ -3,26 +3,23 @@ import Pull_Requests
 import Number_Of_Issues
 import Commits
 # import Lines_Of_Code_And_Num_Of_Chars
-import requests
 import datetime as DT
+from githubAPI import GitHubAPI
 from datetime import datetime
 from sqlite3 import Cursor, Connection  # Need these for determining type
 
 def central(username:str=None, repository:str=None, token:str=None, cursor:Cursor=None, connection:Connection=None):
     # Creates the URL and header information for retrieving data from GitHub
-    url = "https://api.github.com/repos/" + username + "/" + repository
-    headers = {"Authorization": "token " + token}
-
+    gha = GitHubAPI(username=username, repository=repository, token=token, headers=None, cursor=cursor, connection=connection)
+    url = gha.get_BaseURL()
+    headers = gha.get_Headers()
+    
     # Gets the data from GitHub
-    request = requests.get(url=url, headers=headers)
-
-    # print(request.url)    # Code to print the URL of the request
-
-    # Stores data in JSON format
-    githubData = request.json() 
+    base = gha.get_GitHubAPIRequestObj(url=url, headers=headers)
+    baseJSON = base.json()
 
     # Parses the date when the repository was created
-    repositoryConceptionInfo = githubData['created_at'].replace("T", " ").replace("Z", "")    # Goes to the location in the file and replaces information
+    repositoryConceptionInfo = baseJSON['created_at'].replace("T", " ").replace("Z", "")    # Goes to the location in the file and replaces information
     repositoryConceptionDatetime = datetime.strptime(repositoryConceptionInfo, "%Y-%m-%d %H:%M:%S")
 
     # Logic to get the datetimes of all the dates from the conception of the repository to the current date
@@ -38,7 +35,8 @@ def central(username:str=None, repository:str=None, token:str=None, cursor:Curso
     # print(dateTimeList)   # Code to see if the dateTimeList variable is storing the right information
 
     #Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
-    Commits.Main(username, repository, headers, cursor, connection)
+    Commits.Main(username=username, repository=repository, headers=headers, cursor=cursor, connection=connection)
+    quit()
     Pull_Requests.Main(username, repository, headers, cursor, connection)   # This results in an infinite loop
     Number_Of_Issues.Main(username, repository, headers, cursor, connection)
 

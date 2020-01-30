@@ -6,64 +6,55 @@ import csv
 
 def Main(username:str=None, repository:str=None, headers:dict=None, cursor:Cursor=None, connection:Connection=None):
     # Commmunicates with the GitHub API to make a request
-    gha = GitHubAPI(username=username, repository=repository, token=None, cursor=cursor, connection=connection)
-    commits = gha.get_CommitsJSON()
+    gha = GitHubAPI(username=username, repository=repository, token=None, headers=headers, cursor=cursor, connection=connection)
+    commitsRequestObj = gha.get_CommitsRequestObj()
+    commitsJSON = commitsRequestObj.json()
 
-    while commits:
+    # Loop to parse and sanitize values to add to the SQLlite database
+    while True:
+        for x in commitsJSON:
+            author = "None"
+            author_date = "None"
+            committer = "None"
+            committer_date = "None"
+            message = "None"    # Message associated with the commit
+            comment_count = "None"  # Number of comments per commit
+            commits_url = "None"
+            comments_url = "None"
 
-        if not commits.json():
-            print("There are no commits!")
-            break
+            author = x["commit"]["author"]["name"]
+            author_date = x["commit"]["author"]["date"].replace("T", " ").replace("Z", " ")
+            committer = x["commit"]["committer"]["name"]
+            committer_date = x["commit"]["committer"]["date"].replace("T", " ").replace("Z", " ")
+            message = x["commit"]["message"]
+            comment_count = x["commit"]["comment_count"]
+            commits_url = x["commit"]["url"]
+            comments_url = x["comments_url"]
 
-        else:
-            for x in commits.json():
-                author = "None"
-                comments_url = "None"
-                author_date = "None"
-                commits_url = "None"
-                committer = "None"
-                committer_date = "None"
+            author_date = datetime.strptime(author_date, "%Y-%m-%d %H:%M:%S ")
+            committer_date = datetime.strptime(committer_date, "%Y-%m-%d %H:%M:%S ")
+            
+            if not message:
                 message = "None"
-                comment_count = "None"
 
-                author = x["commit"]["author"]["name"]
-                author_date = x["commit"]["author"]["date"]
-                comments_url = x["commit"]["url"]
-                committer = x["commit"]["committer"]["name"]
-                committer_date = x["commit"]["committer"]["date"]
-                message = x["commit"]["message"]
-                comments_url = x["comments_url"]
-                comment_count = x["commit"]["comment_count"]
+            sql = "INSERT INTO COMMITS (author, author_date, committer, committer_date, commits_url, message, comment_count, comments_url) VALUES (?,?,?,?,?,?,?,?);"
+            cursor.execute(sql, (str(author),  str(author_date), str(committer), str(committer_date), str(message), str(commits_url), str(comment_count), str(comments_url)))
+            
+            connection.commit()
+            
+        try:
+            link = commitsRequestObj.headers['link']
+            if "next" not in link:
+                break
 
-                author_date = author_date.replace("T", " ")
-                author_date = author_date.replace("Z", " ")
-                author_date = datetime.strptime(author_date, "%Y-%m-%d %H:%M:%S ")
-                committer_date = committer_date.replace("T", " ")
-                committer_date = committer_date.replace("Z", " ")
-                committer_date = datetime.strptime(committer_date, "%Y-%m-%d %H:%M:%S ")
-                
-                if not message:
-                    message = "None"
+            # Should be a comma separated string of links
+            links = link.split(',')
 
-                sql = "INSERT INTO COMMITS (author, comments_url, author_date, commits_url, committer, committer_date, message, comment_count) VALUES (?,?,?,?,?,?,?,?);"
-                cursor.execute(sql, (str(author) , str(comments_url) , str(author_date) , str(commits_url) , str(committer) , str(committer_date) , str(message), str(comment_count)))
-                
-                connection.commit()
-               
-            try:
-                link = commits.headers['link']
-                #print(link)
-                if "next" not in link:
-                    commits = False
-
-                # Should be a comma separated string of links
-                links = link.split(',')
-
-                for link in links:
-                    # If there is a 'next' link return the URL between the angle brackets, or None
-                    if 'rel="next"' in link:
-                        commits = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
-                        #print((link[link.find("<")+1:link.find(">")]))
-            except Exception as e:
-                print(e)
-                commits = False
+            for link in links:
+                # If there is a 'next' link return the URL between the angle brackets, or None
+                if 'rel="next"' in link:
+                    commitsRequestObj = gha.get_GitHubAPIRequestObj(url=link[link.find("<")+1:link.find(">")], headers=headers)
+                    commitsJSON = commitsRequestObj.json()
+        except Exception as e:
+            print(e)
+            break
