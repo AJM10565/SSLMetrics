@@ -41,7 +41,8 @@ def central(username:str=None, repository:str=None, token:str=None, cursor:Curso
     Commits.Main(username, repository, headers, cursor, connection)
     Pull_Requests.Main(username, repository, headers, cursor, connection)   # This results in an infinite loop
     Number_Of_Issues.Main(username, repository, headers, cursor, connection)
-    
+
+    # Adds all of the datetimes to the SQL database
     for foo in datetimeList:
 
         cursor.execute("SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")

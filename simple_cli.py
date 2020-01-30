@@ -23,7 +23,10 @@ Accepted arguements: GitHub Repository URL, GitHub personal Access Token""")
 		# Logic to remove the https://www.github.com/ portion of the URL
 		# Since the github.com/ portion of the URL is a known constant, it (and everything before it) can be removed to only leave the username and repository information
 		foo=url.find("github.com") + 11
-		url = url[foo:]
+		if foo != -1:
+			url = url[foo:]
+		else:
+			print("ERROR: Invalid URL.")
 
 		splitURL = url.split("/")
 		
@@ -31,7 +34,7 @@ Accepted arguements: GitHub Repository URL, GitHub personal Access Token""")
 			username = splitURL[0]
 			repository = splitURL[1]
 		except IndexError:
-			print("ERROR: Invalid URL format. format ")
+			print("ERROR: Invalid URL format.")
 
 		cursor, conn = sqlite_database.open_connection(repository)	# Unsure of what this code does due to lack of knowledge on how the database works
 		

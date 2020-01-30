@@ -216,3 +216,6 @@ fabric.properties
 
 # VS Code
 .vscode
+test.json
+
+database/nicholassynovic.github.io_historical.db
