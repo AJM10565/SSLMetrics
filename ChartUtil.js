@@ -57,7 +57,7 @@ result.then(function (rows) {
         let randomColor = getRandomColor()
         chartDatasets.push({
             label: metric,
-            data: rawData[metric],
+            data: rawData[metric].reverse(),
             backgroundColor: randomColor,
             borderColor: randomColor,
             fill: false,
@@ -72,7 +72,7 @@ result.then(function (rows) {
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: dates,
+            labels: dates.reverse(),
             datasets: chartDatasets
         },
         options: {
