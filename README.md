@@ -20,26 +20,11 @@ Python script, simple_cli.py, creates .csv file of information for a single repo
 `    python3 simple_cli.py www.github.com/username/reponame
 `
 ### Data Visualization
+1. Run `npm install` to install NPM dependencies.
+   
+2. Run `npm run rebuild` to rebuild sqlite3 dependency for use with Electron.
 
-#### Windows
-Python script, data-vis, calls executable Electron JS app, which displays charts based on data in file.
-
-Run the following commands in your terminal:
-
-    npm run build
-    
-    python3 data_vis.py
-    
-#### MacOS/Linux
-   1.Run the following command in your terminal:
-    
-      npm run build
-     
-   2. A folder titled data-vis-darwin-x64 will appear:
-    
-      -Navigate to Contents->MacOS
-     
-      -Execute data-vis
+3. Run `npm start sqlite_DB_filename` to start the data-vis app. 
 
     
    
