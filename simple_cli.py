@@ -2,44 +2,88 @@ import sys
 import Master
 import sqlite_database
 
-def program():
-	numberOfArgs = len(sys.argv)	# sys.argv[1] = URL, #sys.argv[2] = token
-	
-	if numberOfArgs > 3:
-		print("""ERROR: Too many arguements entered.
-Accepted arguements: GitHub Repository URL, GitHub personal Access Token""")
-		sys.exit(1)	# Exits the program with error code 1
-	
-	elif numberOfArgs != 3:
-		print("""ERROR: Not enough arguements entered.
-Accepted arguements: GitHub Repository URL, GitHub personal Access Token""")
-		sys.exit(1)	# Exits the program with error code 1
-	else:
-		url = sys.argv[1]
-		token = sys.argv[2]
+class SSLMetrics:
 
-		print("Generating data on: " + url)
-		
-		# Logic to remove the https://www.github.com/ portion of the URL
-		# Since the github.com/ portion of the URL is a known constant, it (and everything before it) can be removed to only leave the username and repository information
-		foo=url.find("github.com") + 11
-		if foo != -1:
-			url = url[foo:]
-		else:
-			print("ERROR: Invalid URL.")
+	def __init__(self)	->	None:
+		self.args = sys.argv[1:]	# All of the args excluding the filename
+		self.argsLen = len(self.args)
+		self.githubURL = None
+		self.githubToken = None
+		self.githubUser = None
+		self.githubRepo = None
 
-		splitURL = url.split("/")
-		
+	def parseArgs(self)	->	None:
+		# TODO:
+		# Add unit test to check for this function
+		# Add unit test to check the length of args
+		# Add unit test to check for self.githubURL is updated after this function
+		# Add unit test to check for self.githubToken is updated after this function
+		# Add unit test to check if both self.githuURL and self.githubToken are updated after this function
+		# Add unit test to check if self.githubToken is not updated if there is no githubToken after this function
+		if self.argsLen > 2:
+			print("""ERROR: Too many arguements entered.
+Accepted arguements: GitHub Repository URL, GitHub personal Access Token (optional)""")
+			sys.exit("Too Many Args")
 		try:
-			username = splitURL[0]
-			repository = splitURL[1]
+			self.githubURL = self.args[0]
 		except IndexError:
-			print("ERROR: Invalid URL format.")
-
-		cursor, conn = sqlite_database.open_connection(repository)	# Unsure of what this code does due to lack of knowledge on how the database works
+			print("""ERROR: Not enough arguements entered.
+Accepted arguements: GitHub Repository URL, GitHub personal Access Token (optional)""")
+			sys.exit("No URL Arg")
+		try:
+			self.githubToken = self.args[1]
+		except IndexError:
+			pass
+	
+	def stripURL(self)	->	None:
+		#TODO:
+		# Add unit test to check for this function
+		# Add unit test to see if self.githubURL is updated after this function 
+		# Add unit test to see if self.githubUser is updated after this function
+		# Add unit test to see if self.githubRepo is updated after this function
+		# Add unit test to see if error is raised with wrong url
+		# Add unit test to see if error is raised with right url
 		
-		Master.central(username=username, repository=repository, token=token, cursor=cursor, connection=conn)
+		if self.githubURL.find("github.com/") == -1:
+			print("""ERROR: Invalid GitHub URL.
+Valid URLS: github.com/USERNAME/REPOSITORY""")
+			sys.exit("Invalid URL Arg")
+		
+		foo = self.githubURL.split("/")
 
-	sys.exit(0)	# Exits the program successfully
+		if len(foo) > 5:
+			print("""ERROR: Invalid GitHub URL.
+Valid URLS: github.com/USERNAME/REPOSITORY""")
+			sys.exit("Invalid URL Arg")
 
-program()
+		self.githubUser = foo[-2]
+		self.githubRepo = foo[-1]
+		
+	def launch(self)	->	None:
+		cursor, conn = sqlite_database.open_connection(self.githubRepo)	# Unsure of what this code does due to lack of knowledge on how the database works
+		Master.central(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, cursor=cursor, connection=conn)
+
+	def get_Args(self)	->	list:
+		return self.args
+	
+	def get_ArgsLen(self)	->	int:
+		return self.argsLen
+
+	def get_GitHubURL(self)	->	str:
+		return self.githubURL
+
+	def get_githubToken(self)	->	str:
+		return self.githubToken
+	
+	def get_GitHubUser(self)	->	str:
+		return self.githubUser
+	
+	def get_GitHubRepo(self)	->	str:
+		return self.githubRepo
+
+
+s = SSLMetrics()
+s.parseArgs()
+s.stripURL()
+s.launch()
+sys.exit(0)
