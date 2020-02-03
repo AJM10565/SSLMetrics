@@ -1,99 +1,40 @@
-import requests
-from requests.models import Response
+import sys
+from json import load
+from urllib.request import urlopen
+from urllib.error import HTTPError
 from sqlite3 import Cursor, Connection  # Need these for determining type
 
 class GitHubAPI:
 
-    def __init__(self, username:str=None, repository:str=None, token:str=None, headers:dict=None, cursor:Cursor=None, connection:Connection=None):
-        self.username = username
-        self.repository = repository
-        self.token = token
-        self.cursor = cursor
-        self.connection = connection
-        self.baseURL = "https://api.github.com/repos/" + self.username + "/" + self.repository
-        
-        # These are static
-        self.commitsURL = self.baseURL + "/commits?state=all"
-        self.issuesURL = self.baseURL + "/issues?state=all"
-        self.pullsURL = self.baseURL + "/pulls?state=all"
+    def __init__(self, username:str=None, repository:str=None):
+        self.githubUser = username
+        self.githubRepo = repository
+        self.githubAPIURL = "https://api.github.com/repos/" + self.githubUser + "/" + self.githubRepo
 
-        if headers is None:
-            self.headers = {"Authorization": "token " + self.token}
-        else:
-            self.headers = headers
-
-    def set_Username(self, username:str=None):
-        self.username = username
+    def access_GitHubRepoCommits(self) ->  dict:
+        return self.access_GitHubAPI(endpoint="/commits?state=all")
     
-    def get_Username(self):
-        return self.username
-    
-    def set_Repository(self, repository:str=None):
-        self.repository = repository
-    
-    def get_Repository(self):
-        return self.repository
+    def access_GitHubRepoIssues(self)  ->  dict:
+        return self.access_GitHubAPI(endpoint="/issues?state=all")
 
-    def set_Token(self, token:str=None):
-        self.token = token
+    def access_GitHubAPIPulls(self)    ->  dict:
+        return self.access_GitHubAPI(endpoint="/pulls?state=all")
 
-    def get_Token(self):
-        return self.token
-    
-    def set_Cursor(self, cursor:Cursor=None):
-        self.cursor = cursor
-    
-    def get_Cursor(self):
-        return self.cursor
-    
-    def set_Connection(self, connection:Connection=None):
-        self.connection = connection
+    def access_GitHubAPI(self, endpoint:str="") -> dict:
+        url = self.githubAPIURL + endpoint 
+        try:
+            foo = urlopen(url)
+        except HTTPError:
+            print("""ERROR: Invalid GitHub URL.
+Valid URLS: github.com/USERNAME/REPOSITORY""")
+            sys.exit("Invalid URL Arg")
+        return load(foo)    # Converts JSON object into dict
 
-    def get_Connection(self):
-        return self.connection
+    def get_GitHubUser(self)    ->  str:
+        return self.githubUser
 
-    def set_BaseURL(self, username:str=None, repository:str=None):
-        self.set_Username(username=username)
-        self.set_Repository(repository=repository)
-        self.baseURL = "https://api.github.com/repos/" + self.username + "/" + self.repository
-    
-    def get_BaseURL(self):
-        return self.baseURL
-    
-    def set_Headers(self, token:str=None):  # This is the preferred method for updating the token
-        if token is not None:
-            self.token = token
-        self.headers = {"Authorization": "token " + self.token}
+    def get_GitHubRepo(self)    ->  str:
+        return self.githubRepo
 
-    def get_Headers(self):
-        return self.headers
-
-    def update_Instance(self, username:str=None, repository:str=None, token:str=None, cursor:Cursor=None, connection:Connection=None):
-        self.set_Username(username=username)
-        self.set_Repository(repository=repository)
-        self.set_Token(token=token)
-        self.set_Cursor(cursor=cursor)
-        self.set_Connection(connection=connection)
-        self.set_Headers(token=token)
-
-    def get_CommitsRequestObj(self):
-        foo = requests.get(url=self.commitsURL, headers=self.headers)
-        return foo
-
-    def get_IssuesRequestObj(self):
-        foo = requests.get(url=self.issuesURL, headers=self.headers)
-        return foo
-
-    def get_PullsRequestObj(self):
-        foo = requests.get(url=self.pullsURL, headers=self.headers)
-        return foo
-
-    def get_GitHubAPIRequestObj(self, url:str=None, headers:dict=None):
-        foo = requests.get(url=url, headers=headers)
-        return foo
-
-    def get_RequestObjJSON(self, requestsObj:Response=None):
-        return requestsObj.json()
-
-    def get_RequestObjHeaders(self, requestsObj:Response=None):
-        return requestsObj.headers
+    def get_GitHubAPIURL(self)  ->  str:
+        return self.githubAPIURL

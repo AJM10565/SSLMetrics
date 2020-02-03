@@ -20,11 +20,26 @@ class Logic:
 
     def program(self)   ->  None:
         # Purely a placeholder
-        return None
+        print(self.set_Data())
 
-    def set_Data(self)  ->  None:
-        # Insert code to get the data from the github api
-        return None
+    def set_Data(self, endpoint:str="")  ->  None:
+        '''
+This method is used to set the most recent GitHub API call into self.data. 
+This data should be moved into it's own instance before this is called again in order to prevent the data from being overwritten.
+
+:param endpoint: This can be "commits", "issues", "pulls", "", or some other endpoint that is supported by the GitHub API as long as it is accessible with the root url https://api.github.com/USER/REPOSITORY.
+        '''
+        endpoint = endpoint.lower
+        gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo)
+        if endpoint == "commits":
+            foo = gha.access_GitHubRepoCommits()        
+        elif endpoint == "issues":
+            foo = gha.access_GitHubRepoIssues()
+        elif endpoint == "pulls":
+            foo = gha.access_GitHubAPIPulls()
+        else:
+            foo = gha.access_GitHubAPI(endpoint=endpoint)
+        return foo
 
     def get_GitHubUser(self)    ->  str:
         return self.githubUser
