@@ -13,7 +13,7 @@ import config
 # TODO - Make python scripts for number of lines of code, commits, number of letters in code, and issues #
 
 # Header with my token
-headers = {"Authorization": "token " + config.access_token}
+# headers = {"Authorization": "token " + config.access_token}
 
 # A simple function to use requests.post to make the API call. Note the json= section.
 def run_query(query): 
