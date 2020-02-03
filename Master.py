@@ -3,9 +3,8 @@ import Pull_Requests
 import Number_Of_Issues
 import Commits
 # import Lines_Of_Code_And_Num_Of_Chars
-import datetime as DT
 from githubAPI import GitHubAPI
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlite3 import Cursor, Connection  # Need these for determining type
 
 class Logic:
@@ -19,8 +18,29 @@ class Logic:
         self.data = None
 
     def program(self)   ->  None:
-        # Purely a placeholder
-        print(self.set_Data())
+        rootData = self.set_Data(endpoint="")
+
+        repoConecptionDateTimeInfo = rootData['created_at'].replace("T", " ").replace("Z", "")    # Goes to the location in the file and replaces information
+        repoConecptionDateTime = datetime.strptime(repoConecptionDateTimeInfo, "%Y-%m-%d %H:%M:%S")
+
+        print(type(repoConecptionDateTime.strftime("%Y")))
+        # Logic to get the datetimes of all the dates from the conception of the repository to the current date
+        # num = 0 # Used to subtract from the current datetime
+        # datetimeList = []   # Index 0 = Current datetime, Index -1 = conception datetime
+        # day = datetime.today()  # Stores the date solved by the algorithm
+        # while (day > repositoryConceptionDateTime):
+        #     today = datetime.today()
+        #     day = today - timedelta(days=num)
+        #     datetimeList.append(str(day))
+        #     num = num + 1
+
+    #     print(datetimeList)   # Code to see if the dateTimeList variable is storing the right information        
+
+    # def calculate_DaysSinceConception(self, rCDT)   ->  list:
+        
+
+
+
 
     def set_Data(self, endpoint:str="")  ->  None:
         '''
@@ -29,7 +49,7 @@ This data should be moved into it's own instance before this is called again in 
 
 :param endpoint: This can be "commits", "issues", "pulls", "", or some other endpoint that is supported by the GitHub API as long as it is accessible with the root url https://api.github.com/USER/REPOSITORY.
         '''
-        endpoint = endpoint.lower
+        endpoint = endpoint.lower()
         gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo)
         if endpoint == "commits":
             foo = gha.access_GitHubRepoCommits()        

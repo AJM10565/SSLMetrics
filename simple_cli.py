@@ -48,7 +48,7 @@ Accepted arguements: GitHub Repository URL""")
 			print("""ERROR: Invalid GitHub URL.
 Valid URLS: github.com/USERNAME/REPOSITORY""")
 			sys.exit("Invalid URL Arg")
-		
+
 		foo = self.githubURL.split("/")
 
 		if len(foo) > 5:
