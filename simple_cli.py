@@ -1,6 +1,7 @@
 import sys
-import Master
 import sqlite_database
+from Master import Logic
+from sqlite3 import Cursor, Connection  # Need these for determining type
 
 class SSLMetrics:
 
@@ -11,6 +12,8 @@ class SSLMetrics:
 		self.githubToken = None
 		self.githubUser = None
 		self.githubRepo = None
+		self.dbCursor = None
+		self.dbConnection = None
 
 	def parseArgs(self)	->	None:
 		# TODO:
@@ -60,8 +63,8 @@ Valid URLS: github.com/USERNAME/REPOSITORY""")
 		self.githubRepo = foo[-1]
 		
 	def launch(self)	->	None:
-		cursor, conn = sqlite_database.open_connection(self.githubRepo)	# Unsure of what this code does due to lack of knowledge on how the database works
-		Master.central(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, cursor=cursor, connection=conn)
+		self.dbCursor, self.dbConnection = sqlite_database.open_connection(self.githubRepo)	# Unsure of what this code does due to lack of knowledge on how the database works
+		Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, cursor=self.dbCursor, connection=self.dbConnection).program()
 
 	def get_Args(self)	->	list:
 		return self.args
@@ -72,7 +75,7 @@ Valid URLS: github.com/USERNAME/REPOSITORY""")
 	def get_GitHubURL(self)	->	str:
 		return self.githubURL
 
-	def get_githubToken(self)	->	str:
+	def get_GitHubToken(self)	->	str:
 		return self.githubToken
 	
 	def get_GitHubUser(self)	->	str:
@@ -80,6 +83,12 @@ Valid URLS: github.com/USERNAME/REPOSITORY""")
 	
 	def get_GitHubRepo(self)	->	str:
 		return self.githubRepo
+
+	def get_DbCursor(self)	->	Cursor:
+		return self.dbCursor
+
+	def get_DbConnection(self)	->	Connection:
+		return self.dbConnection
 
 
 s = SSLMetrics()
