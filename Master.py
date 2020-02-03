@@ -1,3 +1,4 @@
+import sys
 import Pull_Requests
 import Number_Of_Issues
 import Commits
@@ -9,7 +10,11 @@ import datetime as DT
 
 def central(username, repo_name, c, conn):
 
-    headers = {"Authorization": "token " + config.access_token}
+    if len(sys.argv) == 3: 
+        access_token = sys.argv[2]
+    else: 
+        access_token = config.access_token
+    headers = {"Authorization": "token " + access_token}
 
     repo_details = requests.get("https://api.github.com/repos/" + username + "/" + repo_name, headers=headers)
 
