@@ -1,9 +1,9 @@
-# Import statements
-# import requests
-from collections import OrderedDict
-import re
-from datetime import datetime
+import requests
 import csv
+import re
+from collections import OrderedDict
+from datetime import datetime
+import json
 
 # TODO - Make the data output into a CSV format #
 # TODO - Number of collaborators #
@@ -11,7 +11,7 @@ import csv
 # TODO - CSV will have rows be times and columns be metrics #
 # TODO - Make python scripts for number of lines of code, commits, number of letters in code, and issues #
 
-token = None
+token = "0338d16e907b96b36d756ade2df178b4728cd0ee"
 
 # Header with my token
 headers = {"Authorization": "token " + token}
@@ -259,3 +259,4 @@ def Main(username, repo_name):
     num_o_lines, num_o_chars = get_lines_of_code_and_num_of_chars(dates_and_oids, username, repo_name)
 
     
+run_query(query=first_query)
