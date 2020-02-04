@@ -20,27 +20,21 @@ class Logic:
     def program(self)   ->  None:
         rootData = self.set_Data(endpoint="")
 
-        repoConecptionDateTimeInfo = rootData['created_at'].replace("T", " ").replace("Z", "")    # Goes to the location in the file and replaces information
-        repoConecptionDateTime = datetime.strptime(repoConecptionDateTimeInfo, "%Y-%m-%d %H:%M:%S")
 
-        print(repoConecptionDateTime.strftime("%Y"))
         # Logic to get the datetimes of all the dates from the conception of the repository to the current date
-        # num = 0 # Used to subtract from the current datetime
-        # datetimeList = []   # Index 0 = Current datetime, Index -1 = conception datetime
-        # day = datetime.today()  # Stores the date solved by the algorithm
-        # while (day > repositoryConceptionDateTime):
-        #     today = datetime.today()
-        #     day = today - timedelta(days=num)
-        #     datetimeList.append(str(day))
-        #     num = num + 1
-
-    #     print(datetimeList)   # Code to see if the dateTimeList variable is storing the right information        
-
-    # def calculate_DaysSinceConception(self, rCDT)   ->  list:
+        datetimeList = []   # Index 0 = Current datetime, Index -1 = conception datetime
         
-
-
-
+        repoConcptionDateTime = datetime.strptime(rootData['created_at'].replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")        
+        today = datetime.today()
+        
+        if repoConcptionDateTime.strftime("%Y-%m-%d") == today.strftime("%Y-%m-%d"):
+            datetimeList.append(str(today))
+            
+        else:
+            datetimeList.append(str(today))
+            while (today > repoConcptionDateTime):
+                today = today - timedelta(days=1)
+                datetimeList.append(str(today))
 
     def set_Data(self, endpoint:str="")  ->  None:
         '''
