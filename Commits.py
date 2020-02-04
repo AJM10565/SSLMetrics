@@ -1,7 +1,7 @@
 from githubAPI import GitHubAPI 
 from datetime import datetime
 from sqlite3 import Cursor, Connection
-import requests
+# import requests
 import csv
 
 def Main(username:str=None, repository:str=None, headers:dict=None, cursor:Cursor=None, connection:Connection=None):

@@ -1,5 +1,5 @@
 # Import statements
-import requests
+# import requests
 from collections import OrderedDict
 import re
 from datetime import datetime
