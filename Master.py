@@ -23,7 +23,7 @@ class Logic:
         repoConecptionDateTimeInfo = rootData['created_at'].replace("T", " ").replace("Z", "")    # Goes to the location in the file and replaces information
         repoConecptionDateTime = datetime.strptime(repoConecptionDateTimeInfo, "%Y-%m-%d %H:%M:%S")
 
-        print(type(repoConecptionDateTime.strftime("%Y")))
+        print(repoConecptionDateTime.strftime("%Y"))
         # Logic to get the datetimes of all the dates from the conception of the repository to the current date
         # num = 0 # Used to subtract from the current datetime
         # datetimeList = []   # Index 0 = Current datetime, Index -1 = conception datetime
