@@ -14,22 +14,32 @@ class GitHubAPI:
         self.responseHeaders = None
 
     def access_GitHubRepoCommits(self) ->  dict:
-        return self.access_GitHubAPI(endpoint="/commits?state=all")
+        return self.access_GitHubAPISpecificEndpoint(endpoint="/commits?state=all")
     
     def access_GitHubRepoIssues(self)  ->  dict:
-        return self.access_GitHubAPI(endpoint="/issues?state=all")
+        return self.access_GitHubAPISpecificEndpoint(endpoint="/issues?state=all")
 
     def access_GitHubRepoPulls(self)    ->  dict:
-        return self.access_GitHubAPI(endpoint="/pulls?state=all")
+        return self.access_GitHubAPISpecificEndpoint(endpoint="/pulls?state=all")
 
-    def access_GitHubAPI(self, endpoint:str="") -> dict:
+    def access_GitHubAPISpecificEndpoint(self, endpoint:str="") -> dict:
         url = self.githubAPIURL + endpoint 
         try:
             foo = urlopen(url)
         except HTTPError:
             print("""ERROR: Invalid GitHub URL.
 Valid URLS: github.com/USERNAME/REPOSITORY""")
-            sys.exit("Invalid URL Arg")
+            sys.exit("HTTPError")
+        self.set_ResponseHeaders(response=foo)
+        return load(foo)    # Converts JSON object into dict
+
+    def access_GitHubAPISpecificURL(self, url:str=None) ->  dict: 
+        try:
+            foo = urlopen(url)
+        except HTTPError:
+            print("""ERROR: Invalid GitHub URL.
+Valid URLS: github.com/USERNAME/REPOSITORY""")
+            sys.exit("HTTPError")
         self.set_ResponseHeaders(response=foo)
         return load(foo)    # Converts JSON object into dict
 
@@ -47,7 +57,3 @@ Valid URLS: github.com/USERNAME/REPOSITORY""")
 
     def set_ResponseHeaders(self, response:HTTPResponse) ->  None:
         self.responseHeaders = response.getheaders()
-
-g = GitHubAPI("numpy", "numpy")
-g.access_GitHubRepoCommits()
-print(g.get_ResponseHeaders())

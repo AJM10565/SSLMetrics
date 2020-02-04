@@ -18,12 +18,13 @@ class Logic:
         self.data = None
 
     def program(self)   ->  None:
-        rootData = self.set_Data(endpoint="")
-        repoConcptionDateTime = datetime.strptime(rootData['created_at'].replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")        
+        self.set_Data(endpoint="")
+        repoConcptionDateTime = datetime.strptime(self.data[0]['created_at'].replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")        
         datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)   # Index 0 = Current datetime, Index -1 = conception datetime
 
         #     Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
-        Commits.Main(username=username, repository=repository, headers=headers, cursor=cursor, connection=connection)
+        self.set_Data(endpoint="commits")
+        Commits.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
         #     quit()
         #     Pull_Requests.Main(username, repository, headers, cursor, connection)   # This results in an infinite loop
         #     Number_Of_Issues.Main(username, repository, headers, cursor, connection)
@@ -80,7 +81,7 @@ class Logic:
     def get_GitHubUser(self)    ->  str:
         return self.githubUser
     
-    def set_Data(self, endpoint:str="")  ->  None:
+    def set_Data(self, endpoint:str="/")  ->  None:
         '''
 This method is used to set the most recent GitHub API call into self.data. 
 This data should be moved into it's own instance before this is called again in order to prevent the data from being overwritten.
@@ -90,11 +91,14 @@ This data should be moved into it's own instance before this is called again in 
         endpoint = endpoint.lower()
         gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo)
         if endpoint == "commits":
-            foo = gha.access_GitHubRepoCommits()        
+            self.data = [gha.access_GitHubRepoCommits(), gha.get_ResponseHeaders()]
         elif endpoint == "issues":
-            foo = gha.access_GitHubRepoIssues()
+            self.data = [gha.access_GitHubRepoIssues(), gha.get_ResponseHeaders()]
         elif endpoint == "pulls":
-            foo = gha.access_GitHubRepoPulls()
+            self.data = [gha.access_GitHubRepoPulls(), gha.get_ResponseHeaders()]
+        elif endpoint == "":
+            self.data = [gha.access_GitHubAPISpecificEndpoint(endpoint=endpoint), gha.get_ResponseHeaders()]
+        elif endpoint[0] == "/":
+            self.data = [gha.access_GitHubAPISpecificEndpoint(endpoint=endpoint), gha.get_ResponseHeaders()]
         else:
-            foo = gha.access_GitHubAPI(endpoint=endpoint)
-        return foo
+            self.data = [gha.access_GitHubAPISpecificURL(url=endpoint), gha.get_ResponseHeaders()]
