@@ -33,7 +33,7 @@ def central(username, repo_name, c, conn):
         day_list.append(day_ago)
         num = num + 1
 
-    #Lines_Of_Code_And_Num_Of_Chars.Main(username, repo_name)
+    Lines_Of_Code_And_Num_Of_Chars.Main(username, repo_name, c, conn)
     Commits.Main(username, repo_name, headers, c, conn)
     Pull_Requests.Main(username, repo_name, headers, c, conn)
     Number_Of_Issues.Main(username, repo_name, headers, c, conn)
