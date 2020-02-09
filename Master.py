@@ -1,11 +1,10 @@
-
+from datetime import datetime, timedelta
+from githubAPI import GitHubAPI
+from sqlite3 import Cursor, Connection
 import Commits
 # import Lines_Of_Code_And_Num_Of_Chars
 import Number_Of_Issues
-import Pull_Requests
-from datetime import datetime, timedelta
-from githubAPI import GitHubAPI
-from sqlite3 import Cursor, Connection  # Need these for determining type
+import pullRequests
 
 class Logic:
 
@@ -21,11 +20,13 @@ class Logic:
         self.set_Data(endpoint="")
         repoConcptionDateTime = datetime.strptime(self.data[0]['created_at'].replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")        
         datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)   # Index 0 = Current datetime, Index -1 = conception datetime
-
         #     Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
         self.set_Data(endpoint="commits")
         # Below stores the output in an SQL query that is handled by the class
         Commits.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
+
+        self.set_Data(endpoint="/pulls?state=all")
+        pullRequests.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
         #     quit()
         #     Pull_Requests.Main(username, repository, headers, cursor, connection)   # This results in an infinite loop
         #     Number_Of_Issues.Main(username, repository, headers, cursor, connection)
@@ -82,7 +83,7 @@ class Logic:
     def get_GitHubUser(self)    ->  str:
         return self.githubUser
     
-    def set_Data(self, endpoint:str="/")  ->  None:
+    def set_Data(self, endpoint:str="/")    ->  None:
         '''
 This method is used to set the most recent GitHub API call into self.data. 
 This data should be moved into it's own instance before this is called again in order to prevent the data from being overwritten.
@@ -90,7 +91,7 @@ This data should be moved into it's own instance before this is called again in 
 :param endpoint: This can be "commits", "issues", "pulls", "", or some other endpoint that is supported by the GitHub API as long as it is accessible with the root url https://api.github.com/USER/REPOSITORY.
         '''
         endpoint = endpoint.lower()
-        gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo)
+        gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo, token=self.githubToken)
         if endpoint == "commits":
             self.data = [gha.access_GitHubRepoCommits(), gha.get_ResponseHeaders()]
         elif endpoint == "issues":

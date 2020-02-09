@@ -7,7 +7,7 @@ class Logic:
 
     def __init__(self, username:str=None, repository:str=None, token:str=None, data:dict=None, responseHeaders:tuple=None, cursor:Cursor=None, connection:Connection=None):
         self.data = data
-        self.responseHeaders = responseHeaders[0]
+        self.responseHeaders = responseHeaders
         self.githubUser = username
         self.githubRepo = repository
         self.githubToken = token
@@ -17,7 +17,6 @@ class Logic:
     
     def parser(self)    ->  None:
         # Loop to parse and sanitize values to add to the SQLlite database
-        count = 1
         while True:
             for x in range(len(self.data)):
                 author = "None"
@@ -41,8 +40,6 @@ class Logic:
                 author_date = datetime.strptime(author_date, "%Y-%m-%d %H:%M:%S ")
                 committer_date = datetime.strptime(committer_date, "%Y-%m-%d %H:%M:%S ")
 
-                print(author_date, committer_date, count)
-                
                 if not message:
                     message = "None"
 
@@ -50,20 +47,21 @@ class Logic:
                 self.dbCursor.execute(sql, (str(author),  str(author_date), str(committer), str(committer_date), str(message), str(commits_url), str(comment_count), str(comments_url)))
                 
                 self.dbConnection.commit()
-                
+            
             try:
-                link = self.responseHeaders['link']
-                if "next" not in link:
+                foo = self.responseHeaders["Link"]
+
+                if 'rel="next"' not in foo: # Breaks if there is no rel="next" text in key Link
                     break
 
-                # Should be a comma separated string of links
-                links = link.split(',')
+                else:
+                    bar = foo.split(",")
 
-                for link in links:
-                    # If there is a 'next' link return the URL between the angle brackets, or None
-                    if 'rel="next"' in link:
-                        self.data = self.gha.access_GitHubAPISpecificURL(url=link[link.find("<")+1:link.find(">")])
-            except Exception as error:
-                print(error)
-                sys.exit()
-        print(count)
+                    for x in bar:
+                        if 'rel="next"' in x:
+                            url = x[x.find("<")+1:x.find(">")]
+                            self.data = self.gha.access_GitHubAPISpecificURL(url=url)
+                            self.responseHeaders = self.gha.get_ResponseHeaders()
+                            self.parser()
+            except KeyError:    # Raises if there is no key Link
+                break
