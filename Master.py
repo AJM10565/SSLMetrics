@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 from githubAPI import GitHubAPI
 from sqlite3 import Cursor, Connection
 import Commits
-# import Lines_Of_Code_And_Num_Of_Chars
 import Issues
+# import Lines_Of_Code_And_Num_Of_Chars
 import Pulls
 
 class Logic:
@@ -52,8 +52,6 @@ class Logic:
             self.dbCursor.execute(sql, (foo, str(commits) , str(issues) , str(pull_requests)))
 
             self.dbConnection.commit()
-        
-        print("DONE")
 
     def generate_DateTimeList(self, rCDT:datetime)  ->  list:
         # Logic to get the datetimes of all the dates from the conception of the repository to the current date

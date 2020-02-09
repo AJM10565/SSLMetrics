@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from githubAPI import GitHubAPI
 from sqlite3 import Cursor, Connection

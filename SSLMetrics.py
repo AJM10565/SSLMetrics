@@ -1,7 +1,7 @@
-import sys
-import sqlite_database
-import Master
 from sqlite3 import Cursor, Connection  # Need these for determining type
+import Master
+import sqlite_database
+import sys
 
 class SSLMetrics:
 
