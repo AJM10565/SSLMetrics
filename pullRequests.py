@@ -19,10 +19,9 @@ class Logic:
     def parser(self)    ->  None:
         # Loop to parse and sanitize values to add to the SQLlite database
         while True:
-            if len(self.data) == 0:
-                break
+            print("heelllo world")
             break
-        return None
+               return None
 
 # def Main(username, repo_name, headers, c, conn):
 

@@ -54,6 +54,7 @@ class SSLMetrics:
 		
 	def launch(self)	->	None:
 		self.dbCursor, self.dbConnection = sqlite_database.open_connection(self.githubRepo)	# Unsure of what this code does due to lack of knowledge on how the database works
+		print("Starting program")
 		Master.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, cursor=self.dbCursor, connection=self.dbConnection).program()
 
 	def get_Args(self)	->	list:

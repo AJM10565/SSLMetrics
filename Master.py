@@ -21,11 +21,13 @@ class Logic:
         repoConcptionDateTime = datetime.strptime(self.data[0]['created_at'].replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")        
         datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)   # Index 0 = Current datetime, Index -1 = conception datetime
         #     Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
+        print("colllecting commits")
         self.set_Data(endpoint="commits")
         # Below stores the output in an SQL query that is handled by the class
+        print("staring commits logic")
         Commits.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
 
-        self.set_Data(endpoint="/pulls?state=all")
+        self.set_Data(endpoint="pulls")
         pullRequests.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
         #     quit()
         #     Pull_Requests.Main(username, repository, headers, cursor, connection)   # This results in an infinite loop

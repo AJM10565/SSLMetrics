@@ -1,7 +1,7 @@
 import sys
 from json import load, dumps
 from http.client import HTTPResponse
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 from urllib.error import HTTPError
 from sqlite3 import Cursor, Connection  # Need these for determining type
 
@@ -23,17 +23,18 @@ class GitHubAPI:
     def access_GitHubRepoPulls(self)    ->  dict:
         return self.access_GitHubAPISpecificEndpoint(endpoint="/pulls?state=all")
 
-    def build_AuthenticationHeader(self):
-        return dumps({"Authorization": "token " + self.githubToken})
+    def build_RequestObj(self, url:str=None)    ->  Request:
+        foo = Request(url=url)
+        if self.githubToken != None:
+            bar = "token " + self.githubToken
+            foo.add_header("Authorization", bar)
+        return foo
 
     def access_GitHubAPISpecificEndpoint(self, endpoint:str="") -> dict:
-        self.githubAPIURL = self.githubAPIURL + endpoint 
+        self.githubAPIURL = self.githubAPIURL + endpoint
+        request = self.build_RequestObj(url=self.githubAPIURL)
         try:
-            if self.githubToken != None:
-                authHeader = self.build_AuthenticationHeader()
-                foo = urlopen(url=self.githubAPIURL, data=authHeader)
-            else:
-                foo = urlopen(url=self.githubAPIURL)
+            foo = urlopen(url=request)
         except HTTPError as error:
             sys.exit(error)
         self.set_ResponseHeaders(response=foo)
@@ -41,12 +42,9 @@ class GitHubAPI:
 
     def access_GitHubAPISpecificURL(self, url:str=None) ->  dict: 
         self.githubAPIURL = url
+        request = self.build_RequestObj(url=self.githubAPIURL)
         try:
-            if self.githubToken != None:
-                authHeader = self.build_AuthenticationHeader()
-                foo = urlopen(url=self.githubAPIURL, data=authHeader)
-            else:
-                foo = urlopen(url=self.githubAPIURL)
+            foo = urlopen(url=request)
         except HTTPError as error:
             sys.exit(error)
         self.set_ResponseHeaders(response=foo)

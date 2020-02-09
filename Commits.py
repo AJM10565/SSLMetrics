@@ -50,6 +50,7 @@ class Logic:
             
             try:
                 foo = self.responseHeaders["Link"]
+                print(foo)
 
                 if 'rel="next"' not in foo: # Breaks if there is no rel="next" text in key Link
                     break
@@ -60,6 +61,7 @@ class Logic:
                     for x in bar:
                         if 'rel="next"' in x:
                             url = x[x.find("<")+1:x.find(">")]
+                            print(url)
                             self.data = self.gha.access_GitHubAPISpecificURL(url=url)
                             self.responseHeaders = self.gha.get_ResponseHeaders()
                             self.parser()
