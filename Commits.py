@@ -13,7 +13,7 @@ class Logic:
         self.githubToken = token
         self.dbCursor = cursor
         self.dbConnection = connection
-        self.gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo)
+        self.gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo, token=self.githubToken)
     
     def parser(self)    ->  None:
         # Loop to parse and sanitize values to add to the SQLlite database
@@ -50,8 +50,6 @@ class Logic:
             
             try:
                 foo = self.responseHeaders["Link"]
-                print(foo)
-
                 if 'rel="next"' not in foo: # Breaks if there is no rel="next" text in key Link
                     break
 
@@ -61,9 +59,9 @@ class Logic:
                     for x in bar:
                         if 'rel="next"' in x:
                             url = x[x.find("<")+1:x.find(">")]
-                            print(url)
                             self.data = self.gha.access_GitHubAPISpecificURL(url=url)
                             self.responseHeaders = self.gha.get_ResponseHeaders()
-                            self.parser()
+                            self.parser()   # Recursive
             except KeyError:    # Raises if there is no key Link
                 break
+            break

@@ -3,8 +3,8 @@ from githubAPI import GitHubAPI
 from sqlite3 import Cursor, Connection
 import Commits
 # import Lines_Of_Code_And_Num_Of_Chars
-import Number_Of_Issues
-import pullRequests
+import Issues
+import Pulls
 
 class Logic:
 
@@ -20,39 +20,40 @@ class Logic:
         self.set_Data(endpoint="")
         repoConcptionDateTime = datetime.strptime(self.data[0]['created_at'].replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")        
         datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)   # Index 0 = Current datetime, Index -1 = conception datetime
-        #     Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
-        print("colllecting commits")
+
         self.set_Data(endpoint="commits")
-        # Below stores the output in an SQL query that is handled by the class
-        print("staring commits logic")
         Commits.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         self.set_Data(endpoint="pulls")
-        pullRequests.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
-        #     quit()
-        #     Pull_Requests.Main(username, repository, headers, cursor, connection)   # This results in an infinite loop
-        #     Number_Of_Issues.Main(username, repository, headers, cursor, connection)
+        Pulls.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
 
-        #     # Adds all of the datetimes to the SQL database
-        #     # Bewary of changing
-        #     for foo in datetimeList:
+        self.set_Data(endpoint="issues")
+        Issues.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
 
-        #         cursor.execute("SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")
-        #         rows = cursor.fetchall()
-        #         commits = rows[0][0]
+        #     Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
 
-        #         cursor.execute("SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + foo + "');")
-        #         rows = cursor.fetchall()
-        #         issues = rows[0][0]
+        # Adds all of the datetimes to the SQL database
+        # Bewary of changing
+        for foo in datetimeList:
 
-        #         cursor.execute("SELECT COUNT(*) FROM PULLREQUESTS WHERE date(created_at) <= date('" + foo + "');")
-        #         rows = cursor.fetchall()
-        #         pull_requests = rows[0][0]
+            self.dbCursor.execute("SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")
+            rows = self.dbCursor.fetchall()
+            commits = rows[0][0]
 
-        #         sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
-        #         cursor.execute(sql, (foo, str(commits) , str(issues) , str(pull_requests)))
+            self.dbCursor.execute("SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + foo + "');")
+            rows = self.dbCursor.fetchall()
+            issues = rows[0][0]
 
-        #         connection.commit()
+            self.dbCursor.execute("SELECT COUNT(*) FROM PULLREQUESTS WHERE date(created_at) <= date('" + foo + "');")
+            rows = self.dbCursor.fetchall()
+            pull_requests = rows[0][0]
+
+            sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
+            self.dbCursor.execute(sql, (foo, str(commits) , str(issues) , str(pull_requests)))
+
+            self.dbConnection.commit()
+        
+        print("DONE")
 
     def generate_DateTimeList(self, rCDT:datetime)  ->  list:
         # Logic to get the datetimes of all the dates from the conception of the repository to the current date
