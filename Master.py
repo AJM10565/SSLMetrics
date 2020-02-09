@@ -9,7 +9,7 @@ from sqlite3 import Cursor, Connection  # Need these for determining type
 
 class Logic:
 
-    def __init__(self, username:str=None, repository:str=None, token:str=None, cursor:Cursor=None, connection:Connection=None):
+    def __init__(self, username:str=None, repository:str=None, token:str=None, cursor:Cursor=None, connection:Connection=None)  ->  None:
         self.githubUser = username
         self.githubRepo = repository
         self.githubToken = token
@@ -24,6 +24,7 @@ class Logic:
 
         #     Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
         self.set_Data(endpoint="commits")
+        # Below stores the output in an SQL query that is handled by the class
         Commits.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
         #     quit()
         #     Pull_Requests.Main(username, repository, headers, cursor, connection)   # This results in an infinite loop
