@@ -1,6 +1,7 @@
-from githubAPI import GitHubAPI 
 from datetime import datetime
+from githubAPI import GitHubAPI 
 from sqlite3 import Cursor, Connection
+import sys
 
 class Logic:
 
@@ -62,7 +63,7 @@ class Logic:
                     # If there is a 'next' link return the URL between the angle brackets, or None
                     if 'rel="next"' in link:
                         self.data = self.gha.access_GitHubAPISpecificURL(url=link[link.find("<")+1:link.find(">")])
-            except Exception as e:
-                print(e)
-                break
+            except Exception as error:
+                print(error)
+                sys.exit()
         print(count)

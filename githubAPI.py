@@ -26,9 +26,8 @@ class GitHubAPI:
         url = self.githubAPIURL + endpoint 
         try:
             foo = urlopen(url)
-        except HTTPError:
-            print("""ERROR: Invalid GitHub URL.
-Valid URLS: github.com/USERNAME/REPOSITORY""")
+        except HTTPError as error:
+            print(error)
             sys.exit("HTTPError")
         self.set_ResponseHeaders(response=foo)
         return load(foo)    # Converts JSON object into dict
@@ -36,9 +35,8 @@ Valid URLS: github.com/USERNAME/REPOSITORY""")
     def access_GitHubAPISpecificURL(self, url:str=None) ->  dict: 
         try:
             foo = urlopen(url)
-        except HTTPError:
-            print("""ERROR: Invalid GitHub URL.
-Valid URLS: github.com/USERNAME/REPOSITORY""")
+        except HTTPError as error:
+            print(error)
             sys.exit("HTTPError")
         self.set_ResponseHeaders(response=foo)
         return load(foo)    # Converts JSON object into dict

@@ -22,14 +22,10 @@ class SSLMetrics:
 		# Add unit test to check if both self.githubURL and self.githubToken are updated after this function
 		# Add unit test to check if self.githubToken is not updated if there is no githubToken after this function
 		if self.argsLen > 1:
-			print("""ERROR: Too many arguements entered.
-Accepted arguements: GitHub Repository URL""")
 			sys.exit("Too Many Args")
 		try:
 			self.githubURL = self.args[0]
 		except IndexError:
-			print("""ERROR: Not enough arguements entered.
-Accepted arguements: GitHub Repository URL""")
 			sys.exit("No URL Arg")
 		try:
 			self.githubToken = self.args[1]
@@ -45,15 +41,11 @@ Accepted arguements: GitHub Repository URL""")
 		# Add unit test to see if error is raised with wrong url
 		# Add unit test to see if error is raised with right url
 		if self.githubURL.find("github.com/") == -1:
-			print("""ERROR: Invalid GitHub URL.
-Valid URLS: github.com/USERNAME/REPOSITORY""")
 			sys.exit("Invalid URL Arg")
 
 		foo = self.githubURL.split("/")
 
 		if len(foo) > 5:
-			print("""ERROR: Invalid GitHub URL.
-Valid URLS: github.com/USERNAME/REPOSITORY""")
 			sys.exit("Invalid URL Arg")
 
 		self.githubUser = foo[-2]
