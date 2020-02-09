@@ -1,6 +1,8 @@
 const electron = require('electron');
 const { app, BrowserWindow } = require('electron')
 
+global.sharedObject = { fileName: process.argv }
+
 function createWindow() {
     let win = new BrowserWindow({
         width: 800,

@@ -77,6 +77,12 @@ def open_connection(repo_name):
             issues INT(3000),
             pull_requests INT(3000));''')
 
+    c.execute('''CREATE TABLE IF NOT EXISTS LINES_OF_CODE_NUM_OF_CHARS
+            (date VARCHAR(300) ,
+            oid VARCHAR(3000),
+            total_lines VARCHAR(3000),
+            total_chars VARCHAR(3000));''')
+
 
     conn.commit()
     
