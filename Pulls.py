@@ -9,11 +9,14 @@ This is logic to analyze the data from the GitHubAPI Pull Request API and store 
 
     def __init__(self, username:str=None, repository:str=None, token:str=None, data:dict=None, responseHeaders:tuple=None, cursor:Cursor=None, connection:Connection=None):
         '''
-Initializes the class and sets class variables that are to be used only in this class instance.
-:param username: The GitHub username.
-:param repository: The GitHub repository.
+Initializes the class and sets class variables that are to be used only in this class instance.\n
+:param username: The GitHub username.\n
+:param repository: The GitHub repository.\n
 :param token: The personal access token from the user who initiated the program.
-:param
+:param data: The dictionary of data that is returned from the API call.\n
+:param responseHeaders: The dictionary of data that is returned with the API call.\n
+:param cursor: The database cursor.\n
+:param connection: The database connection.
         '''
         self.data = data
         self.responseHeaders = responseHeaders
@@ -22,15 +25,18 @@ Initializes the class and sets class variables that are to be used only in this 
         self.githubToken = token
         self.dbCursor = cursor
         self.dbConnection = connection
-        self.gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo, token=self.githubToken)
+        self.gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo, token=self.githubToken)  # Creates an instance of the GitHubAPI 
     
     def parser(self)    ->  None:
-        # Loop to parse and sanitize values to add to the SQLlite database
+        '''
+Actually scrapes, sanitizes, and stores the data returned from the API call.
+        '''
         while True:
-            if len(self.data) == 0:
+            if len(self.data) == 0: # If there is no data returned, quit parsing immediatly
                 break
 
-            for x in self.data:
+            for x in self.data: # Scrapes the data
+                # All of these are manually set to none in order prevent overwritting variable data
                 user = None
                 user_id = None
                 pull_req_id = None
@@ -67,35 +73,34 @@ Initializes the class and sets class variables that are to be used only in this 
                 locked = x["locked"]
                 assignee = x["assignee"]
                 assignees = x["assignees"]
+                body = x["body"]
+                # Scrapes and sanitizes the time related data
                 created_at = x["created_at"].replace("T", " ").replace("Z", " ")
                 updated_at = x["updated_at"].replace("T", " ").replace("Z", " ")
                 closed_at = x["closed_at"].replace("T", " ").replace("Z", " ")
-                body = x["body"]
-                
                 created_at = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S ")
                 updated_at = datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S ")
                 closed_at = datetime.strptime(closed_at, "%Y-%m-%d %H:%M:%S ")
-                
-                
+            
+                # Stores the data into a SQL database
                 sql = "INSERT INTO PULLREQUESTS (user, user_id, pull_req_id, comments_url, node_id, number, title, labels, state, locked, assignee, assignees, created_at, updated_at, closed_at, body, comment_user, comment_user_id, comment_id, comment_node_id, comment_created_at, comment_updated_at, comment_body) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
-                self.dbCursor.execute(sql, (str(user), str(user_id), str(pull_req_id), str(comments_url), str(node_id), str(number), str(title), str(labels), str(state), str(locked), str(assignee), str(assignees), str(created_at), str(updated_at), str(closed_at), str(body), str(comment_user), str(comment_user_id), str(comment_id), str(comment_node_id), str(comment_created_at), str(comment_updated_at), str(comment_body)))
+                self.dbCursor.execute(sql, (str(user), str(user_id), str(pull_req_id), str(comments_url), str(node_id), str(number), str(title), str(labels), str(state), str(locked), str(assignee), str(assignees), str(created_at), str(updated_at), str(closed_at), str(body), str(comment_user), str(comment_user_id), str(comment_id), str(comment_node_id), str(comment_created_at), str(comment_updated_at), str(comment_body)))    # Str data type wrapper called in order to assure type
+                self.dbConnection.commit()  # Actually stores the data in the database
 
-                self.dbConnection.commit()
-
+            # Below checks to see if there are any links related to the data returned
             try:
                 foo = self.responseHeaders["Link"]
                 if 'rel="next"' not in foo: # Breaks if there is no rel="next" text in key Link
                     break
 
-                else:
-                    bar = foo.split(",")
+                bar = foo.split(",")
 
-                    for x in bar:
-                        if 'rel="next"' in x:
-                            url = x[x.find("<")+1:x.find(">")]
-                            self.data = self.gha.access_GitHubAPISpecificURL(url=url)
-                            self.responseHeaders = self.gha.get_ResponseHeaders()
-                            self.parser()   # Recursive
+                for x in bar:
+                    if 'rel="next"' in x:   # Recursive logic to open a supported link, download the data, and reparse the data
+                        url = x[x.find("<")+1:x.find(">")]
+                        self.data = self.gha.access_GitHubAPISpecificURL(url=url)
+                        self.responseHeaders = self.gha.get_ResponseHeaders()
+                        self.parser()   # Recursive
             except KeyError:    # Raises if there is no key Link
                 break
             break

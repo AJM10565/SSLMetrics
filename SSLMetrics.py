@@ -5,18 +5,16 @@ import sys
 
 class SSLMetrics:
 	'''
-This is what should be called to actually run the SSL Metrics tool.
+This is what should be called to actually run the SSL Metrics tool.\n
 Call this tool in the command line as: python SSLMetrics.py {GitHub URL} {Optional Token}
 	'''
 
 	def __init__(self)	->	None:
 		'''
-Initializes the program and sets class variables that are going to be used as the initial values across the program.
-
-Required command line arguements:
-GitHub URL (https://github.com/{Username}/{Repository})
-
-Optional command line arguements:
+Initializes the program and sets class variables that are going to be used as the initial values across the program.\n
+Required command line arguements:\n
+GitHub URL (https://github.com/{Username}/{Repository})\n
+Optional command line arguements:\n
 GitHub Personal Access Token
 		'''
 		self.args = sys.argv[1:]	# All of the command line args excluding the filename
@@ -29,7 +27,7 @@ GitHub Personal Access Token
 
 	def parseArgs(self)	->	None:
 		'''
-This is a REQUIRED method.
+This is a REQUIRED method.\n
 Logic to parse the list of command line arguements to make sure that they meet program requirements.
 		'''
 		# TODO:
@@ -52,8 +50,8 @@ Logic to parse the list of command line arguements to make sure that they meet p
 	def stripURL(self)	->	None:
 		'''
 This is a REQUIRED method.
-Logic to parse the URL arguement to make sure it contains both a username and a repository.
-Logic will error out if an invalid URL is the arguement.
+Logic to parse the URL arguement to make sure it contains both a username and a repository.\n
+Logic will error out if an invalid URL is the arguement.\n
 Further checks are made on the URL in the GitHubAPI.py file. It is possible for a URL to pass these tests here, however the program will error out if it fails other tests down the road.
 		'''
 		#TODO:
@@ -76,7 +74,7 @@ Further checks are made on the URL in the GitHubAPI.py file. It is possible for 
 		
 	def launch(self)	->	None:
 		'''
-This is a REQUIRED method.
+This is a REQUIRED method.\n
 Logic to actually begin the analysis.
 		'''
 		self.dbCursor, self.dbConnection = sqlite_database.open_connection(self.githubRepo)	# Unsure of what this code does due to lack of knowledge on how the database works
