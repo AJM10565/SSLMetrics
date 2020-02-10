@@ -65,13 +65,13 @@ def Main(username, repo_name, headers, c, conn):
                 try:
                     created_at = created_at.replace("T", " ")
                     created_at = created_at.replace("Z", " ")
-                    created_at = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S ")
+                    created_at = datetime.strptime(str(created_at)[:10], "%Y-%m-%d")
                     updated_at = updated_at.replace("T", " ")
                     updated_at = updated_at.replace("Z", " ")
-                    updated_at = datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S ")
+                    updated_at = datetime.strptime(str(updated_at)[:10], "%Y-%m-%d")
                     closed_at = closed_at.replace("T", " ")
                     closed_at = closed_at.replace("Z", " ")
-                    closed_at = datetime.strptime(closed_at, "%Y-%m-%d %H:%M:%S ")
+                    closed_at = datetime.strptime(str(closed_at)[:10], "%Y-%m-%d")
                 except:
                     pass
 

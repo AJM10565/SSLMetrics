@@ -3,6 +3,7 @@ import Pull_Requests
 import Number_Of_Issues
 import Commits
 import Lines_Of_Code_And_Num_Of_Chars
+import Defect_Density_Issue_Spoilage
 import config
 import requests
 from datetime import datetime 
@@ -33,10 +34,12 @@ def central(username, repo_name, c, conn):
         day_list.append(day_ago)
         num = num + 1
 
-    Lines_Of_Code_And_Num_Of_Chars.Main(username, repo_name, c, conn)
+    Lines_Of_Code_And_Num_Of_Chars.Main(username, repo_name, c, conn, access_token)
     Commits.Main(username, repo_name, headers, c, conn)
     Pull_Requests.Main(username, repo_name, headers, c, conn)
     Number_Of_Issues.Main(username, repo_name, headers, c, conn)
+    Defect_Density_Issue_Spoilage.Main(c, conn, day_list)
+
     
     for x in day_list:
 
