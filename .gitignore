@@ -216,3 +216,6 @@ fabric.properties
 
 #VS Code
 .vscode/
+
+# DB files
+*.db
