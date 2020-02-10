@@ -7,25 +7,20 @@ class Logic:
 This is logic to analyze the data from the GitHubAPI Issues Request API and store the data in a database.
     '''
 
-    def __init__(self, username:str=None, repository:str=None, token:str=None, data:dict=None, responseHeaders:tuple=None, cursor:Cursor=None, connection:Connection=None):
+    def __init__(self, gha:GitHubAPI=None, data:dict=None, responseHeaders:tuple=None, cursor:Cursor=None, connection:Connection=None):
         '''
 Initializes the class and sets class variables that are to be used only in this class instance.\n
-:param username: The GitHub username.\n
-:param repository: The GitHub repository.\n
-:param token: The personal access token from the user who initiated the program.
+:param gha: An instance of the GitHubAPI class.\n
 :param data: The dictionary of data that is returned from the API call.\n
 :param responseHeaders: The dictionary of data that is returned with the API call.\n
 :param cursor: The database cursor.\n
 :param connection: The database connection.
         '''
+        self.gha = gha
         self.data = data
         self.responseHeaders = responseHeaders
-        self.githubUser = username
-        self.githubRepo = repository
-        self.githubToken = token
         self.dbCursor = cursor
         self.dbConnection = connection
-        self.gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo, token=self.githubToken)
 
     def parser(self)    ->  None:
         '''

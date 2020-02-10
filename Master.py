@@ -29,6 +29,7 @@ Initalizes the class and sets class variables that are to be used only in this c
         self.dbCursor = cursor
         self.dbConnection = connection
         self.data = None
+        self.gha = None
 
     def program(self)   ->  None:
         '''
@@ -41,15 +42,15 @@ Calls classes and methods to analyze and interpret data.
 
         # Gets and stores data from the commits api endpoint
         self.set_Data(endpoint="commits")
-        Commits.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
+        Commits.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         # Gets and stores data from the pulls api endpoint
         self.set_Data(endpoint="pulls")
-        Pulls.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
+        Pulls.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         # Gets and stores data from the issues api endpoint
         self.set_Data(endpoint="issues")
-        Issues.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
+        Issues.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         # Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
 
@@ -133,16 +134,16 @@ This data should be moved into it's own instance before this is called again in 
 :param endpoint: This can be "commits", "issues", "pulls", "", or some other endpoint that is supported by the GitHub API as long as it is accessible with the root url https://api.github.com/{USER}/{REPOSITORY}
         '''
         endpoint = endpoint.lower()
-        gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo, token=self.githubToken)
+        self.gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo, token=self.githubToken)
         if endpoint == "commits":
-            self.data = [gha.access_GitHubRepoCommits(), gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubRepoCommits(), self.gha.get_ResponseHeaders()]
         elif endpoint == "issues":
-            self.data = [gha.access_GitHubRepoIssues(), gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubRepoIssues(), self.gha.get_ResponseHeaders()]
         elif endpoint == "pulls":
-            self.data = [gha.access_GitHubRepoPulls(), gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubRepoPulls(), self.gha.get_ResponseHeaders()]
         elif endpoint == "":
-            self.data = [gha.access_GitHubAPISpecificEndpoint(endpoint=endpoint), gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubAPISpecificEndpoint(endpoint=endpoint), self.gha.get_ResponseHeaders()]
         elif endpoint[0] == "/":
-            self.data = [gha.access_GitHubAPISpecificEndpoint(endpoint=endpoint), gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubAPISpecificEndpoint(endpoint=endpoint), self.gha.get_ResponseHeaders()]
         else:
-            self.data = [gha.access_GitHubAPISpecificURL(url=endpoint), gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubAPISpecificURL(url=endpoint), self.gha.get_ResponseHeaders()]

@@ -19,7 +19,7 @@ This initializes the class and sets class specific variables.
         self.githubUser = username
         self.githubRepo = repository
         self.githubToken = token
-        self.githubAPIURL = "https://api.github.com/repos/" + self.githubUser + "/" + self.githubRepo   # This is the most basic root directory
+        self.githubAPIURL = None
         self.responseHeaders = None
 
     def access_GitHubRepoCommits(self) ->  dict:
@@ -54,9 +54,9 @@ Builds the request header in order to access the GitHub API as an authorized use
     def access_GitHubAPISpecificEndpoint(self, endpoint:str="") -> dict:
         '''
 This allows access to a GitHub API call that is not already defined by other methods.\n
-:param endpoint: The GitHub API endpoint beginning with \\.
+:param endpoint: The GitHub API endpoint beginning with /.
         '''
-        self.githubAPIURL = self.githubAPIURL + endpoint
+        self.githubAPIURL = "https://api.github.com/repos/" + self.githubUser + "/" + self.githubRepo + endpoint
         request = self.build_RequestObj(url=self.githubAPIURL)
         try:
             foo = urlopen(url=request)
