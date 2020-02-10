@@ -4,8 +4,13 @@ from sqlite3 import Cursor, Connection
 import sys
 
 class Logic:
-
+    '''
+    This class contains the methods needed to access the GitHub Repository Commits API as well as any class specific variables.
+    '''
     def __init__(self, username:str=None, repository:str=None, token:str=None, data:dict=None, responseHeaders:tuple=None, cursor:Cursor=None, connection:Connection=None):
+        '''
+This initializes the class and sets class variables
+        '''
         self.data = data
         self.responseHeaders = responseHeaders
         self.githubUser = username

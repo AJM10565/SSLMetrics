@@ -3,8 +3,18 @@ from githubAPI import GitHubAPI
 from sqlite3 import Cursor, Connection
 
 class Logic:
+    '''
+This is logic to analyze the data from the GitHubAPI Pull Request API and store the data in a database.
+    '''
 
     def __init__(self, username:str=None, repository:str=None, token:str=None, data:dict=None, responseHeaders:tuple=None, cursor:Cursor=None, connection:Connection=None):
+        '''
+Initializes the class and sets class variables that are to be used only in this class instance.
+:param username: The GitHub username.
+:param repository: The GitHub repository.
+:param token: The personal access token from the user who initiated the program.
+:param
+        '''
         self.data = data
         self.responseHeaders = responseHeaders
         self.githubUser = username

@@ -4,25 +4,41 @@ import sqlite_database
 import sys
 
 class SSLMetrics:
+	'''
+This is what should be called to actually run the SSL Metrics tool.
+Call this tool in the command line as: python SSLMetrics.py {GitHub URL} {Optional Token}
+	'''
 
 	def __init__(self)	->	None:
-		self.args = sys.argv[1:]	# All of the args excluding the filename
-		self.argsLen = len(self.args)
+		'''
+Initializes the program and sets class variables that are going to be used as the initial values across the program.
+
+Required command line arguements:
+GitHub URL (https://github.com/{Username}/{Repository})
+
+Optional command line arguements:
+GitHub Personal Access Token
+		'''
+		self.args = sys.argv[1:]	# All of the command line args excluding the filename
 		self.githubURL = None
 		self.githubUser = None
 		self.githubRepo = None
 		self.githubToken = None
-		self.dbCursor = None
-		self.dbConnection = None
+		self.dbCursor = None	# Database specific variable
+		self.dbConnection = None	# Database specific variables
 
 	def parseArgs(self)	->	None:
+		'''
+This is a REQUIRED method.
+Logic to parse the list of command line arguements to make sure that they meet program requirements.
+		'''
 		# TODO:
 		# Add unit test to check for this function
 		# Add unit test to check the length of args
 		# Add unit test to check for self.githubURL is updated after this function
 		# Add unit test to check if both self.githubURL and self.githubToken are updated after this function
 		# Add unit test to check if self.githubToken is not updated if there is no githubToken after this function
-		if self.argsLen > 2:
+		if len(self.args) > 2:
 			sys.exit("Too Many Args")
 		try:
 			self.githubURL = self.args[0]
@@ -34,6 +50,12 @@ class SSLMetrics:
 			pass
 	
 	def stripURL(self)	->	None:
+		'''
+This is a REQUIRED method.
+Logic to parse the URL arguement to make sure it contains both a username and a repository.
+Logic will error out if an invalid URL is the arguement.
+Further checks are made on the URL in the GitHubAPI.py file. It is possible for a URL to pass these tests here, however the program will error out if it fails other tests down the road.
+		'''
 		#TODO:
 		# Add unit test to check for this function
 		# Add unit test to see if self.githubURL is updated after this function 
@@ -53,28 +75,47 @@ class SSLMetrics:
 		self.githubRepo = foo[-1]
 		
 	def launch(self)	->	None:
+		'''
+This is a REQUIRED method.
+Logic to actually begin the analysis.
+		'''
 		self.dbCursor, self.dbConnection = sqlite_database.open_connection(self.githubRepo)	# Unsure of what this code does due to lack of knowledge on how the database works
 		Master.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, cursor=self.dbCursor, connection=self.dbConnection).program()
 
 	def get_Args(self)	->	list:
+		'''
+Returns the class variable args.
+		'''
 		return self.args
-	
-	def get_ArgsLen(self)	->	int:
-		return self.argsLen
 
 	def get_GitHubURL(self)	->	str:
+		'''
+Returns the class variable githubURL.
+		'''
 		return self.githubURL
 	
 	def get_GitHubUser(self)	->	str:
+		'''
+Returns the class variable githubUser
+		'''
 		return self.githubUser
 	
 	def get_GitHubRepo(self)	->	str:
+		'''
+Returns the class variable githubRepo.
+		'''
 		return self.githubRepo
 
 	def get_DbCursor(self)	->	Cursor:
+		'''
+Returns the class variable dbCursor.
+		'''
 		return self.dbCursor
 
 	def get_DbConnection(self)	->	Connection:
+		'''
+Returns the class variable dbConnection.
+		'''
 		return self.dbConnection
 
 

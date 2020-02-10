@@ -2,11 +2,11 @@ import sqlite3
 
 def open_connection(repo_name):
     
-    conn = sqlite3.connect('database/' + str(repo_name) + '_historical.db')
-    c = conn.cursor()
+    connection = sqlite3.connect('database/' + str(repo_name) + '_historical.db')
+    cursor = connection.cursor()
 
     # Create table - COMMITS
-    c.execute('''CREATE TABLE IF NOT EXISTS COMMITS
+    cursor.execute('''CREATE TABLE IF NOT EXISTS COMMITS
             (author VARCHAR(3000) ,
             comments_url VARCHAR(3000),
             author_date VARCHAR(3000),
@@ -17,7 +17,7 @@ def open_connection(repo_name):
             comment_count VARCHAR(3000));''')
     
     # Create table - ISSUES
-    c.execute('''CREATE TABLE IF NOT EXISTS ISSUES
+    cursor.execute('''CREATE TABLE IF NOT EXISTS ISSUES
             (user VARCHAR(3000) ,
                 user_id VARCHAR(3000) ,
                 issue_id VARCHAR(3000) ,
@@ -45,7 +45,7 @@ def open_connection(repo_name):
                 comment_body VARCHAR(3000)) ;''')
 
         # Create table - PULL_REQUESTS
-    c.execute('''CREATE TABLE IF NOT EXISTS PULLREQUESTS
+    cursor.execute('''CREATE TABLE IF NOT EXISTS PULLREQUESTS
             (user VARCHAR(3000) ,
                 user_id VARCHAR(3000) ,
                 pull_req_id VARCHAR(3000) ,
@@ -71,19 +71,19 @@ def open_connection(repo_name):
                 comment_body VARCHAR(3000)) ;''')
 
         # Create table - MASTER
-    c.execute('''CREATE TABLE IF NOT EXISTS MASTER
+    cursor.execute('''CREATE TABLE IF NOT EXISTS MASTER
             (date VARCHAR(300) ,
             commits INT(3000),
             issues INT(3000),
             pull_requests INT(3000));''')
 
-    c.execute('''CREATE TABLE IF NOT EXISTS LINES_OF_CODE_NUM_OF_CHARS
+    cursor.execute('''CREATE TABLE IF NOT EXISTS LINES_OF_CODE_NUM_OF_CHARS
             (date VARCHAR(300) ,
             oid VARCHAR(3000),
             total_lines VARCHAR(3000),
             total_chars VARCHAR(3000));''')
 
 
-    conn.commit()
+    connection.commit()
     
-    return c, conn
+    return cursor, connection
