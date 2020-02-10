@@ -1,15 +1,22 @@
 from datetime import datetime
 from githubAPI import GitHubAPI 
 from sqlite3 import Cursor, Connection
-import sys
+
 
 class Logic:
     '''
-    This class contains the methods needed to access the GitHub Repository Commits API as well as any class specific variables.
+This class contains the methods needed to access the GitHub Repository Commits API as well as any class specific variables.
     '''
     def __init__(self, username:str=None, repository:str=None, token:str=None, data:dict=None, responseHeaders:tuple=None, cursor:Cursor=None, connection:Connection=None):
         '''
-This initializes the class and sets class variables
+This initializes the class and sets class variables specific variables.\n
+:param username: The GitHub username.\n
+:param repository: The GitHub repository.\n
+:param token: The personal access token from the user who initiated the program.
+:param data: The dictionary of data that is returned from the API call.\n
+:param responseHeaders: The dictionary of data that is returned with the API call.\n
+:param cursor: The database cursor.\n
+:param connection: The database connection.
         '''
         self.data = data
         self.responseHeaders = responseHeaders
@@ -21,7 +28,9 @@ This initializes the class and sets class variables
         self.gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo, token=self.githubToken)
     
     def parser(self)    ->  None:
-        # Loop to parse and sanitize values to add to the SQLlite database
+        '''
+Actually scrapes, sanitizes, and stores the data returned from the API call.
+        '''                
         while True:
             for x in range(len(self.data)):
                 author = "None"
@@ -34,25 +43,23 @@ This initializes the class and sets class variables
                 comments_url = "None"
 
                 author = self.data[x]["commit"]["author"]["name"]
-                author_date = self.data[x]["commit"]["author"]["date"].replace("T", " ").replace("Z", " ")
                 committer = self.data[x]["commit"]["committer"]["name"]
-                committer_date = self.data[x]["commit"]["committer"]["date"].replace("T", " ").replace("Z", " ")
                 message = self.data[x]["commit"]["message"]
                 comment_count = self.data[x]["commit"]["comment_count"]
                 commits_url = self.data[x]["commit"]["url"]
                 comments_url = self.data[x]["comments_url"]
-
+                # Scrapes and sanitizes the time related data
+                author_date = self.data[x]["commit"]["author"]["date"].replace("T", " ").replace("Z", " ")
                 author_date = datetime.strptime(author_date, "%Y-%m-%d %H:%M:%S ")
+                committer_date = self.data[x]["commit"]["committer"]["date"].replace("T", " ").replace("Z", " ")
                 committer_date = datetime.strptime(committer_date, "%Y-%m-%d %H:%M:%S ")
 
-                if not message:
-                    message = "None"
-
+                # Stores the data into a SQL database
                 sql = "INSERT INTO COMMITS (author, author_date, committer, committer_date, commits_url, message, comment_count, comments_url) VALUES (?,?,?,?,?,?,?,?);"
                 self.dbCursor.execute(sql, (str(author),  str(author_date), str(committer), str(committer_date), str(message), str(commits_url), str(comment_count), str(comments_url)))
-                
                 self.dbConnection.commit()
-            
+
+            # Below checks to see if there are any links related to the data returned            
             try:
                 foo = self.responseHeaders["Link"]
                 if 'rel="next"' not in foo: # Breaks if there is no rel="next" text in key Link
