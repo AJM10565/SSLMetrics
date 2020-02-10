@@ -23,13 +23,14 @@ def Calculate_Issue_Spoilage(c, conn, Issues):
 
     return Min, Max, Avg
 
-def Main(c, conn):
+def Main(c, conn, days):
     #First Pull down all of the values and loop through them one day at a time
     
     #Once table exists, pull down data here#
 
     #Now loop!
     for day in days:
+        print(day)
 
         Num_Of_Open_BF = "" #Fill this with the total number of open BF on that date
         Num_Of_Open_FR = "" #Fill this with the total number of open FR on that date
@@ -45,7 +46,11 @@ def Main(c, conn):
         IssSpoil_Open_T = "" #Fill this with issue spoilage of BT
         Lines_Of_Code = "" #Store the lines of code on that specifc date
 
-        Issues = [] #This is going to be a list of all of the issues on that date so that IS metrics can be ran
+        day = datetime.strptime(str(day)[:10], "%Y-%m-%d")
+
+        Issues = c.execute( "SELECT COUNT(*) FROM ISSUES WHERE updated_at = '" + str(day) + "';")
+        print(c.fetchall()[0][0])
+        conn.commit()
 
 
 
