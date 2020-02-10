@@ -213,3 +213,11 @@ fabric.properties
 
 # Pycharm
 .idea
+
+# VS Code
+.vscode
+test.json
+
+database/nicholassynovic.github.io_historical.db
+
+database/

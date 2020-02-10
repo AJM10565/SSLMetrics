@@ -1,5 +1,5 @@
-import subprocess
 import platform
+import subprocess
 
 # Get operating system of current platform
 host_os = platform.system()

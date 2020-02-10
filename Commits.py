@@ -1,67 +1,72 @@
-# Import statements
-import requests
-from collections import OrderedDict
-import re
 from datetime import datetime
-import csv
-import config
+from githubAPI import GitHubAPI 
+from sqlite3 import Cursor, Connection
+import sys
 
-def Main(username, repo_name, headers, c, conn):
-
-    commits = requests.get("https://api.github.com/repos/" + username + "/" + repo_name + "/commits?state=all", headers=headers)
-
-    while commits:
-
-        if not commits.json():
-            print("There are no commits!")
-
-        else:
-            for x in commits.json():
+class Logic:
+    '''
+    This class contains the methods needed to access the GitHub Repository Commits API as well as any class specific variables.
+    '''
+    def __init__(self, username:str=None, repository:str=None, token:str=None, data:dict=None, responseHeaders:tuple=None, cursor:Cursor=None, connection:Connection=None):
+        '''
+This initializes the class and sets class variables
+        '''
+        self.data = data
+        self.responseHeaders = responseHeaders
+        self.githubUser = username
+        self.githubRepo = repository
+        self.githubToken = token
+        self.dbCursor = cursor
+        self.dbConnection = connection
+        self.gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo, token=self.githubToken)
+    
+    def parser(self)    ->  None:
+        # Loop to parse and sanitize values to add to the SQLlite database
+        while True:
+            for x in range(len(self.data)):
                 author = "None"
-                comments_url = "None"
                 author_date = "None"
-                commits_url = "None"
                 committer = "None"
                 committer_date = "None"
-                message = "None"
-                comment_count = "None"
+                message = "None"    # Message associated with the commit
+                comment_count = "None"  # Number of comments per commit
+                commits_url = "None"
+                comments_url = "None"
 
-                author = x["commit"]["author"]["name"]
-                author_date = x["commit"]["author"]["date"]
-                comments_url = x["commit"]["url"]
-                committer = x["commit"]["committer"]["name"]
-                committer_date = x["commit"]["committer"]["date"]
-                message = x["commit"]["message"]
-                comments_url = x["comments_url"]
-                comment_count = x["commit"]["comment_count"]
+                author = self.data[x]["commit"]["author"]["name"]
+                author_date = self.data[x]["commit"]["author"]["date"].replace("T", " ").replace("Z", " ")
+                committer = self.data[x]["commit"]["committer"]["name"]
+                committer_date = self.data[x]["commit"]["committer"]["date"].replace("T", " ").replace("Z", " ")
+                message = self.data[x]["commit"]["message"]
+                comment_count = self.data[x]["commit"]["comment_count"]
+                commits_url = self.data[x]["commit"]["url"]
+                comments_url = self.data[x]["comments_url"]
 
-                author_date = author_date.replace("T", " ")
-                author_date = author_date.replace("Z", " ")
                 author_date = datetime.strptime(author_date, "%Y-%m-%d %H:%M:%S ")
-                committer_date = committer_date.replace("T", " ")
-                committer_date = committer_date.replace("Z", " ")
                 committer_date = datetime.strptime(committer_date, "%Y-%m-%d %H:%M:%S ")
-                
-                
 
                 if not message:
                     message = "None"
 
-                sql = "INSERT INTO COMMITS (author, comments_url, author_date, commits_url, committer, committer_date, message, comment_count) VALUES (?,?,?,?,?,?,?,?)"
-                c.execute(sql, (str(author) , str(comments_url) , str(author_date) , str(commits_url) , str(committer) , str(committer_date) , str(message), str(comment_count)))
+                sql = "INSERT INTO COMMITS (author, author_date, committer, committer_date, commits_url, message, comment_count, comments_url) VALUES (?,?,?,?,?,?,?,?);"
+                self.dbCursor.execute(sql, (str(author),  str(author_date), str(committer), str(committer_date), str(message), str(commits_url), str(comment_count), str(comments_url)))
                 
-                conn.commit()
-               
-            link = commits.headers['link']
-            #print(link)
-            if "next" not in link:
-                commits = False
+                self.dbConnection.commit()
+            
+            try:
+                foo = self.responseHeaders["Link"]
+                if 'rel="next"' not in foo: # Breaks if there is no rel="next" text in key Link
+                    break
 
-            # Should be a comma separated string of links
-            links = link.split(',')
+                else:
+                    bar = foo.split(",")
 
-            for link in links:
-                # If there is a 'next' link return the URL between the angle brackets, or None
-                if 'rel="next"' in link:
-                    commits = requests.get((link[link.find("<")+1:link.find(">")]), headers=headers)
-                    #print((link[link.find("<")+1:link.find(">")]))
+                    for x in bar:
+                        if 'rel="next"' in x:
+                            url = x[x.find("<")+1:x.find(">")]
+                            self.data = self.gha.access_GitHubAPISpecificURL(url=url)
+                            self.responseHeaders = self.gha.get_ResponseHeaders()
+                            self.parser()   # Recursive
+            except KeyError:    # Raises if there is no key Link
+                break
+            break

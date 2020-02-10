@@ -1,10 +1,9 @@
-# Import statements
 import requests
-from collections import OrderedDict
-import re
-from datetime import datetime
 import csv
-import config
+import re
+from collections import OrderedDict
+from datetime import datetime
+import json
 
 # TODO - Make the data output into a CSV format #
 # TODO - Number of collaborators #
@@ -12,8 +11,10 @@ import config
 # TODO - CSV will have rows be times and columns be metrics #
 # TODO - Make python scripts for number of lines of code, commits, number of letters in code, and issues #
 
+token = "0338d16e907b96b36d756ade2df178b4728cd0ee"
+
 # Header with my token
-headers = {"Authorization": "token " + config.access_token}
+headers = {"Authorization": "token " + token}
 
 # A simple function to use requests.post to make the API call. Note the json= section.
 def run_query(query): 
@@ -75,13 +76,9 @@ def get_closest_date(dates_and_oids):
             elif(x_day < date_convert and y_day < date_convert):
                 return (x_day)
             
-def get_lines_of_code_and_num_of_chars(dates_and_oids, un, rn):
+def get_lines_of_code_and_num_of_chars(dates_and_oids, un, rn, c , conn):
     
     total = ""
-
-    f = open(str(rn) + "_lines_and_number.csv", "w+", newline = "")
-    writer = csv.DictWriter(f, fieldnames=["date", "oid", "total_lines", "total_chars"])
-    writer.writeheader()
 
     # Prints the ordered dict
     for x in dates_and_oids:
@@ -113,11 +110,11 @@ def get_lines_of_code_and_num_of_chars(dates_and_oids, un, rn):
         #print(total.count('\n'))
         #print(re.sub(r"\W", "", total))
         
+        sql = "INSERT INTO LINES_OF_CODE_NUM_OF_CHARS (date, oid, total_lines, total_chars) VALUES (?,?,?,?);"
+        c.execute(sql, (str(x_day) , str(dates_and_oids[x]) , str(total.count('\n')) , str(len(re.sub(r"\W", "", total)))))
+                
+        conn.commit()
 
-        writer.writerows([{"date": str(x_day), "oid": str(dates_and_oids[x]), "total_lines": str(total.count('\n')), "total_chars": str(len(re.sub(r"\W", "", total)))}])
-        total = ""
-
-    f.close()
     return total.count('\n'), len(re.sub(r"\W", "", total))
             
 
@@ -243,7 +240,7 @@ third_query = """
 }
 
 """
-def Main(username, repo_name):
+def Main(username, repo_name, c, conn):
     # An ordered dict of all of the commit dates and OIDs
     dates_and_oids = OrderedDict([])
 
@@ -255,6 +252,7 @@ def Main(username, repo_name):
     # print(closest_date)
 
     # Gets the number of letters
-    num_o_lines, num_o_chars = get_lines_of_code_and_num_of_chars(dates_and_oids, username, repo_name)
+    num_o_lines, num_o_chars = get_lines_of_code_and_num_of_chars(dates_and_oids, username, repo_name, c, conn)
 
     
+run_query(query=first_query)
