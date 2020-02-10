@@ -12,8 +12,8 @@ import config
 # TODO - CSV will have rows be times and columns be metrics #
 # TODO - Make python scripts for number of lines of code, commits, number of letters in code, and issues #
 
-# Header with my token
 headers = {"Authorization": "token " + config.access_token}
+
 
 # A simple function to use requests.post to make the API call. Note the json= section.
 def run_query(query): 
@@ -113,6 +113,8 @@ def get_lines_of_code_and_num_of_chars(dates_and_oids, un, rn, c , conn):
         c.execute(sql, (str(x_day) , str(dates_and_oids[x]) , str(total.count('\n')) , str(len(re.sub(r"\W", "", total)))))
                 
         conn.commit()
+
+        total = ""
 
     return total.count('\n'), len(re.sub(r"\W", "", total))
             
@@ -239,7 +241,9 @@ third_query = """
 }
 
 """
-def Main(username, repo_name, c, conn):
+def Main(username, repo_name, c, conn, access_token):
+    # Header with my token
+    headers = {"Authorization": "token " + access_token}
     # An ordered dict of all of the commit dates and OIDs
     dates_and_oids = OrderedDict([])
 
