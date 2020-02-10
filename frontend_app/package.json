@@ -1,0 +1,19 @@
+{
+  "name": "metrics_frontend",
+  "version": "1.0.0",
+  "description": "Node app that serves the client-side charts using data requested from Flask backend",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "csv-parser": "^2.3.2",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
