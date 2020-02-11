@@ -6,7 +6,7 @@ import sqlite_database
 
 # code takes a single git repo as input and generates an out.csv file
 arg_length = len(sys.argv)
-if arg_length >= 3:
+if arg_length > 3:
   print("You entered: " + str(len(sys.argv)) + "arguments, which is too many")
   print("This takes a single public www.github.com/name/repo/ as input")
   sys.exit()
@@ -23,10 +23,10 @@ cursor, conn = sqlite_database.open_connection(repo_name)
 Master.central(username, repo_name, cursor, conn)
 
 # Create the pandas DataFrame
-df = pd.DataFrame(data, columns=['Date', '# of Commits', '# of Issues', '# of Pull Requests'])
+# df = pd.DataFrame(data, columns=['Date', '# of Commits', '# of Issues', '# of Pull Requests'])
 
 # print dataframe.
-print(df)
+# print(df)
 
 
 

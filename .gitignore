@@ -213,3 +213,9 @@ fabric.properties
 
 # Pycharm
 .idea
+
+#VS Code
+.vscode/
+
+# DB files
+*.db
