@@ -221,3 +221,9 @@ test.json
 database/nicholassynovic.github.io_historical.db
 
 database/
+
+#VS Code
+.vscode/
+
+# DB files
+*.db
