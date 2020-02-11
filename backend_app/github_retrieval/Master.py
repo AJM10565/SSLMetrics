@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
-from backend_app.github_retrieval.githubAPI import GitHubAPI
+from githubAPI import GitHubAPI
 from sqlite3 import Cursor, Connection
 import Commits
-from backend_app.github_retrieval import Issues, Pulls
+import Issues
+import Pulls
 
 
 # import Lines_Of_Code_And_Num_Of_Chars
