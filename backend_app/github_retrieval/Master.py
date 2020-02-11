@@ -14,7 +14,7 @@ This is logic to call all other classes and methods that make the program run.\n
 Does very little analysis of data.
     '''
 
-    def __init__(self, username:str=None, repository:str=None, token:str=None, cursor:Cursor=None, connection:Connection=None)  ->  None:
+    def __init__(self, username: str = None, repository: str = None, token: str = None, cursor: Cursor = None, connection: Connection = None) -> None:
         '''
 Initalizes the class and sets class variables that are to be used only in this class instance.\n
 :param username: The GitHub username.\n
@@ -33,26 +33,31 @@ Initalizes the class and sets class variables that are to be used only in this c
         self.data = None
         self.gha = None
 
-    def program(self)   ->  None:
+    def program(self) -> None:
         '''
 Calls classes and methods to analyze and interpret data.
         '''
         # Gets and stores data from the root api endpoint
         self.set_Data(endpoint="")
-        repoConcptionDateTime = datetime.strptime(self.data[0]['created_at'].replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")        
-        datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)   # Index 0 = Current datetime, Index -1 = conception datetime
+        repoConcptionDateTime = datetime.strptime(self.data[0]['created_at'].replace(
+            "T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")
+        # Index 0 = Current datetime, Index -1 = conception datetime
+        datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)
 
         # Gets and stores data from the commits api endpoint
         self.set_Data(endpoint="commits")
-        Commits.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
+        Commits.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],
+                      cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         # Gets and stores data from the pulls api endpoint
         self.set_Data(endpoint="pulls")
-        Pulls.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
+        Pulls.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],
+                    cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         # Gets and stores data from the issues api endpoint
         self.set_Data(endpoint="issues")
-        Issues.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1], cursor=self.dbCursor, connection=self.dbConnection).parser()
+        Issues.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],
+                     cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         # Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
 
@@ -60,24 +65,28 @@ Calls classes and methods to analyze and interpret data.
         # Bewary of changing
         for foo in datetimeList:
 
-            self.dbCursor.execute("SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")
+            self.dbCursor.execute(
+                "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")
             rows = self.dbCursor.fetchall()
             commits = rows[0][0]
 
-            self.dbCursor.execute("SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + foo + "');")
+            self.dbCursor.execute(
+                "SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + foo + "');")
             rows = self.dbCursor.fetchall()
             issues = rows[0][0]
 
-            self.dbCursor.execute("SELECT COUNT(*) FROM PULLREQUESTS WHERE date(created_at) <= date('" + foo + "');")
+            self.dbCursor.execute(
+                "SELECT COUNT(*) FROM PULLREQUESTS WHERE date(created_at) <= date('" + foo + "');")
             rows = self.dbCursor.fetchall()
             pull_requests = rows[0][0]
 
             sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
-            self.dbCursor.execute(sql, (foo, str(commits) , str(issues) , str(pull_requests)))
+            self.dbCursor.execute(
+                sql, (foo, str(commits), str(issues), str(pull_requests)))
 
             self.dbConnection.commit()
 
-    def generate_DateTimeList(self, rCDT:datetime)  ->  list:
+    def generate_DateTimeList(self, rCDT: datetime) -> list:
         '''
 Creates a list of datetimes from the repository conception datetime till today's current datetime.\n
 :param rCDT: Repository conception datetime. This is found in the root api call of a repository.
@@ -93,59 +102,66 @@ Creates a list of datetimes from the repository conception datetime till today's
                 foo.append(str(today))
         return foo
 
-    def get_Data(self)  ->  dict:
+    def get_Data(self) -> dict:
         '''
 Returns the class variable data.
         '''
         return self.data
-    
-    def get_DbConnection(self)  ->  Connection:
+
+    def get_DbConnection(self) -> Connection:
         '''
 Returns the class variable dbConnection.
         '''
         return self.dbConnection
-        
-    def get_DbCursor(self)  ->  Cursor:
+
+    def get_DbCursor(self) -> Cursor:
         '''
 Returns the class variable dbCursor.
         '''
         return self.dbCursor
-    
-    def get_GitHubRepo(self)    ->  str:
+
+    def get_GitHubRepo(self) -> str:
         '''
 Returns the class variable githubRepo.
         '''
         return self.githubRepo
 
-    def get_GitHubToken(self)   ->  str:
+    def get_GitHubToken(self) -> str:
         '''
 Returns the class variable githubToken.
         '''
         return self.githubToken
 
-    def get_GitHubUser(self)    ->  str:
+    def get_GitHubUser(self) -> str:
         '''
 Returns the class variable githubUser.
         '''
         return self.githubUser
-    
-    def set_Data(self, endpoint:str="/")    ->  None:
+
+    def set_Data(self, endpoint: str = "/") -> None:
         '''
 This method is used to set the most recent GitHub API call into self.data.\n
 This data should be moved into it's own instance before this is called again in order to prevent the data from being overwritten.\n
 :param endpoint: This can be "commits", "issues", "pulls", "", or some other endpoint that is supported by the GitHub API as long as it is accessible with the root url https://api.github.com/{USER}/{REPOSITORY}
         '''
         endpoint = endpoint.lower()
-        self.gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo, token=self.githubToken)
+        self.gha = GitHubAPI(username=self.githubUser,
+                             repository=self.githubRepo, token=self.githubToken)
         if endpoint == "commits":
-            self.data = [self.gha.access_GitHubRepoCommits(), self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubRepoCommits(),
+                         self.gha.get_ResponseHeaders()]
         elif endpoint == "issues":
-            self.data = [self.gha.access_GitHubRepoIssues(), self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubRepoIssues(),
+                         self.gha.get_ResponseHeaders()]
         elif endpoint == "pulls":
-            self.data = [self.gha.access_GitHubRepoPulls(), self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubRepoPulls(),
+                         self.gha.get_ResponseHeaders()]
         elif endpoint == "":
-            self.data = [self.gha.access_GitHubAPISpecificEndpoint(endpoint=endpoint), self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubAPISpecificEndpoint(
+                endpoint=endpoint), self.gha.get_ResponseHeaders()]
         elif endpoint[0] == "/":
-            self.data = [self.gha.access_GitHubAPISpecificEndpoint(endpoint=endpoint), self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubAPISpecificEndpoint(
+                endpoint=endpoint), self.gha.get_ResponseHeaders()]
         else:
-            self.data = [self.gha.access_GitHubAPISpecificURL(url=endpoint), self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubAPISpecificURL(
+                url=endpoint), self.gha.get_ResponseHeaders()]
