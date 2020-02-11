@@ -8,7 +8,7 @@ class Logic:
 This is logic to analyze the data from the githubAPI Pull Request API and store the data in a database.
     '''
 
-    def __init__(self, gha: githubAPI = None, data: dict = None, responseHeaders: tuple = None, cursor: Cursor = None, connection: Connection = None):
+    def __init__(self, gha: GitHubAPI = None, data: dict = None, responseHeaders: tuple = None, cursor: Cursor = None, connection: Connection = None):
         '''
 Initializes the class and sets class variables that are to be used only in this class instance.\n
 :param gha: An instance of the githubAPI class.\n
