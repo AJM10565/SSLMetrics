@@ -77,6 +77,7 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                     "T", " ").replace("Z", " ")
                 updated_at = x["updated_at"].replace(
                     "T", " ").replace("Z", " ")
+                # TODO ry except to make sure you can parse issues that are still open
                 closed_at = x["closed_at"].replace("T", " ").replace("Z", " ")
                 created_at = datetime.strptime(
                     created_at, "%Y-%m-%d %H:%M:%S ")
