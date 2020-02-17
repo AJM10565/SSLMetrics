@@ -1,5 +1,6 @@
 from sqlite3 import Cursor, Connection  # Need these for determining type
 import Master
+from TokenHandler import TokenHandler
 import sqlite_database
 import sys
 
@@ -23,13 +24,16 @@ GitHub Personal Access Token
         self.githubUser = None
         self.githubRepo = None
         self.githubToken = None
+        self.githubTokenList = None # This is pulled from keys.txt
         self.dbCursor = None  # Database specific variable
         self.dbConnection = None  # Database specific variables
+        self.th = TokenHandler()    # Class instance to write and read tokens to tokens.txt
 
     def parseArgs(self) -> None:
         '''
 This is a REQUIRED method.\n
-Logic to parse the list of command line arguements to make sure that they meet program requirements.
+Logic to parse the list of command line arguements to make sure that they meet program requirements.\n
+Will also generate the keys.txt file, get data from it, and potentially write data to it as well.
         '''
         # TODO:
         # Add unit test to check for this function
@@ -45,8 +49,15 @@ Logic to parse the list of command line arguements to make sure that they meet p
             sys.exit("No URL Arg")
         try:
             self.githubToken = self.args[1]
+            self.th.write(token=self.githubToken)
+            self.githubTokenList = self.th.read()
         except IndexError:
-            pass
+            self.githubTokenList = self.th.read()
+            
+            try:
+                self.githubToken = self.githubTokenList[0]
+            except IndexError:
+                pass
 
     def stripURL(self) -> None:
         '''

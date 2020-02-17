@@ -2,13 +2,14 @@ class TokenHandler:
 
     def __init__(self):
         self.filename = "tokens.txt"
+        open("tokens.txt", "w").close()  # Gaurentees creation of tokens.txt if it is not created
     
-    def writer(self, tag:str)  ->  None:
+    def write(self, token:str)  ->  None:
         keysfile = open(self.filename, "a+")    # Opens file in appending mode
-        keysfile.writelines(tag + "\n")
+        keysfile.writelines(token + "\n")
         keysfile.close()
 
-    def reader(self)    ->  list:
+    def read(self)    ->  list:
         keysfile = open(self.filename, "r") # Opens the file in read mode
         foo = keysfile.readlines()
         keysfile.close()
