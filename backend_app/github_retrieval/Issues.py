@@ -58,31 +58,125 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                 comment_updated_at = "NA"
                 comment_body = "NA"
 
-                user = x["user"]["login"]
-                user_id = x["user"]["id"]
-                issue_id = x["id"]
-                comments_url = x["comments_url"]
-                node_id = x["node_id"]
-                number = x["number"]
-                title = x["title"]
-                labels = x["labels"]
-                state = x["state"]
-                locked = x["locked"]
-                assignee = x["assignee"]
-                assignees = x["assignees"]
-                comments = x["comments"]
-                body = x["body"]
+                try:
+                    user = x["user"]["login"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+
+                try:
+                    user_id = x["user"]["id"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+
+                try:
+                    issue_id = x["id"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+                try:
+                    comments_url = x["comments_url"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+
+                try:
+                    node_id = x["node_id"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+                
+                try:
+                    number = x["number"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+
+                try:
+                    title = x["title"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+                
+                try:
+                    labels = x["labels"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+                
+                try:
+                    state = x["state"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+
+                try:
+                    locked = x["locked"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+                try:
+                    assignee = x["assignee"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+
+                try:
+                    assignees = x["assignees"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+                
+                try:
+                    comments = x["comments"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+
+                try:
+                    body = x["body"]
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
                 # Scrapes and sanitizes the time related data
-                created_at = x["created_at"].replace(
-                    "T", " ").replace("Z", " ")
-                updated_at = x["updated_at"].replace(
-                    "T", " ").replace("Z", " ")
-                closed_at = x["closed_at"].replace("T", " ").replace("Z", " ")
-                created_at = datetime.strptime(
-                    created_at, "%Y-%m-%d %H:%M:%S ")
-                updated_at = datetime.strptime(
-                    updated_at, "%Y-%m-%d %H:%M:%S ")
-                closed_at = datetime.strptime(closed_at, "%Y-%m-%d %H:%M:%S ")
+                try:
+                    closed_at = x["closed_at"].replace("T", " ").replace("Z", " ")
+                    closed_at = datetime.strptime(closed_at, "%Y-%m-%d %H:%M:%S ")
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+                
+                try:
+                    created_at = x["created_at"].replace("T", " ").replace("Z", " ")
+                    created_at = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S ")
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
+
+                try:
+                    updated_at = x["updated_at"].replace("T", " ").replace("Z", " ")
+                    updated_at = datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S ")
+                except KeyError:
+                    pass
+                except AttributeError:
+                    pass
 
                 # Stores the data into a SQL database
                 sql = "INSERT INTO ISSUES (user, user_id, issue_id, comments_url, node_id, number, title, labels, state, locked, assignee, assignees, comments, created_at, updated_at, closed_at, body, comment_user, comment_user_id, comment_id, issue_url, comment_node_id, comment_created_at, comment_updated_at, comment_body) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
