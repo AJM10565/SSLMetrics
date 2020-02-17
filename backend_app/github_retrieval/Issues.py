@@ -32,6 +32,7 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                 break
 
             for x in self.data:
+                # Values below are the values that are to be returned/set if parsing FAILS
                 user = "NA"
                 user_id = "NA"
                 issue_id = "NA"
