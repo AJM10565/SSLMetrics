@@ -42,37 +42,51 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                     author = self.data[x]["commit"]["author"]["name"]
                 except KeyError:
                     author = "NA"
+                except AttributeError:
+                    author = "NA"
                 
                 try:
                     committer = self.data[x]["commit"]["committer"]["name"]
                 except KeyError:
                     committer = "NA"
-                
+                except AttributeError:
+                    committer = "NA"
+
                 try:
                     message = self.data[x]["commit"]["message"]
                 except KeyError:
                     message = "NA"
-                
+                except AttributeError:
+                    message = "NA"
+
                 try:
                     comment_count = self.data[x]["commit"]["comment_count"]
                 except KeyError:
                     comment_count = "NA"
-                
+                except AttributeError:
+                    comment_count = "NA"
+
                 try:
                     commits_url = self.data[x]["commit"]["url"]
                 except KeyError:
                     commits_url = "NA"
-                
+                except AttributeError:
+                    commits_url = "NA"
+
                 try:
                     comments_url = self.data[x]["comments_url"]
                 except KeyError:
                     commits_url = "NA"
-                
+                except AttributeError:
+                    commits_url = "NA"
+
                 # Scrapes and sanitizes the time related data
                 try:
                     author_date = self.data[x]["commit"]["author"]["date"].replace("T", " ").replace("Z", " ")
                     author_date = datetime.strptime(author_date, "%Y-%m-%d %H:%M:%S ")
                 except KeyError:
+                    author_date = "NA"
+                except AttributeError:
                     author_date = "NA"
 
                 try:    
@@ -80,7 +94,9 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                     committer_date = datetime.strptime(committer_date, "%Y-%m-%d %H:%M:%S ")
                 except KeyError:
                     committer_date = "NA"
-
+                except AttributeError:
+                    committer_date = "NA"
+                    
                 # Stores the data into a SQL database
                 sql = "INSERT INTO COMMITS (author, author_date, committer, committer_date, commits_url, message, comment_count, comments_url) VALUES (?,?,?,?,?,?,?,?);"
                 self.dbCursor.execute(sql, (str(author),  str(author_date), str(committer), str(
