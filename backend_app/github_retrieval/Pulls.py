@@ -32,145 +32,146 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                 break
 
             for x in self.data:  # Scrapes the data
-                # All of these are manually set to none in order prevent overwritting variable data
-                user = None
-                user_id = None
-                pull_req_id = None
-                comments_url = None
-                node_id = None
-                number = None
-                title = None
-                labels = None
-                state = None
-                locked = None
-                assignee = None
-                assignees = None
-                created_at = None
-                updated_at = None
-                closed_at = None
-                body = None
-                comment_user = None
-                comment_user_id = None
-                comment_id = None
-                comment_node_id = None
-                comment_created_at = None
-                comment_updated_at = None
-                comment_body = None
+                # Values below are the values that are to be returned/set if parsing FAILS
+                user = "NA"
+                user_id = "NA"
+                pull_req_id = "NA"
+                comments_url = "NA"
+                node_id = "NA"
+                number = "NA"
+                title = "NA"
+                labels = "NA"
+                state = "NA"
+                locked = "NA"
+                assignee = "NA"
+                assignees = "NA"
+                created_at = "NA"
+                updated_at = "NA"
+                closed_at = "NA"
+                body = "NA"
+                comment_user = "NA"
+                comment_user_id = "NA"
+                comment_id = "NA"
+                comment_node_id = "NA"
+                comment_created_at = "NA"
+                comment_updated_at = "NA"
+                comment_body = "NA"
 
                 try:
                     user = x["user"]["login"]
                 except KeyError:
-                    user = "NA"
+                    pass
                 except AttributeError:
-                    user = "NA"
+                    pass
+
                 try:
                     user_id = x["user"]["id"]
                 except KeyError:
-                    user_id = "NA"
+                    pass
                 except AttributeError:
-                    user_id = "NA"
+                    pass
 
                 try:
                     pull_req_id = x["id"]
                 except KeyError:
-                    pull_req_id = "NA"
+                    pass
                 except AttributeError:
-                    pull_req_id = "NA"
+                    pass
 
                 try:
                     comments_url = x["comments_url"]
                 except KeyError:
-                    comments_url = "NA"
+                    pass
                 except AttributeError:
-                    comments_url = "NA"
+                    pass
 
                 try:
                     node_id = x["node_id"]
                 except KeyError:
-                    node_id  = "NA"
+                    pass
                 except AttributeError:
-                    node_id = "NA"
+                    pass
 
                 try:
                     number = x["number"]
                 except KeyError:
-                    number = "NA"
+                    pass
                 except AttributeError:
-                    number = "NA"
+                    pass
 
                 try:
                     title = x["title"]
                 except KeyError:
-                    title = "NA"
+                    pass
                 except AttributeError:
-                    title  = "NA"
+                    pass
 
                 try:
                     labels = x["labels"]
                 except KeyError:
-                    labels  = "NA"
+                    pass
                 except AttributeError:
-                    labels = "NA"
+                    pass
 
                 try:
                     state = x["state"]
                 except KeyError:
-                    state = "NA"
+                    pass
                 except AttributeError:
-                    state = "NA"
+                    pass
 
                 try:
                     locked = x["locked"]
                 except KeyError:
-                    locked = "NA"
+                    pass
                 except AttributeError:
-                    locked = "NA"
+                    pass
 
                 try:
                     assignee = x["assignee"]
                 except KeyError:
-                    assignee = "NA"
+                    pass
                 except AttributeError:
-                    assignee = "NA"
+                    pass
 
                 try:
                     assignees = x["assignees"]
                 except KeyError:
-                    assignees = "NA"
+                    pass
                 except AttributeError:
-                    assignees = "NA"
+                    pass
 
                 try:
                     body = x["body"]
                 except KeyError:
-                    body = "NA"
+                    pass
                 except AttributeError:
-                    body = "NA"
+                    pass
 
                 # Scrapes and sanitizes the time related data
                 try:
                     closed_at = x["closed_at"].replace("T", " ").replace("Z", " ")
                     closed_at = datetime.strptime(closed_at, "%Y-%m-%d %H:%M:%S ")
                 except KeyError:
-                    closed_at = "NA"
+                    pass
                 except AttributeError:
-                    closed_at = "NA"
+                    pass
 
                 try:
                     created_at = x["created_at"].replace("T", " ").replace("Z", " ")
                     created_at = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S ")
                 except KeyError:
-                    created_at = "NA"
+                    pass
                 except AttributeError:
-                    created_at = "NA"
+                    pass
 
                 try:
                     updated_at = x["updated_at"].replace("T", " ").replace("Z", " ")
                     updated_at = datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S ")
                 except KeyError:
-                    updated_at = "NA"
+                    pass
                 except AttributeError:
-                    updated_at = "NA"
+                    pass
 
                 # Stores the data into a SQL database
                 sql = "INSERT INTO PULLREQUESTS (user, user_id, pull_req_id, comments_url, node_id, number, title, labels, state, locked, assignee, assignees, created_at, updated_at, closed_at, body, comment_user, comment_user_id, comment_id, comment_node_id, comment_created_at, comment_updated_at, comment_body) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"

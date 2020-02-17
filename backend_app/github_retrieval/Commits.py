@@ -29,74 +29,75 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
         '''
         while True:
             for x in range(len(self.data)):
-                author = "None"
-                author_date = "None"
-                committer = "None"
-                committer_date = "None"
-                message = "None"    # Message associated with the commit
-                comment_count = "None"  # Number of comments per commit
-                commits_url = "None"
-                comments_url = "None"
+                # Values below are the values that are to be returned/set if parsing FAILS
+                author = "NA"
+                author_date = "NA"
+                committer = "NA"
+                committer_date = "NA"
+                message = "NA"    # Message associated with the commit
+                comment_count = "NA"  # Number of comments per commit
+                commits_url = "NA"
+                comments_url = "NA"
 
                 try:
                     author = self.data[x]["commit"]["author"]["name"]
                 except KeyError:
-                    author = "NA"
+                    pass
                 except AttributeError:
-                    author = "NA"
+                    pass
                 
                 try:
                     committer = self.data[x]["commit"]["committer"]["name"]
                 except KeyError:
-                    committer = "NA"
+                    pass
                 except AttributeError:
-                    committer = "NA"
+                    pass
 
                 try:
                     message = self.data[x]["commit"]["message"]
                 except KeyError:
-                    message = "NA"
+                    pass
                 except AttributeError:
-                    message = "NA"
+                    pass
 
                 try:
                     comment_count = self.data[x]["commit"]["comment_count"]
                 except KeyError:
-                    comment_count = "NA"
+                    pass
                 except AttributeError:
-                    comment_count = "NA"
+                    pass
 
                 try:
                     commits_url = self.data[x]["commit"]["url"]
                 except KeyError:
-                    commits_url = "NA"
+                    pass
                 except AttributeError:
-                    commits_url = "NA"
+                    pass
 
                 try:
                     comments_url = self.data[x]["comments_url"]
                 except KeyError:
-                    commits_url = "NA"
+                    pass
                 except AttributeError:
-                    commits_url = "NA"
+                    pass
 
                 # Scrapes and sanitizes the time related data
                 try:
                     author_date = self.data[x]["commit"]["author"]["date"].replace("T", " ").replace("Z", " ")
                     author_date = datetime.strptime(author_date, "%Y-%m-%d %H:%M:%S ")
                 except KeyError:
-                    author_date = "NA"
+                    pass
                 except AttributeError:
-                    author_date = "NA"
+                    pass
 
                 try:    
                     committer_date = self.data[x]["commit"]["committer"]["date"].replace("T", " ").replace("Z", " ")
                     committer_date = datetime.strptime(committer_date, "%Y-%m-%d %H:%M:%S ")
                 except KeyError:
-                    committer_date = "NA"
+                    pass
                 except AttributeError:
-                    committer_date = "NA"
-                    
+                    pass
+
                 # Stores the data into a SQL database
                 sql = "INSERT INTO COMMITS (author, author_date, committer, committer_date, commits_url, message, comment_count, comments_url) VALUES (?,?,?,?,?,?,?,?);"
                 self.dbCursor.execute(sql, (str(author),  str(author_date), str(committer), str(
