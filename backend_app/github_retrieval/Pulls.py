@@ -61,65 +61,90 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                     user = x["user"]["login"]
                 except KeyError:
                     user = "NA"
-
+                except AttributeError:
+                    user = "NA"
                 try:
                     user_id = x["user"]["id"]
                 except KeyError:
                     user_id = "NA"
-                
+                except AttributeError:
+                    user_id = "NA"
+
                 try:
                     pull_req_id = x["id"]
                 except KeyError:
+                    pull_req_id = "NA"
+                except AttributeError:
                     pull_req_id = "NA"
 
                 try:
                     comments_url = x["comments_url"]
                 except KeyError:
                     comments_url = "NA"
+                except AttributeError:
+                    comments_url = "NA"
 
                 try:
                     node_id = x["node_id"]
                 except KeyError:
                     node_id  = "NA"
+                except AttributeError:
+                    node_id = "NA"
 
                 try:
                     number = x["number"]
                 except KeyError:
+                    number = "NA"
+                except AttributeError:
                     number = "NA"
 
                 try:
                     title = x["title"]
                 except KeyError:
                     title = "NA"
+                except AttributeError:
+                    title  = "NA"
 
                 try:
                     labels = x["labels"]
                 except KeyError:
                     labels  = "NA"
+                except AttributeError:
+                    labels = "NA"
 
                 try:
                     state = x["state"]
                 except KeyError:
+                    state = "NA"
+                except AttributeError:
                     state = "NA"
 
                 try:
                     locked = x["locked"]
                 except KeyError:
                     locked = "NA"
+                except AttributeError:
+                    locked = "NA"
 
                 try:
                     assignee = x["assignee"]
                 except KeyError:
+                    assignee = "NA"
+                except AttributeError:
                     assignee = "NA"
 
                 try:
                     assignees = x["assignees"]
                 except KeyError:
                     assignees = "NA"
+                except AttributeError:
+                    assignees = "NA"
 
                 try:
                     body = x["body"]
                 except KeyError:
+                    body = "NA"
+                except AttributeError:
                     body = "NA"
 
                 # Scrapes and sanitizes the time related data
@@ -128,19 +153,25 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                     closed_at = datetime.strptime(closed_at, "%Y-%m-%d %H:%M:%S ")
                 except KeyError:
                     closed_at = "NA"
+                except AttributeError:
+                    closed_at = "NA"
 
                 try:
                     created_at = x["created_at"].replace("T", " ").replace("Z", " ")
                     created_at = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S ")
                 except KeyError:
                     created_at = "NA"
-                
+                except AttributeError:
+                    created_at = "NA"
+
                 try:
                     updated_at = x["updated_at"].replace("T", " ").replace("Z", " ")
                     updated_at = datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S ")
                 except KeyError:
                     updated_at = "NA"
-                    
+                except AttributeError:
+                    updated_at = "NA"
+
                 # Stores the data into a SQL database
                 sql = "INSERT INTO PULLREQUESTS (user, user_id, pull_req_id, comments_url, node_id, number, title, labels, state, locked, assignee, assignees, created_at, updated_at, closed_at, body, comment_user, comment_user_id, comment_id, comment_node_id, comment_created_at, comment_updated_at, comment_body) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
                 self.dbCursor.execute(sql, (str(user), str(user_id), str(pull_req_id), str(comments_url), str(node_id), str(number), str(title), str(labels), str(state), str(locked), str(assignee), str(assignees), str(created_at), str(updated_at), str(
