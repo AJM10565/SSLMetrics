@@ -227,3 +227,6 @@ database/
 
 # DB files
 *.db
+
+# GitHub Token file
+tokens.txt
