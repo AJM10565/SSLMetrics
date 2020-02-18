@@ -51,9 +51,8 @@ Will also generate the keys.txt file, get data from it, and potentially write da
             self.githubToken = self.args[1]
             self.th.write(token=self.githubToken)
             self.githubTokenList = self.th.read()
-        except IndexError:
+        except IndexError:  # There was no token as an arg
             self.githubTokenList = self.th.read()
-            
             try:
                 self.githubToken = self.githubTokenList[0]
             except IndexError:
@@ -91,8 +90,7 @@ Logic to actually begin the analysis.
         '''
         self.dbCursor, self.dbConnection = sqlite_database.open_connection(
             self.githubRepo)  # Unsure of what this code does due to lack of knowledge on how the database works
-        Master.Logic(username=self.githubUser, repository=self.githubRepo,
-                     token=self.githubToken, cursor=self.dbCursor, connection=self.dbConnection).program()
+        Master.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, tokenList=self.githubTokenList, cursor=self.dbCursor, connection=self.dbConnection).program()
 
     def get_Args(self) -> list:
         '''
@@ -129,7 +127,6 @@ Returns the class variable dbCursor.
 Returns the class variable dbConnection.
         '''
         return self.dbConnection
-
 
 s = SSLMetrics()
 s.parseArgs()

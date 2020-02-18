@@ -197,8 +197,7 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                     for x in bar:
                         if 'rel="next"' in x:   # Recursive logic to open a supported link, download the data, and reparse the data
                             url = x[x.find("<")+1:x.find(">")]
-                            self.data = self.gha.access_githubAPISpecificURL(
-                                url=url)
+                            self.data = self.gha.access_githubAPISpecificURL(url=url)
                             self.responseHeaders = self.gha.get_ResponseHeaders()
                             self.parser()   # Recursive
             except KeyError:    # Raises if there is no key Link

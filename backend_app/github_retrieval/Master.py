@@ -14,12 +14,13 @@ This is logic to call all other classes and methods that make the program run.\n
 Does very little analysis of data.
     '''
 
-    def __init__(self, username: str = None, repository: str = None, token: str = None, cursor: Cursor = None, connection: Connection = None) -> None:
+    def __init__(self, username: str=None, repository:str=None, token:str=None, tokenList:list=None, cursor:Cursor=None, connection:Connection=None) ->  None:
         '''
 Initalizes the class and sets class variables that are to be used only in this class instance.\n
 :param username: The GitHub username.\n
 :param repository: The GitHub repository.\n
 :param token: The personal access token from the user who initiated the program.
+:param tokenList: A list of tokens that will be iterated through.\n
 :param data: The dictionary of data that is returned from the API call.\n
 :param responseHeaders: The dictionary of data that is returned with the API call.\n
 :param cursor: The database cursor.\n
@@ -28,6 +29,7 @@ Initalizes the class and sets class variables that are to be used only in this c
         self.githubUser = username
         self.githubRepo = repository
         self.githubToken = token
+        self.githubTokenList = tokenList
         self.dbCursor = cursor
         self.dbConnection = connection
         self.data = None
@@ -39,15 +41,14 @@ Calls classes and methods to analyze and interpret data.
         '''
         # Gets and stores data from the root api endpoint
         self.set_Data(endpoint="")
-        repoConcptionDateTime = datetime.strptime(self.data[0]['created_at'].replace(
-            "T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")
+        repoConcptionDateTime = datetime.strptime(self.data[0]['created_at'].replace("T", " ").replace("Z", ""), "%Y-%m-%d %H:%M:%S")
+        
         # Index 0 = Current datetime, Index -1 = conception datetime
         datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)
 
         # Gets and stores data from the commits api endpoint
         self.set_Data(endpoint="commits")
-        Commits.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],
-                      cursor=self.dbCursor, connection=self.dbConnection).parser()
+        Commits.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         # Gets and stores data from the pulls api endpoint
         self.set_Data(endpoint="pulls")
@@ -145,23 +146,16 @@ This data should be moved into it's own instance before this is called again in 
 :param endpoint: This can be "commits", "issues", "pulls", "", or some other endpoint that is supported by the GitHub API as long as it is accessible with the root url https://api.github.com/{USER}/{REPOSITORY}
         '''
         endpoint = endpoint.lower()
-        self.gha = GitHubAPI(username=self.githubUser,
-                             repository=self.githubRepo, token=self.githubToken)
+        self.gha = GitHubAPI(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, tokenList=self.githubTokenList)
         if endpoint == "commits":
-            self.data = [self.gha.access_GitHubRepoCommits(),
-                         self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubRepoCommits(), self.gha.get_ResponseHeaders()]
         elif endpoint == "issues":
-            self.data = [self.gha.access_GitHubRepoIssues(),
-                         self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubRepoIssues(), self.gha.get_ResponseHeaders()]
         elif endpoint == "pulls":
-            self.data = [self.gha.access_GitHubRepoPulls(),
-                         self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubRepoPulls(), self.gha.get_ResponseHeaders()]
         elif endpoint == "":
-            self.data = [self.gha.access_GitHubAPISpecificEndpoint(
-                endpoint=endpoint), self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubAPISpecificEndpoint(endpoint=endpoint), self.gha.get_ResponseHeaders()]
         elif endpoint[0] == "/":
-            self.data = [self.gha.access_GitHubAPISpecificEndpoint(
-                endpoint=endpoint), self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubAPISpecificEndpoint(endpoint=endpoint), self.gha.get_ResponseHeaders()]
         else:
-            self.data = [self.gha.access_GitHubAPISpecificURL(
-                url=endpoint), self.gha.get_ResponseHeaders()]
+            self.data = [self.gha.access_GitHubAPISpecificURL(url=endpoint), self.gha.get_ResponseHeaders()]

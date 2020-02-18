@@ -1,8 +1,14 @@
+import os
+
 class TokenHandler:
 
     def __init__(self):
         self.filename = "tokens.txt"
-        open("tokens.txt", "w").close()  # Gaurentees creation of tokens.txt if it is not created
+
+        if os.path.isfile(self.filename):   # Boolean
+            pass
+        else:
+            open("tokens.txt", "w").close()  # Gaurentees creation of tokens.txt if it is not created
     
     def write(self, token:str, mode:str="a+")  ->  None:
         keysfile = open(self.filename, mode)    # Opens file in appending mode

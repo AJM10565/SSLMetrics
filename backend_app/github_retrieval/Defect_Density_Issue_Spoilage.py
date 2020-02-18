@@ -12,7 +12,6 @@ def Calculate_Issue_Spoilage(c, conn, Issues, day):
     total = 0
 
     for issue in Issues:
-        #print(issue)
         open_date = datetime.strptime(issue[0], "%Y-%m-%d")
         if(issue[1] == "None"):
             Issue_Spoilage.append(day - open_date)
@@ -41,8 +40,6 @@ def Main(c, conn, days):
 
     #Now loop!
     for day in days:
-        print(day)
-
         Num_Of_Open_BF = "" #Fill this with the total number of open BF on that date
         Num_Of_Open_FR = "" #Fill this with the total number of open FR on that date
         Num_Of_Open_T = "" #Fill this with the total number of open T on that date
@@ -65,7 +62,6 @@ def Main(c, conn, days):
             Num_Of_Open_BF = int(c.fetchall()[0][0])
         except:
             Num_Of_Open_BF = 0
-        print(Num_Of_Open_BF)
         conn.commit()
 
         c.execute("select total_lines from LINES_OF_CODE_NUM_OF_CHARS where date(date) = (select max(date(date)) from LINES_OF_CODE_NUM_OF_CHARS where date(date) <= date('" + str(day) + "'));")
@@ -73,20 +69,12 @@ def Main(c, conn, days):
             LOC = int(c.fetchall()[0][0])
         except:
             LOC = 0
-        print(LOC)
         conn.commit()
 
         Defect_Den = Calculate_Defect_Density(c, conn, LOC, Num_Of_Open_BF)
-        print(Defect_Den)
 
         c.execute("SELECT date(created_at), date(closed_at) FROM ISSUES WHERE date(created_at) <= date('" + str(day) + "') AND date(closed_at) >= date('" + str(day) + "') OR date(created_at) <= date('" + str(day) + "') AND closed_at = 'None';")
         Issues = c.fetchall()
-        print(Issues)
         conn.commit()
 
         Min, Max, Avg = Calculate_Issue_Spoilage(c, conn, Issues, day)
-        print("Min:" + str(Min) + " Max: " + str(Max) + " Avg: " + str(Avg))
-
-
-
-

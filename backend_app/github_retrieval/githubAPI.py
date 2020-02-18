@@ -9,7 +9,7 @@ class GitHubAPI:
     '''
 This provides the communication layer between the program and the GitHub API
     '''
-    def __init__(self, username:str=None, repository:str=None, token:str=None):
+    def __init__(self, username:str=None, repository:str=None, token:str=None, tokenList:list=None):
         '''
 This initializes the class and sets class specific variables.
 :param username: The username of a GitHub user.\n
@@ -19,6 +19,7 @@ This initializes the class and sets class specific variables.
         self.githubUser = username
         self.githubRepo = repository
         self.githubToken = token
+        self.githubTokenList = tokenList
         self.githubAPIURL = None
         self.responseHeaders = None
 
@@ -61,7 +62,16 @@ This allows access to a GitHub API call that is not already defined by other met
         try:
             foo = urlopen(url=request)
         except HTTPError as error:
-            sys.exit(error)
+            try:
+                bar = self.githubTokenList.index(self.githubToken)
+                self.set_GitHubToken(self.githubTokenList[bar + 1])
+                self.access_GitHubAPISpecificEndpoint(endpoint=endpoint)
+            except IndexError:
+                print("Unable to utilize next token: IndexError")
+                sys.exit(error)
+            except ValueError:
+                print("Unable to utilize next token: ValueError")
+                sys.exit(error)
         self.set_ResponseHeaders(response=foo)
         return load(foo)    # Converts JSON object into dict
 
@@ -75,7 +85,16 @@ This allows access to GitHub API's that are not under the domain of https://api.
         try:
             foo = urlopen(url=request)
         except HTTPError as error:
-            sys.exit(error)
+            try:
+                bar = self.githubTokenList.index(self.githubToken)
+                self.set_GitHubToken(self.githubTokenList[bar + 1])
+                self.access_GitHubAPISpecificEndpoint(url)
+            except IndexError:
+                print("Unable to utilize next token: IndexError")
+                sys.exit(error)
+            except ValueError:
+                print("Unable to utilize next token: ValueError")
+                sys.exit(error)
         self.set_ResponseHeaders(response=foo)
         return load(foo)    # Converts JSON object into dict
 

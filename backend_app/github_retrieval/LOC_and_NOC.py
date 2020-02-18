@@ -38,7 +38,6 @@ def get_commit_dates_and_oids(dates_and_oids, un, rn):
 
     # This gets the remaining number of calls that can be made
     remaining_rate_limit = result["data"]["rateLimit"]["remaining"] 
-    print("Remaining rate limit - {}".format(remaining_rate_limit))
 
     # This loop goes through and paginates through all of the responses
     while next_page:
@@ -50,7 +49,6 @@ def get_commit_dates_and_oids(dates_and_oids, un, rn):
             dates_and_oids["'" + x["committedDate"] + "'"] = str(x["oid"])
 
         remaining_rate_limit = result["data"]["rateLimit"]["remaining"] 
-        print("Remaining rate limit - {}".format(remaining_rate_limit))
 
         next_page = result["data"]["repository"]["object"]["history"]["pageInfo"]["endCursor"]
 
@@ -82,21 +80,15 @@ def get_lines_of_code_and_num_of_chars(dates_and_oids, un, rn, c , conn):
 
     # Prints the ordered dict
     for x in dates_and_oids:
-        print(x)
         x_day = x.replace("T", " ")
         x_day = x_day.replace("Z", " ")
         x_day = datetime.strptime(x_day, "'%Y-%m-%d %H:%M:%S '")
 
-
-        #print(x)
-        #print(dates_and_oids[x])
         content = run_query(third_query % (un, rn, str(dates_and_oids[x])))
 
         remaining_rate_limit = content["data"]["rateLimit"]["remaining"] 
-        #print("Remaining rate limit - {}".format(remaining_rate_limit))
         
         for y in content['data']['repository']['object']['tree']['entries']:
-            # print(y)
             try:
                 total = total + (y['object']['text'])
             except:
@@ -105,11 +97,6 @@ def get_lines_of_code_and_num_of_chars(dates_and_oids, un, rn, c , conn):
                 except:
                     pass
 
-        #print (total)
-        #print("END OF SECTION")
-        #print(total.count('\n'))
-        #print(re.sub(r"\W", "", total))
-        
         sql = "INSERT INTO LINES_OF_CODE_NUM_OF_CHARS (date, oid, total_lines, total_chars) VALUES (?,?,?,?);"
         c.execute(sql, (str(x_day) , str(dates_and_oids[x]) , str(total.count('\n')) , str(len(re.sub(r"\W", "", total)))))
                 
@@ -249,10 +236,8 @@ def Main(username, repo_name, c, conn):
 
     # Gets the closest commit date to use to pull metrics from
     # closest_date = get_closest_date(dates_and_oids)
-    # print(closest_date)
 
     # Gets the number of letters
     num_o_lines, num_o_chars = get_lines_of_code_and_num_of_chars(dates_and_oids, username, repo_name, c, conn)
 
-    
 run_query(query=first_query)
