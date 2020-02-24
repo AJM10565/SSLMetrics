@@ -1,6 +1,7 @@
 # Electron App
 node_modules
 data-vis-win32-x64
+data-vis-darwin-x64
 
 # pythoon stuff
 config.py
