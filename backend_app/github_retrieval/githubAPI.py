@@ -65,6 +65,7 @@ This allows access to a GitHub API call that is not already defined by other met
             try:
                 bar = self.githubTokenList.index(self.githubToken)
                 self.set_GitHubToken(self.githubTokenList[bar + 1])
+                print("Switching token to: " + self.githubToken)
                 self.access_GitHubAPISpecificEndpoint(endpoint=endpoint)
             except IndexError:
                 print("Unable to utilize next token: IndexError")
@@ -88,6 +89,7 @@ This allows access to GitHub API's that are not under the domain of https://api.
             try:
                 bar = self.githubTokenList.index(self.githubToken)
                 self.set_GitHubToken(self.githubTokenList[bar + 1])
+                print("Switching token to", self.githubTokenList[bar + 1])
                 self.access_GitHubAPISpecificEndpoint(url)
             except IndexError:
                 print("Unable to utilize next token: IndexError")
