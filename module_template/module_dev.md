@@ -1,8 +1,3 @@
-# SSLMetrics
-
-## How It Works
-Using the [GitHub API](https://developer.github.com/v3/) we gather information about a repository, and use [pandas](https://pandas.pydata.org/) to display the information.
-
 ## Module Development
 ### How to use the module template
 First, create a folder for your module (following the file structure of this template, `module_template` would be that folder). Then, create another folder called `code` within that folder. Inside the `code` folder, place all of your Python code for your module. For each library you import, add it to a file called `requirements.txt` within the `code` folder. Lastly, copy the `Dockerfile` from this template into the folder of the module itself.
@@ -19,7 +14,3 @@ In your Docker terminal, `cd` into the `module_template` folder, run `docker bui
         Your first command line argument is:
         word
         {'userId': 1, 'id': 1, 'title': 'delectus aut autem', 'completed': False}
-
-
-    
-   
