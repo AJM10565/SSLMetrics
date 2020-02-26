@@ -16,8 +16,8 @@ This is some SQL code that creates the tables and columns in a database named af
     # Create table - COMMITS
     cursor.execute('''CREATE TABLE IF NOT EXISTS COMMITS
             (author VARCHAR(3000) ,
-            comments_url VARCHAR(3000),
             author_date VARCHAR(3000),
+            comments_url VARCHAR(3000),
             commits_url VARCHAR(3000),
             committer VARCHAR(3000),
             committer_date VARCHAR(3000),

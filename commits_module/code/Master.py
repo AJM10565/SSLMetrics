@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 from githubAPI import GitHubAPI
 from sqlite3 import Cursor, Connection
 import Commits
-import Issues
-import Pulls
+# import Issues
+# import Pulls
 from tqdm import tqdm
 import time
 
@@ -76,9 +76,9 @@ Calls classes and methods to analyze and interpret data.
             commits = rows[0][0]
 
 
-            sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
-            self.dbCursor.execute(
-                sql, (foo, str(commits)))
+            # sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
+            # self.dbCursor.execute(
+            #     sql, (foo, str(commits)))
 
             self.dbConnection.commit()
             # time.sleep(0.01)
