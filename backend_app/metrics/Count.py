@@ -1,16 +1,18 @@
 import sys
-
+import re
 class Count:
     '''
 This is a series of metrics meant to count the number of blank lines, comments, code lines, and charachters in a file.
     '''
-    def __init__(self, filename:str=None)   ->  None:
+    def __init__(self, filename:str=None, regexPattern:str=r"^(\#)[^.]")   ->  None:
         '''
 Initalizes the class and reads the data from a file into a list.\n
 :param filename: The name of the file to be opened and read from.
+:param regexPattern: A str of the regex pattern to be searched for.
         '''
         self.file = open(filename, "r")
         self.fileData = self.file.readlines()
+        self.regexPattern = regexPattern
 
     def close_File(self) ->  None:
         '''
@@ -30,7 +32,7 @@ A blank line is a line that only contains the \\n charachter.\n
                 count += 1
         return count
 
-    def count_Comments(self, openingCommentMark:str=None, closingCommentMark:str=None)   ->  int:
+    def count_Comments(self, openingCommentMark:str=None, closingCommentMark:str=None)   ->  int:   # Use regex to find the first instance of # that is not encapsulated by ""
         '''
 Counts the number of comments in a file.\n
 This could also be repurposed to count the number of lines that start and end with a set of charachters or contain a set of charachters.\n
@@ -39,54 +41,48 @@ This could also be repurposed to count the number of lines that start and end wi
 :return int: This is the total number of comments in the file. 
         '''
         # Test for the required param
-        try:
-            len_OCM = len(openingCommentMark)
-        except TypeError:
+        if openingCommentMark is None:
             print("There needs to be an openingCommentMark arguement.")
-            sys.exit()
-        # Starts parsing
+            sys.exit(1)
         count = 0
-        # Parsing for one mark
         if closingCommentMark is None:
-            for x in self.fileData:
-                x = x.strip()
-                if x[0:len_OCM] == openingCommentMark:  # Finds the comment mark assuming that it is the first charachter(s) of the line
+            for line in self.fileData:
+                if re.match(pattern=self.regexPattern, string=line):  # Finds the comment mark assuming that it is the first charachter(s) of the line
                     count += 1
                 else:
                     try:
-                        x.index(openingCommentMark) # Finds the comment mark even if it is not the first charachter(s) in the line
+                        line.index(openingCommentMark) # Finds the comment mark even if it is not the first charachter(s) in the line
                         count += 1
                     except ValueError:
                         pass
-        # Parsing for two marks
         else:
-            for x in range(len(self.fileData)):
-                foo = self.fileData[x].strip()
-                if foo[0:len_OCM] == openingCommentMark:
-                    bar = x # Stores the current index to avoid finding previous closingCommentMark(s)
-                    while bar < len(self.fileData):
-                        temp = self.fileData[bar].strip()
+            for lineNum in range(len(self.fileData)):
+                if re.match(pattern=self.regexPattern, string=self.fileData[lineNum]):
+                    foo = lineNum
+                    while foo < len(self.fileData):
+                        temp = self.fileData[foo].strip()
                         try:
                             temp.index(closingCommentMark)
                             count += 1
                             break
                         except ValueError:
-                            bar += 1
+                            foo += 1
         return count
 
-    def count_CountCodeLines(self)  ->  int:
+    def count_CodeLines(self)  ->  int:    # Use regex to make sure that the line is not a comment
         '''
 Counts the number of code lines in a file.\n
 A code line is a line that contains more than the \\n charachter.\n
 :returns int: This is the total number of blank lines in the file.
         '''
         count = 0
-        for x in self.fileData:
-            if x != "\n":
-                count += 1
+        for line in self.fileData:
+            if line != "\n":
+                if re.match(pattern=self.regexPattern, string=line) is None: 
+                    count += 1
         return count
 
-    def count_CountCharachters(self)    ->  int:
+    def count_Charachters(self)    ->  int:
         '''
 Counts the number of charachters in a file.\n
 A charachter is a line that contains more than the \\n charachter.\n
@@ -114,9 +110,16 @@ Opens a new file and reads the data from it.\n
 Reads the data from the currently opened file.
         '''
         self.fileData = self.file.readlines()
+    
+    def set_RegexPattern(self, regexPattern:str=None)   ->  None:
+        '''
+Sets the new pattern to be searched for across all of the methods that implement it.\n
+:param regexPattern: A str of the regex pattern to be searched for.
+        '''
+        self.regexPattern = regexPattern
 
 c = Count(filename="test.txt")
-print("Comments: " + str(c.count_Comments(openingCommentMark="//")))
+print("Comments: " + str(c.count_Comments(openingCommentMark="<!--")))
 print("Blank Lines: " + str(c.count_BlankLines()))
-print("Code Lines: " + str(c.count_CountCodeLines()))
-print("Chars:" + str(c.count_CountCharachters()))
+print("Code Lines: " + str(c.count_CodeLines()))
+print("Chars:" + str(c.count_Charachters()))
