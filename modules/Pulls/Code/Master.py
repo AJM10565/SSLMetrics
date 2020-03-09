@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from githubAPI import GitHubAPI
 from sqlite3 import Cursor, Connection
-import Commits
-import Issues
+# import Commits
+# import Issues
 import Pulls
 
 
@@ -46,19 +46,19 @@ Calls classes and methods to analyze and interpret data.
         # Index 0 = Current datetime, Index -1 = conception datetime
         datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)
 
-        # Gets and stores data from the commits api endpoint
-        self.set_Data(endpoint="commits")
-        Commits.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],cursor=self.dbCursor, connection=self.dbConnection).parser()
+        # # Gets and stores data from the commits api endpoint
+        # self.set_Data(endpoint="commits")
+        # Commits.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         # Gets and stores data from the pulls api endpoint
         self.set_Data(endpoint="pulls")
         Pulls.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],
                     cursor=self.dbCursor, connection=self.dbConnection).parser()
 
-        # Gets and stores data from the issues api endpoint
-        self.set_Data(endpoint="issues")
-        Issues.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],
-                     cursor=self.dbCursor, connection=self.dbConnection).parser()
+        # # Gets and stores data from the issues api endpoint
+        # self.set_Data(endpoint="issues")
+        # Issues.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],
+        #              cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         # Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
 
@@ -66,24 +66,25 @@ Calls classes and methods to analyze and interpret data.
         # Bewary of changing
         for foo in datetimeList:
 
-            self.dbCursor.execute(
-                "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")
-            rows = self.dbCursor.fetchall()
-            commits = rows[0][0]
+            # self.dbCursor.execute(
+            #     "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")
+            # rows = self.dbCursor.fetchall()
+            # commits = rows[0][0]
 
-            self.dbCursor.execute(
-                "SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + foo + "');")
-            rows = self.dbCursor.fetchall()
-            issues = rows[0][0]
+            # self.dbCursor.execute(
+            #     "SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + foo + "');")
+            # rows = self.dbCursor.fetchall()
+            # issues = rows[0][0]
 
             self.dbCursor.execute(
                 "SELECT COUNT(*) FROM PULLREQUESTS WHERE date(created_at) <= date('" + foo + "');")
             rows = self.dbCursor.fetchall()
             pull_requests = rows[0][0]
 
-            sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
+            # sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
+            sql = "INSERT INTO MASTER (date, pull_requests) VALUES (?,?);"
             self.dbCursor.execute(
-                sql, (foo, str(commits), str(issues), str(pull_requests)))
+                sql, (foo, str(pull_requests)))
 
             self.dbConnection.commit()
 
