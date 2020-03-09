@@ -6,6 +6,7 @@
 ### - *[Use Case](use-case)*
 ### - *[Installation Instructions](#installation-instructions)*
 
+<<<<<<< HEAD
 ---
 ## About
 This repository holds my most up to date code on the Loyola University Chicago SSLMetrics project.
