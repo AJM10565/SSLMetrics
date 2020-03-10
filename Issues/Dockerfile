@@ -1,4 +1,6 @@
-FROM python:3.7-alpine
+FROM python:3.7
+RUN mkdir -p /metrics_issues
 COPY Code/ /app
 WORKDIR /app
+RUN pip install -r requirements.txt
 ENTRYPOINT ["python", "./SSLMetrics.py"]
