@@ -2,6 +2,7 @@ const { Chart } = require("chart.js")
 const csv = require('csv-parser');
 const fs = require('fs');
 //Chart.defaults.global.elements.point.pointStyle = 'star';
+//plot(sin(1,10), "steppedLine=after&backgroundColor=transparent&borderColor=gray&borderWidth=2&label=Step Function")
 
 let rawData = {}
 let headers = [];
@@ -16,8 +17,8 @@ function getRandomColor() {
     return color;
 }
 
-fs.createReadStream('all_data.csv')
-    .pipe(csv())
+fs.createReadStream('SSLMetrics_historical.db')
+    .pipe(indexedDB())
     .on('headers', (headersIn) => {
         headers = headersIn;
         console.log(headers);
