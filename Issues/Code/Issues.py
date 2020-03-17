@@ -2,7 +2,6 @@ from datetime import datetime
 from githubAPI import GitHubAPI
 from sqlite3 import Cursor, Connection
 
-
 class Logic:
     '''
 This is logic to analyze the data from the githubAPI Issues Request API and store the data in a database.

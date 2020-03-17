@@ -101,7 +101,7 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                 # Stores the data into a SQL database
                 sql = "INSERT INTO COMMITS (author, author_date, committer, committer_date, commits_url, message, comment_count, comments_url) VALUES (?,?,?,?,?,?,?,?);"
                 self.dbCursor.execute(sql, (str(author),  str(author_date), str(committer), str(
-                    committer_date), str(message), str(commits_url), str(comment_count), str(comments_url)))
+                    committer_date), str(commits_url), str(message), str(comment_count), str(comments_url)))
                 self.dbConnection.commit()
 
             # Below checks to see if there are any links related to the data returned

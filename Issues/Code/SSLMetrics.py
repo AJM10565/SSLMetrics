@@ -35,12 +35,7 @@ This is a REQUIRED method.\n
 Logic to parse the list of command line arguements to make sure that they meet program requirements.\n
 Will also generate the keys.txt file, get data from it, and potentially write data to it as well.
         '''
-        # TODO:
-        # Add unit test to check for this function
-        # Add unit test to check the length of args
-        # Add unit test to check for self.githubURL is updated after this function
-        # Add unit test to check if both self.githubURL and self.githubToken are updated after this function
-        # Add unit test to check if self.githubToken is not updated if there is no githubToken after this function
+
         if len(self.args) > 2:
             sys.exit("Too Many Args")
         try:
@@ -65,13 +60,7 @@ Logic to parse the URL arguement to make sure it contains both a username and a 
 Logic will error out if an invalid URL is the arguement.\n
 Further checks are made on the URL in the GitHubAPI.py file. It is possible for a URL to pass these tests here, however the program will error out if it fails other tests down the road.
         '''
-        # TODO:
-        # Add unit test to check for this function
-        # Add unit test to see if self.githubURL is updated after this function
-        # Add unit test to see if self.githubUser is updated after this function
-        # Add unit test to see if self.githubRepo is updated after this function
-        # Add unit test to see if error is raised with wrong url
-        # Add unit test to see if error is raised with right url
+
         if self.githubURL.find("github.com/") == -1:
             sys.exit("Invalid URL Arg")
 
@@ -89,7 +78,7 @@ This is a REQUIRED method.\n
 Logic to actually begin the analysis.
         '''
         self.dbCursor, self.dbConnection = sqlite_database.open_connection(
-            self.githubRepo)  # Unsure of what this code does due to lack of knowledge on how the database works
+            self.githubRepo + "_issues")  # Unsure of what this code does due to lack of knowledge on how the database works
         Master.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, tokenList=self.githubTokenList, cursor=self.dbCursor, connection=self.dbConnection).program()
 
     def get_Args(self) -> list:
