@@ -19,7 +19,23 @@ In your Docker terminal, `cd` into the `module_template` folder, run `docker bui
         Your first command line argument is:
         word
         {'userId': 1, 'id': 1, 'title': 'delectus aut autem', 'completed': False}
-
+### File sharing from Docker containers to host machine/other Docker containers (Windows)
+To share files between your computer and your Docker containers, you need to create a volume. This should be pretty simple on *nix machines - I haven't had a chance to test on Mac/Linux, but I have been able to make it work on Windows, which is a more complicated process.
+First, assuming you are not on an enterprise version of Windows and therefore you are using Docker Toolbox with Oracle VirtualBox, you will need to create a "Shared Folder".
+I suggest following this tutorial and changing all instances of "Divio" in the commands to "metrics-vol" or something else you recognize: http://support.divio.com/en/articles/646695-how-to-use-a-directory-outside-c-users-with-docker-toolbox-docker-for-windows
+The second part of this process, as mentioned in the tutorial, is permanently mounting the new shared folder in your default Docker machine. The tutorial provides good instructions on how to do this, and I will note that one way to edit the `profile` document is to use the default Linux `echo` command. First do a `sudo su` to give yourself proper permissions, then run `echo -e '\nsudo mkdir /metrics-vol\nsudo mount -t vboxsf -o uid=1000,gid=50 metrics-vol /metrics-vol' >> profile`.
+After following the tutorial above as described, you should be able to read and write files in the shared folder you set up on your host machine from your Docker containers at the path `/metrics-vol`, so long as you mount a volume when you run the container. This command should look like `docker run -v /metrics-vol:/metrics-vol image-name command_line_argument`
+I've included some test code in module_template/app.py that is currently commented out - if you correctly add a shared folder on your host machine, mount the folder on your default Docker machine, and mount it as a volume when you run the container (after building the image with the lines uncommented), it should write your command line argument
+to a file called `voltest.txt` that exists in your shared folder on your host machine.
+### File sharing from Docker containers to host machine/other Docker containers (Mac)
+docker volume create metrics
+docker build . -t name_of_image
+docker run -v metrics:/metrics <name_of_image> github.com/owner/repo_name
+#### To get data from inside volume after docker is dead
+get docker id:
+docker container ls -a
+copy data
+docker cp id:/metrics /path/to/file/on/host
 
     
    
