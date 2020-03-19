@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bar Chart</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+</head>
+<body>
+  <canvas id="myChart" width="1000" height="400"></canvas>
+  <script>
+    // Get the context of the canvas element we want to select
+    var ctx = document.getElementById("myChart").getContext("2d");
+
+    var date = {{date|safe}};
+    var commits = {{commits|safe}};
+    var issues = {{issues|safe}};
+    var pull_requests = {{pull_requests|safe}};
+
+    var data = {
+        labels: date,
+        datasets: [
+            {
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: commits
+            },
+            {
+                label: "My Second dataset",
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(151,187,205,1)",
+                data: issues
+            },
+            {
+                label: "My Third dataset",
+                fillColor: "rgba(330,187,205,0.2)",
+                strokeColor: "rgba(330,187,205,1)",
+                pointColor: "rgba(330,187,205,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(330,187,205,1)",
+                data: pull_requests
+            }
+        ]
+    };
+    var myLineChart = new Chart(ctx).Line(data);
+  </script>
+</body>
+</html>
