@@ -8,7 +8,6 @@ This is some SQL code that creates the tables and columns in a database named af
 	try:
 		connection = sqlite3.connect('/metrics/' + str(repo_name) + '.db')
 	except sqlite3.OperationalError:
-		os.makedirs("database")
 		connection = sqlite3.connect('/metrics/' + str(repo_name) + '.db')
 
 	cursor = connection.cursor()

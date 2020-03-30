@@ -60,7 +60,7 @@ Calls classes and methods to analyze and interpret data.
         # Issues.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],
         #              cursor=self.dbCursor, connection=self.dbConnection).parser()
 
-        Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
+        Lines_Of_Code_And_Num_Of_Chars.Main(username, repository, self.dbCursor, self.dbConnection)
 
         # Adds all of the datetimes to the SQL database
         # Bewary of changing
