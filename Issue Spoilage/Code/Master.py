@@ -4,7 +4,7 @@ from sqlite3 import Cursor, Connection
 import Commits
 # import Issues
 # import Pulls
-
+import Defect_Density_Issue_Spoilage
 
 # import Lines_Of_Code_And_Num_Of_Chars
 
@@ -47,8 +47,8 @@ Calls classes and methods to analyze and interpret data.
         datetimeList = self.generate_DateTimeList(rCDT=repoConcptionDateTime)
 
         # Gets and stores data from the commits api endpoint
-        self.set_Data(endpoint="commits")
-        Commits.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],cursor=self.dbCursor, connection=self.dbConnection).parser()
+        # self.set_Data(endpoint="commits")
+        # Commits.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         # # Gets and stores data from the pulls api endpoint
         # self.set_Data(endpoint="pulls")
@@ -61,6 +61,8 @@ Calls classes and methods to analyze and interpret data.
         #              cursor=self.dbCursor, connection=self.dbConnection).parser()
 
         # Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
+
+        Defect_Density_Issue_Spoilage.main(self.dbCursor, self.dbConnection, datetimeList)
 
         # Adds all of the datetimes to the SQL database
         # Bewary of changing
