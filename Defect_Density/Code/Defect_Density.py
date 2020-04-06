@@ -79,7 +79,8 @@ def Main(c, conn, days):
         Defect_Den = Calculate_Defect_Density(c, conn, LOC, Num_Of_Open_BF)
         print(Defect_Den)
 
-        c.execute("INSERT INTO DEFECT_DENSITY (date, DD) VALUES (+ " str(day) " +, + " str(Defect_Den) " +);")
+        sql = "INSERT INTO DEFECT_DENSITY (date, DD) VALUES (?,?);"
+        c.execute(sql, (str(day), str(Defect_Den)))
         conn.commit()
 
 
