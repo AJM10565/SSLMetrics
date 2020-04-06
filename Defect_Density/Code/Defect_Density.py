@@ -79,13 +79,8 @@ def Main(c, conn, days):
         Defect_Den = Calculate_Defect_Density(c, conn, LOC, Num_Of_Open_BF)
         print(Defect_Den)
 
-        c.execute("SELECT date(created_at), date(closed_at) FROM ISSUES WHERE date(created_at) <= date('" + str(day) + "') AND date(closed_at) >= date('" + str(day) + "') OR date(created_at) <= date('" + str(day) + "') AND closed_at = 'None';")
-        Issues = c.fetchall()
-        print(Issues)
+        c.execute("INSERT INTO DEFECT_DENSITY (date, DD) VALUES (+ " str(day) " +, + " str(Defect_Den) " +);")
         conn.commit()
-
-        Min, Max, Avg = Calculate_Issue_Spoilage(c, conn, Issues, day)
-        print("Min:" + str(Min) + " Max: " + str(Max) + " Avg: " + str(Avg))
 
 
 

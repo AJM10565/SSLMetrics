@@ -4,7 +4,7 @@ from sqlite3 import Cursor, Connection
 import Commits
 # import Issues
 # import Pulls
-import Defect_Density_Issue_Spoilage
+import Defect_Density
 
 # import Lines_Of_Code_And_Num_Of_Chars
 
@@ -62,7 +62,7 @@ Calls classes and methods to analyze and interpret data.
 
         # Lines_Of_Code_And_Num_Of_Chars.Main(username, repository)
 
-        Defect_Density_Issue_Spoilage.main(self.dbCursor, self.dbConnection, datetimeList)
+        Defect_Density.main(self.dbCursor, self.dbConnection, datetimeList)
 
         # Adds all of the datetimes to the SQL database
         # Bewary of changing
