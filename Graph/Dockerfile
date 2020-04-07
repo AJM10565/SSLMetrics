@@ -3,4 +3,4 @@ RUN mkdir -p /metrics
 COPY code/ /app
 WORKDIR /app
 RUN pip install -r requirements.txt
-ENTRYPOINT ["python", "./flaskr.py"]
+ENTRYPOINT ["python", "./flaskr/flaskr.py"]
