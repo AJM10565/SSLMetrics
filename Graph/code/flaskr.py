@@ -10,7 +10,8 @@ app = Flask(__name__)
 
 # configuration
 app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'SSL.db'),
+    # temporarily testing SSLMetrics repo data
+    DATABASE='/metrics/SSLMetrics_commits.db',
 ))
 
 def connect_db():
@@ -22,8 +23,8 @@ def init_db():
 
 @app.route('/')
 def stacked_bar_chart():
-    # Read sqlite query results into a pandas DataFrame
-    con = sqlite3.connect("SSL.db")
+    # Read query results into a pandas DataFrame
+    con = connect_db()
     df = pd.read_sql_query("SELECT * from MASTER", con)
 
     # verify that result of SQL query is stored in the dataframe
@@ -33,11 +34,15 @@ def stacked_bar_chart():
 
     date = df['date'].values.tolist() # x axis
     commits = df['commits'].values.tolist()
-    issues = df['issues'].values.tolist()
-    pull_requests = df['pull_requests'].values.tolist()
+    #issues = df['issues'].values.tolist()
+    #pull_requests = df['pull_requests'].values.tolist()
 
-    return render_template('linegraph.html', date=date, commits=commits, issues=issues, pull_requests=pull_requests)
+    return render_template('linegraph.html', date=date, commits=commits) #issues=issues, pull_requests=pull_requests)
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
+
+# first build the docker image
+# then run 'docker run -v metrics:/metrics -p 5000:5000 <name_of_image>' 
+# this opens a port for the flask server to run in
