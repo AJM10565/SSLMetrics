@@ -226,4 +226,4 @@ database/
 .vscode/
 
 # DB files
-*.db
+#*.db
