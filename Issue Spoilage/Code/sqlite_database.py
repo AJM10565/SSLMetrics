@@ -90,6 +90,15 @@ This is some SQL code that creates the tables and columns in a database named af
             total_lines VARCHAR(3000),
             total_chars VARCHAR(3000));''')
 
+    cursor.execute('''CREATE TABLE IF NOT EXISTS DEFECT_DENSITY
+            (date VARCHAR(300) ,
+            DD VARCHAR(3000));''')
+
+    cursor.execute('''CREATE TABLE IF NOT EXISTS ISSUE_SPOILAGE
+            (date VARCHAR(300) ,
+            Min VARCHAR(3000),
+            Max VARCHAR(300),
+            Avg VARCHAR(300));''')
 
     connection.commit()
     
