@@ -6,9 +6,9 @@ def open_connection(repo_name):
 This is some SQL code that creates the tables and columns in a database named after the repository its data is holding.
     '''    
     try:
-        connection = sqlite3.connect('/metrics/' + str(repo_name) + '.db')
+        connection = sqlite3.connect('/metrics/' + str(repo_name) + '_historical.db')
     except sqlite3.OperationalError:
-        connection = sqlite3.connect('/metrics/' + str(repo_name) + '.db')
+        connection = sqlite3.connect('/metrics/' + str(repo_name) + '_historical.db')
 
     cursor = connection.cursor()
 
