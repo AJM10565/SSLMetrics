@@ -78,7 +78,7 @@ This is a REQUIRED method.\n
 Logic to actually begin the analysis.
         '''
         self.dbCursor, self.dbConnection = sqlite_database.open_connection(
-            self.githubRepo + "_commits")  # Unsure of what this code does due to lack of knowledge on how the database works
+            self.githubRepo)  # Unsure of what this code does due to lack of knowledge on how the database works
         Master.Logic(username=self.githubUser, repository=self.githubRepo, token=self.githubToken, tokenList=self.githubTokenList, cursor=self.dbCursor, connection=self.dbConnection).program()
 
     def get_Args(self) -> list:
