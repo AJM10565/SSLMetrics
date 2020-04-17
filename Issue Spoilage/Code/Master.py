@@ -66,9 +66,11 @@ Calls classes and methods to analyze and interpret data.
         for foo in datetimeList:
 
             self.dbCursor.execute(
-                "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")
+                "SELECT Avg, Min, Max FROM ISSUE_SPOILAGE WHERE date(committer_date) == date('" + foo + "');")
             rows = self.dbCursor.fetchall()
-            commits = rows[0][0]
+            Avg = rows[0][0]
+            Min = rows[0][1]
+            Max = rows[0][2]
 
             # self.dbCursor.execute(
             #     "SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + foo + "');")
@@ -81,9 +83,9 @@ Calls classes and methods to analyze and interpret data.
             # pull_requests = rows[0][0]
 
             # sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
-            sql = "INSERT INTO MASTER (date, commits) VALUES (?,?);"
+            sql = "INSERT INTO MASTER (date, issue_spoilage_avg, issue_spoilage_min, issue_spoilage_max) VALUES (?,?,?,?);"
             self.dbCursor.execute(
-                sql, (foo, str(commits)))
+                sql, (foo, str(Avg), str(Min), str(Max)))
 
             self.dbConnection.commit()
 

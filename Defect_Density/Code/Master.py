@@ -66,7 +66,7 @@ Calls classes and methods to analyze and interpret data.
         for foo in datetimeList:
 
             self.dbCursor.execute(
-                "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")
+                "SELECT DD FROM DEFECT_DENSITY WHERE date(committer_date) == date('" + foo + "');")
             rows = self.dbCursor.fetchall()
             commits = rows[0][0]
 
@@ -81,7 +81,7 @@ Calls classes and methods to analyze and interpret data.
             # pull_requests = rows[0][0]
 
             # sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
-            sql = "INSERT INTO MASTER (date, commits) VALUES (?,?);"
+            sql = "INSERT INTO MASTER (date, defect_density) VALUES (?,?);"
             self.dbCursor.execute(
                 sql, (foo, str(commits)))
 
