@@ -66,7 +66,7 @@ Calls classes and methods to analyze and interpret data.
         for foo in datetimeList:
 
             self.dbCursor.execute(
-                "SELECT DD FROM DEFECT_DENSITY WHERE date(committer_date) == date('" + foo + "');")
+                "SELECT DD FROM DEFECT_DENSITY WHERE date(date) == date('" + foo + "');")
             rows = self.dbCursor.fetchall()
             commits = rows[0][0]
 

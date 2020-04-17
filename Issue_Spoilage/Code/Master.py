@@ -66,7 +66,7 @@ Calls classes and methods to analyze and interpret data.
         for foo in datetimeList:
 
             self.dbCursor.execute(
-                "SELECT Avg, Min, Max FROM ISSUE_SPOILAGE WHERE date(committer_date) == date('" + foo + "');")
+                "SELECT Avg, Min, Max FROM ISSUE_SPOILAGE WHERE date(date) == date('" + foo + "');")
             rows = self.dbCursor.fetchall()
             Avg = rows[0][0]
             Min = rows[0][1]
