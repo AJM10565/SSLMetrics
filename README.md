@@ -46,8 +46,12 @@ docker run -v metrics:/metrics <name_of_image> github.com/owner/repo_name
 
 get docker id:
 
-docker container ls -a
+`docker container ls -a`
 
-copy data
+copy data:
 
-docker cp id:/metrics /path/to/file/on/host
+`docker cp id:/metrics /path/to/file/on/host`
+
+#### Running FE Flask Server to Display Data
+
+`docker run -v metrics:/metrics -p 5000:5000 <name_of_image>`
