@@ -34,6 +34,23 @@ After following the tutorial above as described, you should be able to read and 
 I've included some test code in module_template/app.py that is currently commented out - if you correctly add a shared folder on your host machine, mount the folder on your default Docker machine, and mount it as a volume when you run the container (after building the image with the lines uncommented), it should write your command line argument
 to a file called `voltest.txt` that exists in your shared folder on your host machine.
 
+### Simplified Volume Setup Instructions for Windows
+The following instructions assume you are running a non-enterprise version of Windows and are therefore using Docker Toolbox. Docker Toolbox should be fully installed before attempting the following process.
+
+- Open Docker Quickstart Terminal and run `docker-machine stop`
+- Open Oracle Virtualbox and select the "default" machine.
+- Click "Settings", then "Shared Folders"
+- Click the "Add Folder" button (icon with a '+' on the right side)
+- Under "Folder Path", select the folder on your physical machine which you would like to share files with the `/metrics` folder in your Docker VM
+- Type "metrics" in the "Folder Name" blank, select "Auto-Mount", and click "OK"
+- Make sure the "Auto-mount" field for the new shared folder indicates "Yes" and "Access" indicates "Full"
+- Return to Docker Quickstart Terminal and run `docker-machine start`
+- Run `sudo su` then `echo -e '\nsudo mkdir /metrics\nsudo mount -t vboxsf -o uid=1000,gid=50 metrics /metrics' >> /mnt/sda1/var/lib/boot2docker/profile`
+- Run `exit`, then `exit` again
+- Run `docker-machine restart`
+
+If you've correctly completed the process, any Docker container you create should have a folder `/metrics` which mirrors files (in and out) with the folder you've indicated in Virtualbox.
+
 ### File sharing from Docker containers to host machine/other Docker containers (Mac)
 
 docker volume create metrics
