@@ -80,6 +80,7 @@ Further checks are made on the URL in the GitHubAPI.py file. It is possible for 
         if len(foo) > 5:
             sys.exit("Invalid URL Arg")
 
+        print(foo[-2])
         self.githubUser = foo[-2]
         self.githubRepo = foo[-1]
 

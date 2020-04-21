@@ -11,7 +11,7 @@ import json
 # TODO - CSV will have rows be times and columns be metrics #
 # TODO - Make python scripts for number of lines of code, commits, number of letters in code, and issues #
 
-token = "0338d16e907b96b36d756ade2df178b4728cd0ee"
+token = "33c0a6b121c88f6959cc5ce9fc99143c2ef77966"
 
 # Header with my token
 headers = {"Authorization": "token " + token}
@@ -26,6 +26,7 @@ def run_query(query):
 
 # A function that returns ther dates and oids of a github repo
 def get_commit_dates_and_oids(dates_and_oids, un, rn):
+
     # Execute the query
     result = run_query(first_query % (un, rn)) 
 
@@ -128,7 +129,7 @@ first_query = """
     resetAt
   }
   
-  repository(owner: "%s" name:"%s"){
+  repository(owner: "%s" name: "%s"){
 
     object(expression: "master") {
       ... on Commit {
@@ -255,4 +256,4 @@ def Main(username, repo_name, c, conn):
     num_o_lines, num_o_chars = get_lines_of_code_and_num_of_chars(dates_and_oids, username, repo_name, c, conn)
 
     
-run_query(query=first_query)
+# run_query(query=first_query)
