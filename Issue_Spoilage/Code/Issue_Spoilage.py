@@ -5,7 +5,7 @@ def Calculate_Issue_Spoilage(c, conn, Issues, day):
     total = 0
 
     for issue in Issues:
-        #print(issue)
+        print(issue)
         open_date = datetime.strptime(issue[0], "%Y-%m-%d")
         if(issue[1] == "None"):
             Issue_Spoilage.append(day - open_date)
