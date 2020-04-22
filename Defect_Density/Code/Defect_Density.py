@@ -7,33 +7,6 @@ def Calculate_Defect_Density(c, conn, LoC, Open_BF):
         Defect_Density = Open_BF / LoC
     return Defect_Density
 
-def Calculate_Issue_Spoilage(c, conn, Issues, day):
-    Issue_Spoilage = []
-    total = 0
-
-    for issue in Issues:
-        #print(issue)
-        open_date = datetime.strptime(issue[0], "%Y-%m-%d")
-        if(issue[1] == "None"):
-            Issue_Spoilage.append(day - open_date)
-        else:
-            Issue_Spoilage.append((day - open_date).days)
-
-    if not Issue_Spoilage:
-        Min = 0
-        Max = 0
-        Avg = 0
-    else:
-        Min = min(Issue_Spoilage) 
-        Max = max(Issue_Spoilage)
-        
-        for i in Issue_Spoilage:
-            total = total + i
-
-        Avg = total / len(Issue_Spoilage)
-
-    return Min, Max, Avg
-
 def Main(c, conn, days):
     #First Pull down all of the values and loop through them one day at a time
     

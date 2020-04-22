@@ -11,7 +11,7 @@ import json
 # TODO - CSV will have rows be times and columns be metrics #
 # TODO - Make python scripts for number of lines of code, commits, number of letters in code, and issues #
 
-token = "33c0a6b121c88f6959cc5ce9fc99143c2ef77966"
+token = "5a9d2c7a79b864133c19c9f890d77b2bae4e8ebe"
 
 # Header with my token
 headers = {"Authorization": "token " + token}
