@@ -27,19 +27,19 @@ This initializes the class and sets class specific variables.
         '''
 Returns the JSON data of the commits GitHub API endpoint as a dict.
         '''
-        return self.access_GitHubAPISpecificEndpoint(endpoint="/commits?state=all")
+        return self.access_GitHubAPISpecificEndpoint(endpoint="/commits?state=all&per_page=100")
     
     def access_GitHubRepoIssues(self)  ->  dict:
         '''
 Returns the JSON data of the issues GitHub API endpoint as a dict.
         '''
-        return self.access_GitHubAPISpecificEndpoint(endpoint="/issues?state=all")
+        return self.access_GitHubAPISpecificEndpoint(endpoint="/issues?state=all&per_page=100")
 
     def access_GitHubRepoPulls(self)    ->  dict:
         '''
 Returns the JSON data of the pulls GitHub API endpoint as a dict.
         '''
-        return self.access_GitHubAPISpecificEndpoint(endpoint="/pulls?state=all")
+        return self.access_GitHubAPISpecificEndpoint(endpoint="/pulls?state=all&per_page=100")
 
     def build_RequestObj(self, url:str=None)    ->  Request:
         '''

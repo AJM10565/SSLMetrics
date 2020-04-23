@@ -49,14 +49,18 @@ Calls classes and methods to analyze and interpret data.
         # Bewary of changing
         for foo in datetimeList:
 
+            date = datetime.strptime(foo[:10], "%Y-%m-%d")
+
+            date = str(date)
+
             self.dbCursor.execute(
-                "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")
+                "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + date + "');")
             rows = self.dbCursor.fetchall()
             commits = rows[0][0]
 
-            sql = "INSERT INTO MASTER (date, commits) VALUES (?,?);"
+            sql = "INSERT INTO MASTER (date, commits) VALUES (?,?) ON CONFLICT(date) DO UPDATE SET commits = (?);"
             self.dbCursor.execute(
-                sql, (foo, str(commits)))
+                sql, (date, str(commits), str(commits)))
 
             self.dbConnection.commit()
 

@@ -6,9 +6,9 @@ def open_connection(repo_name):
 This is some SQL code that creates the tables and columns in a database named after the repository its data is holding.
     '''    
     try:
-        connection = sqlite3.connect('/metrics/' + str(repo_name) + '_historical.db')
+        connection = sqlite3.connect('/metrics/' + str(repo_name) + '.db')
     except sqlite3.OperationalError:
-        connection = sqlite3.connect('/metrics/' + str(repo_name) + '_historical.db')
+        connection = sqlite3.connect('/metrics/' + str(repo_name) + '.db')
 
     cursor = connection.cursor()
 
@@ -77,12 +77,12 @@ This is some SQL code that creates the tables and columns in a database named af
                     comment_updated_at VARCHAR(3000) ,
                     comment_body VARCHAR(3000)) ;''')
 
-	# Create table - MASTER
-    cursor.execute("CREATE TABLE IF NOT EXISTS MASTER(date VARCHAR(300), commits INT(3000), issues INT(3000), defect_density INT(3000), issue_spoilage_avg INT(3000), issue_spoilage_max INT(3000), issue_spoilage_min INT(3000));")
+# Create table - MASTER
+    cursor.execute("CREATE TABLE IF NOT EXISTS MASTER(date DATE, commits INT(3000), issues INT(3000), defect_density INT(3000), issue_spoilage_avg INT(3000), issue_spoilage_max INT(3000), issue_spoilage_min INT(3000), lines_of_code INT(300), num_of_chars INT(300), PRIMARY KEY (date));")
 
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS LINES_OF_CODE_NUM_OF_CHARS
-            (date VARCHAR(300) ,
+            (date DATE,
             oid VARCHAR(3000),
             total_lines VARCHAR(3000),
             total_chars VARCHAR(3000));''')

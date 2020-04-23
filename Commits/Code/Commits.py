@@ -121,5 +121,6 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                             self.responseHeaders = self.gha.get_ResponseHeaders()
                             self.parser()   # Recursive
             except KeyError:    # Raises if there is no key Link
+                print(self.responseHeaders)
                 break
             break

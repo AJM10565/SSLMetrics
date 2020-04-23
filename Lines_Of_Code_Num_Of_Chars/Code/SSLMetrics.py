@@ -41,6 +41,7 @@ Will also generate the keys.txt file, get data from it, and potentially write da
         # Add unit test to check for self.githubURL is updated after this function
         # Add unit test to check if both self.githubURL and self.githubToken are updated after this function
         # Add unit test to check if self.githubToken is not updated if there is no githubToken after this function
+        
         if len(self.args) > 2:
             sys.exit("Too Many Args")
         try:
@@ -80,6 +81,7 @@ Further checks are made on the URL in the GitHubAPI.py file. It is possible for 
         if len(foo) > 5:
             sys.exit("Invalid URL Arg")
 
+        print(foo[-2])
         self.githubUser = foo[-2]
         self.githubRepo = foo[-1]
 

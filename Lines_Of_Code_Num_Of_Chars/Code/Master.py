@@ -1,12 +1,10 @@
 from datetime import datetime, timedelta
 from githubAPI import GitHubAPI
 from sqlite3 import Cursor, Connection
-import Commits
 # import Issues
 # import Pulls
 
-
-# import Lines_Of_Code_And_Num_Of_Chars
+import Lines_Of_Code_And_Num_Of_Chars
 
 class Logic:
     '''
@@ -60,31 +58,29 @@ Calls classes and methods to analyze and interpret data.
         # Issues.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],
         #              cursor=self.dbCursor, connection=self.dbConnection).parser()
 
-        Lines_Of_Code_And_Num_Of_Chars.Main(username, repository, self.dbCursor, self.dbConnection)
+        Lines_Of_Code_And_Num_Of_Chars.Main(self.githubUser, self.githubRepo, self.dbCursor, self.dbConnection, self.githubToken)
 
         # Adds all of the datetimes to the SQL database
         # Bewary of changing
         for foo in datetimeList:
 
+            date = datetime.strptime(foo[:10], "%Y-%m-%d")
+            date = str(date)
+
             self.dbCursor.execute(
-                "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + foo + "');")
+                "SELECT total_lines, total_chars FROM LINES_OF_CODE_NUM_OF_CHARS WHERE date(date) == (select date(max(date)) from LINES_OF_CODE_NUM_OF_CHARS where date(date) <= date('" + date + "'));")
             rows = self.dbCursor.fetchall()
-            commits = rows[0][0]
+            
+            try:
+                lines = rows[0][0]
+                chars = rows[0][1]
+            except:
+                lines = 0
+                chars = 0
 
-            # self.dbCursor.execute(
-            #     "SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + foo + "');")
-            # rows = self.dbCursor.fetchall()
-            # issues = rows[0][0]
-
-            # self.dbCursor.execute(
-            #     "SELECT COUNT(*) FROM PULLREQUESTS WHERE date(created_at) <= date('" + foo + "');")
-            # rows = self.dbCursor.fetchall()
-            # pull_requests = rows[0][0]
-
-            # sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
-            sql = "INSERT INTO MASTER (date, commits) VALUES (?,?);"
+            sql = "INSERT INTO MASTER (date, lines_of_code, num_of_chars) VALUES (?,?,?) ON CONFLICT(date) DO UPDATE SET lines_of_code = (?), num_of_chars = (?);"
             self.dbCursor.execute(
-                sql, (foo, str(commits)))
+                sql, (date, str(lines), str(chars), str(lines), str(chars)))
 
             self.dbConnection.commit()
 

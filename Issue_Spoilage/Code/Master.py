@@ -65,27 +65,19 @@ Calls classes and methods to analyze and interpret data.
         # Bewary of changing
         for foo in datetimeList:
 
+            date = datetime.strptime(foo[:10], "%Y-%m-%d")
+            date = str(date)
+
             self.dbCursor.execute(
-                "SELECT Avg, Min, Max FROM ISSUE_SPOILAGE WHERE date(date) == date('" + foo + "');")
+                "SELECT Avg, Min, Max FROM ISSUE_SPOILAGE WHERE date(date) == date('" + date + "');")
             rows = self.dbCursor.fetchall()
             Avg = rows[0][0]
             Min = rows[0][1]
             Max = rows[0][2]
 
-            # self.dbCursor.execute(
-            #     "SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + foo + "');")
-            # rows = self.dbCursor.fetchall()
-            # issues = rows[0][0]
-
-            # self.dbCursor.execute(
-            #     "SELECT COUNT(*) FROM PULLREQUESTS WHERE date(created_at) <= date('" + foo + "');")
-            # rows = self.dbCursor.fetchall()
-            # pull_requests = rows[0][0]
-
-            # sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
-            sql = "INSERT INTO MASTER (date, issue_spoilage_avg, issue_spoilage_min, issue_spoilage_max) VALUES (?,?,?,?);"
+            sql = "INSERT INTO MASTER (date, issue_spoilage_avg, issue_spoilage_min, issue_spoilage_max) VALUES (?,?,?,?) ON CONFLICT(date) DO UPDATE SET issue_spoilage_avg = (?), issue_spoilage_min = (?), issue_spoilage_max = (?);"
             self.dbCursor.execute(
-                sql, (foo, str(Avg), str(Min), str(Max)))
+                sql, (date, str(Avg), str(Min), str(Max), str(Avg), str(Min), str(Max)))
 
             self.dbConnection.commit()
 

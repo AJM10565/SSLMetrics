@@ -5,16 +5,7 @@ from collections import OrderedDict
 from datetime import datetime
 import json
 
-# TODO - Make the data output into a CSV format #
-# TODO - Number of collaborators #
-# TODO - Pull requests, forks, branches #
-# TODO - CSV will have rows be times and columns be metrics #
-# TODO - Make python scripts for number of lines of code, commits, number of letters in code, and issues #
-
-token = "0338d16e907b96b36d756ade2df178b4728cd0ee"
-
-# Header with my token
-headers = {"Authorization": "token " + token}
+global headers
 
 # A simple function to use requests.post to make the API call. Note the json= section.
 def run_query(query): 
@@ -26,6 +17,7 @@ def run_query(query):
 
 # A function that returns ther dates and oids of a github repo
 def get_commit_dates_and_oids(dates_and_oids, un, rn):
+
     # Execute the query
     result = run_query(first_query % (un, rn)) 
 
@@ -128,7 +120,7 @@ first_query = """
     resetAt
   }
   
-  repository(owner: "%s" name:"%s"){
+  repository(owner: "%s" name: "%s"){
 
     object(expression: "master") {
       ... on Commit {
@@ -240,7 +232,13 @@ third_query = """
 }
 
 """
-def Main(username, repo_name, c, conn):
+def Main(username, repo_name, c, conn, token):
+
+    # Header with my token
+    global headers 
+    
+    headers = {"Authorization": "token " + token}
+    
     # An ordered dict of all of the commit dates and OIDs
     dates_and_oids = OrderedDict([])
 
@@ -255,4 +253,4 @@ def Main(username, repo_name, c, conn):
     num_o_lines, num_o_chars = get_lines_of_code_and_num_of_chars(dates_and_oids, username, repo_name, c, conn)
 
     
-run_query(query=first_query)
+# run_query(query=first_query)

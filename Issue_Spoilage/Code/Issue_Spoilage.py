@@ -34,7 +34,7 @@ def Main(c, conn, days):
 
     #Now loop!
     for day in days:
-        print(day)
+        # print(day)
 
         Num_Of_Open_BF = "" #Fill this with the total number of open BF on that date
         Num_Of_Open_FR = "" #Fill this with the total number of open FR on that date
@@ -54,11 +54,11 @@ def Main(c, conn, days):
 
         c.execute("SELECT date(created_at), date(closed_at) FROM ISSUES WHERE date(created_at) <= date('" + str(day) + "') AND date(closed_at) >= date('" + str(day) + "') OR date(created_at) <= date('" + str(day) + "') AND closed_at = 'None';")
         Issues = c.fetchall()
-        print(Issues)
+        # print(Issues)
         conn.commit()
 
         Min, Max, Avg = Calculate_Issue_Spoilage(c, conn, Issues, day)
-        print("Min:" + str(Min) + " Max: " + str(Max) + " Avg: " + str(Avg))
+        # print("Min:" + str(Min) + " Max: " + str(Max) + " Avg: " + str(Avg))
 
         sql = "INSERT INTO ISSUE_SPOILAGE (date, min, max, avg) VALUES (?,?,?,?);"
         c.execute(sql, (str(day), str(Min), str(Max), str(Avg)))

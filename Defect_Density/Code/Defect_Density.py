@@ -7,33 +7,6 @@ def Calculate_Defect_Density(c, conn, LoC, Open_BF):
         Defect_Density = Open_BF / LoC
     return Defect_Density
 
-def Calculate_Issue_Spoilage(c, conn, Issues, day):
-    Issue_Spoilage = []
-    total = 0
-
-    for issue in Issues:
-        #print(issue)
-        open_date = datetime.strptime(issue[0], "%Y-%m-%d")
-        if(issue[1] == "None"):
-            Issue_Spoilage.append(day - open_date)
-        else:
-            Issue_Spoilage.append((day - open_date).days)
-
-    if not Issue_Spoilage:
-        Min = 0
-        Max = 0
-        Avg = 0
-    else:
-        Min = min(Issue_Spoilage) 
-        Max = max(Issue_Spoilage)
-        
-        for i in Issue_Spoilage:
-            total = total + i
-
-        Avg = total / len(Issue_Spoilage)
-
-    return Min, Max, Avg
-
 def Main(c, conn, days):
     #First Pull down all of the values and loop through them one day at a time
     
@@ -41,7 +14,7 @@ def Main(c, conn, days):
 
     #Now loop!
     for day in days:
-        print(day)
+        #print(day)
 
         Num_Of_Open_BF = "" #Fill this with the total number of open BF on that date
         Num_Of_Open_FR = "" #Fill this with the total number of open FR on that date
@@ -65,7 +38,7 @@ def Main(c, conn, days):
             Num_Of_Open_BF = int(c.fetchall()[0][0])
         except:
             Num_Of_Open_BF = 0
-        print(Num_Of_Open_BF)
+        #print(Num_Of_Open_BF)
         conn.commit()
 
         c.execute("select total_lines from LINES_OF_CODE_NUM_OF_CHARS where date(date) = (select max(date(date)) from LINES_OF_CODE_NUM_OF_CHARS where date(date) <= date('" + str(day) + "'));")
@@ -73,11 +46,11 @@ def Main(c, conn, days):
             LOC = int(c.fetchall()[0][0])
         except:
             LOC = 0
-        print(LOC)
+        #print(LOC)
         conn.commit()
 
         Defect_Den = Calculate_Defect_Density(c, conn, LOC, Num_Of_Open_BF)
-        print(Defect_Den)
+        #print(Defect_Den)
 
         sql = "INSERT INTO DEFECT_DENSITY (date, DD) VALUES (?,?);"
         c.execute(sql, (str(day), str(Defect_Den)))
