@@ -106,7 +106,7 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
 
             # Below checks to see if there are any links related to the data returned
             try:
-                foo = self.responseHeaders["Link"]
+                foo = self.responseHeaders["link"]
                 if 'rel="next"' not in foo:  # Breaks if there is no rel="next" text in key Link
                     break
 
