@@ -14,7 +14,7 @@ def Main(c, conn, days):
 
     #Now loop!
     for day in days:
-        print(day)
+        #print(day)
 
         Num_Of_Open_BF = "" #Fill this with the total number of open BF on that date
         Num_Of_Open_FR = "" #Fill this with the total number of open FR on that date
@@ -38,7 +38,7 @@ def Main(c, conn, days):
             Num_Of_Open_BF = int(c.fetchall()[0][0])
         except:
             Num_Of_Open_BF = 0
-        print(Num_Of_Open_BF)
+        #print(Num_Of_Open_BF)
         conn.commit()
 
         c.execute("select total_lines from LINES_OF_CODE_NUM_OF_CHARS where date(date) = (select max(date(date)) from LINES_OF_CODE_NUM_OF_CHARS where date(date) <= date('" + str(day) + "'));")
@@ -46,11 +46,11 @@ def Main(c, conn, days):
             LOC = int(c.fetchall()[0][0])
         except:
             LOC = 0
-        print(LOC)
+        #print(LOC)
         conn.commit()
 
         Defect_Den = Calculate_Defect_Density(c, conn, LOC, Num_Of_Open_BF)
-        print(Defect_Den)
+        #print(Defect_Den)
 
         sql = "INSERT INTO DEFECT_DENSITY (date, DD) VALUES (?,?);"
         c.execute(sql, (str(day), str(Defect_Den)))

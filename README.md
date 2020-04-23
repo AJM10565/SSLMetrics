@@ -55,3 +55,17 @@ copy data:
 #### Running FE Flask Server to Display Data
 
 `docker run -v metrics:/metrics -p 5000:5000 <name_of_image>`
+
+#### Running the script to run everything
+
+To run the scripts, run the following commands while in the top SSLMetrics directory:
+`
+chmod +x ./all_metrics.sh
+chmod +x ./Commits/metrics.sh
+chmod +x ./Issues/metrics.sh
+chmod +x ./Lines_Of_Code_Num_Of_Chars/metrics.sh
+chmod +x ./Issue_Spoilage/metrics.sh
+chmod +x ./Defect_Density/metrics.sh
+./all_metrics.sh github.com/<owner>/<repo_name> <api_token>
+`
+Note: the chmod commands need to be run only initially. After that, just run the all_metrics.sh script with the GitHub repo as the command line argument.
