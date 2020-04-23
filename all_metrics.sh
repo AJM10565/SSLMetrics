@@ -1,16 +1,31 @@
 #!/usr/bin/env bash
 
+echo "Running all metrics scripts for repository: $1"
+
+docker volume create metrics
+
 # Run Commits
-./Commits/metrics.sh
+cd Commits
+./metrics.sh $1
+cd ..
 
 # Run Issues
-./Issues/metrics.sh
+cd Issues
+./metrics.sh $1
+cd ..
 
 # Run Lines of Code
-./Lines_Of_Code/metrics.sh
+cd Lines_Of_Code
+./metrics.sh $1
+cd ..
 
 # Run Issue_Spoilage
-./Issue_Spoilage/metrics.sh
+cd Issue_Spoilage
+./metrics.sh $1
+cd ..
 
 # Run Defect Density (this command should also copy volume content to the current dir)
-./Defect_Density/metrics.sh
+cd Defect_Density
+./metrics.sh $1
+cd ..
+

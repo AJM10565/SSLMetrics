@@ -4,7 +4,7 @@
 # DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 #create volume
-docker volume create metrics
+# docker volume create metrics
 
 # build and run docker, then get container id
 docker build . -t code
@@ -18,6 +18,6 @@ CONTAINERID=$(docker ps -q -n 1)
 # remove containers, images, and volumes
 echo "stopping docker"
 docker stop $CONTAINERID
-docker system prune -a --volumes
+# docker system prune -a --volumes
 echo "Metrics created"
 
