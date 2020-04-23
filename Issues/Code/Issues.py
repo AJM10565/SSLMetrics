@@ -186,7 +186,7 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
 
             # Below checks to see if there are any links related to the data returned
             try:
-                foo = self.responseHeaders["link"]
+                foo = self.responseHeaders["Link"]
                 
                 if 'rel="next"' not in foo:  # Breaks if there is no rel="next" text in key Link
                     break
@@ -201,6 +201,5 @@ Actually scrapes, sanitizes, and stores the data returned from the API call.
                             self.responseHeaders = self.gha.get_ResponseHeaders()
                             self.parser()   # Recursive
             except KeyError:    # Raises if there is no key Link
-                print(self.responseHeaders)
                 break
             break

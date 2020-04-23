@@ -65,25 +65,20 @@ Calls classes and methods to analyze and interpret data.
         # Bewary of changing
         for foo in datetimeList:
 
+            date = datetime.strptime(foo[:10], "%Y-%m-%d")
+            date = str(date)
+
             self.dbCursor.execute(
-                "SELECT DD FROM DEFECT_DENSITY WHERE date(date) == date('" + foo + "');")
+                "SELECT DD FROM DEFECT_DENSITY WHERE date(date) == date('" + date + "');")
             rows = self.dbCursor.fetchall()
-            commits = rows[0][0]
+            try:
+                commits = rows[0][0]
+            except:
+                commits = 0
 
-            # self.dbCursor.execute(
-            #     "SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + foo + "');")
-            # rows = self.dbCursor.fetchall()
-            # issues = rows[0][0]
-
-            # self.dbCursor.execute(
-            #     "SELECT COUNT(*) FROM PULLREQUESTS WHERE date(created_at) <= date('" + foo + "');")
-            # rows = self.dbCursor.fetchall()
-            # pull_requests = rows[0][0]
-
-            # sql = "INSERT INTO MASTER (date, commits, issues, pull_requests) VALUES (?,?,?,?);"
-            sql = "INSERT INTO MASTER (date, defect_density) VALUES (?,?);"
+            sql = "INSERT INTO MASTER (date, defect_density) VALUES (?,?) ON CONFLICT(date) DO UPDATE SET defect_density = (?);"
             self.dbCursor.execute(
-                sql, (foo, str(commits)))
+                sql, (date, str(commits), str(commits)))
 
             self.dbConnection.commit()
 

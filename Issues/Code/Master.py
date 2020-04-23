@@ -55,14 +55,17 @@ Calls classes and methods to analyze and interpret data.
         # Bewary of changing
         for foo in datetimeList:
 
+            date = datetime.strptime(foo[:10], "%Y-%m-%d")
+            date = str(date)
+
             self.dbCursor.execute(
-                "SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + foo + "');")
+                "SELECT COUNT(*) FROM ISSUES WHERE date(created_at) <= date('" + date + "');")
             rows = self.dbCursor.fetchall()
             issues = rows[0][0]
 
-            sql = "INSERT INTO MASTER (date, issues) VALUES (?,?);"
+            sql = "INSERT INTO MASTER (date, issues) VALUES (?,?) ON CONFLICT(date) DO UPDATE SET issues = (?);"
             self.dbCursor.execute(
-                sql, (foo, str(issues)))
+                sql, (date, str(issues), str(issues)))
 
             self.dbConnection.commit()
 
