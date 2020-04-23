@@ -5,16 +5,7 @@ from collections import OrderedDict
 from datetime import datetime
 import json
 
-# TODO - Make the data output into a CSV format #
-# TODO - Number of collaborators #
-# TODO - Pull requests, forks, branches #
-# TODO - CSV will have rows be times and columns be metrics #
-# TODO - Make python scripts for number of lines of code, commits, number of letters in code, and issues #
-
-token = "b765be78ac68e2fed258cd24ba69a3cc4eab0f58"
-
-# Header with my token
-headers = {"Authorization": "token " + token}
+global headers
 
 # A simple function to use requests.post to make the API call. Note the json= section.
 def run_query(query): 
@@ -241,7 +232,13 @@ third_query = """
 }
 
 """
-def Main(username, repo_name, c, conn):
+def Main(username, repo_name, c, conn, token):
+
+    # Header with my token
+    global headers 
+    
+    headers = {"Authorization": "token " + token}
+    
     # An ordered dict of all of the commit dates and OIDs
     dates_and_oids = OrderedDict([])
 

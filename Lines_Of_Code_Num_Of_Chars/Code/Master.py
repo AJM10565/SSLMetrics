@@ -58,7 +58,7 @@ Calls classes and methods to analyze and interpret data.
         # Issues.Logic(gha=self.gha, data=self.data[0], responseHeaders=self.data[1],
         #              cursor=self.dbCursor, connection=self.dbConnection).parser()
 
-        Lines_Of_Code_And_Num_Of_Chars.Main(self.githubUser, self.githubRepo, self.dbCursor, self.dbConnection)
+        Lines_Of_Code_And_Num_Of_Chars.Main(self.githubUser, self.githubRepo, self.dbCursor, self.dbConnection, self.githubToken)
 
         # Adds all of the datetimes to the SQL database
         # Bewary of changing
