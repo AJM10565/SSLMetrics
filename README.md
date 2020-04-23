@@ -73,5 +73,6 @@ To run the scripts, run the following commands while in the top SSLMetrics direc
 `chmod +x ./Defect_Density/metrics.sh`
 
 `./all_metrics.sh github.com/<owner>/<repo_name> <api_token>`
-`
+
+
 Note: the chmod commands need to be run only initially. After that, just run the all_metrics.sh script with the GitHub repo as the command line argument.
