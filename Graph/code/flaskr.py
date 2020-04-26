@@ -32,7 +32,7 @@ def init_db():
 def stacked_bar_chart():
     # Read query results into a pandas DataFrame
     con = connect_db()
-    df = pd.read_sql_query("SELECT * from MASTER", con)
+    df = pd.read_sql_query("SELECT * from MASTER ORDER BY date DESC", con)
 
     # verify that result of SQL query is stored in the dataframe
     print(df.to_json())
