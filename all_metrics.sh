@@ -29,4 +29,10 @@ cd Defect_Density
 ./metrics.sh $1 $2
 cd ..
 
+# Run Graph
+cd Graph
+./metrics.sh $1
+cd ..
+
+
 
