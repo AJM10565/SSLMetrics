@@ -6,14 +6,17 @@ import pandas as pd
 from flask import Flask, g, render_template
 from contextlib import closing
 
+# Extracting name from args
+dbname = sys.argv[1].split('/')[2]
+
+
 # create our little application :)
 app = Flask(__name__)
 
 # configuration
 app.config.update(dict(
-    # temporarily testing SSLMetrics repo data
-    DATABASE='/metrics/' + str(sys.argv[1]) + '.db',
-))
+    DATABASE='/metrics/' + str(dbname) + '.db',
+    ))
 
 
 def connect_db():
