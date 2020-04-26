@@ -44,11 +44,13 @@ def stacked_bar_chart():
     issues = df['issues'].values.tolist()
     lines_of_code = df['lines_of_code'].values.tolist()
     issue_spoilage_avg = df['issue_spoilage_avg'].values.tolist()
-    issue_spoilage_min = df['issue_spoilage_min'].values.tolist()
-    issue_spoilage_max = df['issue_spoilage_max'].values.tolist()
+    #issue_spoilage_min = df['issue_spoilage_min'].values.tolist()
+    #issue_spoilage_max = df['issue_spoilage_max'].values.tolist()
     defect_density = df['defect_density'].values.tolist()
 
-    return render_template('linegraph.html', date=date, commits=commits)  # issues=issues, pull_requests=pull_requests)
+    return render_template('linegraph.html', date=date, commits=commits, issues=issues,
+                           lines_of_code=lines_of_code, defect_density=defect_density,
+                           issue_spoilage_avg=issue_spoilage_avg)
 
 
 if __name__ == '__main__':
