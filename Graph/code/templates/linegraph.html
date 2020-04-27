@@ -5,10 +5,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 </head>
 <body>
-  <canvas id="myChart" width="1000" height="400"></canvas>
+  <canvas id="myChart1" width="1000" height="400"></canvas>
+  <canvas id="myChart2" width="1000" height="400"></canvas>
+  <canvas id="myChart3" width="1000" height="400"></canvas>
+  <canvas id="myChart4" width="1000" height="400"></canvas>
+  <canvas id="myChart5" width="1000" height="400"></canvas>
+
+
+
+
+
   <script>
     // Get the context of the canvas element we want to select
-    var ctx = document.getElementById("myChart").getContext("2d");
+    var ctx1 = document.getElementById("myChart1").getContext("2d");
+    var ctx2 = document.getElementById("myChart2").getContext("2d");
+    var ctx3 = document.getElementById("myChart3").getContext("2d");
+    var ctx4 = document.getElementById("myChart4").getContext("2d");
+    var ctx5 = document.getElementById("myChart5").getContext("2d");
 
     var date = {{date|safe}};
     var commits = {{commits|safe}};
@@ -17,10 +30,9 @@
     var issue_spoilage_avg = {{issue_spoilage_avg|safe}};
     var lines_of_code  = {{lines_of_code|safe}};
 
-    var data = {
+    var data1 = {
         labels: date,
-        datasets: [
-            {
+        datasets: [{
                 label: "My Commits",
                 fillColor: "rgba(220,220,220,0.2)",
                 strokeColor: "rgba(220,220,220,1)",
@@ -29,8 +41,26 @@
                 pointHighlightFill: "#fff",
                 pointHighlightStroke: "rgba(220,220,220,1)",
                 data: commits
-            },
-             {
+            }],
+        options: {
+            scales: {
+                xAxes: [{
+                        type: 'time',
+                        position: 'bottom',
+                        time: {
+                          displayFormats: {'day': 'MM/YY'},
+                          tooltipFormat: 'DD/MM/YY',
+                          unit: 'month',
+                         }
+                      }],
+                }
+            }
+    };
+
+    var data2 = {
+        labels: date,
+        datasets: [
+            {
                  label: "My Issues",
                  fillColor: "rgba(151,187,205,0.2)",
                  strokeColor: "rgba(151,187,205,1)",
@@ -39,8 +69,14 @@
                  pointHighlightFill: "#fff",
                  pointHighlightStroke: "rgba(151,187,205,1)",
                  data: issues
-             },
-             {
+             }
+
+        ]
+    };
+    var data3 = {
+        labels: date,
+        datasets: [
+            {
                  label: "My Defect_Density",
                  fillColor: "rgba(151,187,205,0.2)",
                  strokeColor: "rgba(151,187,205,1)",
@@ -49,8 +85,14 @@
                  pointHighlightFill: "#fff",
                  pointHighlightStroke: "rgba(151,187,205,1)",
                  data: defect_density
-             },
-             {
+             }
+
+        ]
+    };
+    var data4 = {
+        labels: date,
+        datasets: [
+            {
                  label: "My Issue_Spoilage_Avg",
                  fillColor: "rgba(151,187,205,0.2)",
                  strokeColor: "rgba(151,187,205,1)",
@@ -59,8 +101,14 @@
                  pointHighlightFill: "#fff",
                  pointHighlightStroke: "rgba(151,187,205,1)",
                  data: issue_spoilage_avg
-             },
-             {
+             }
+
+        ]
+    };
+    var data5 = {
+        labels: date,
+        datasets: [
+            {
                  label: "My Lines_of_Code",
                  fillColor: "rgba(151,187,205,0.2)",
                  strokeColor: "rgba(151,187,205,1)",
@@ -73,7 +121,14 @@
 
         ]
     };
-    var myLineChart = new Chart(ctx).Line(data);
+
+    var myLineChart1 = new Chart(ctx1).Line(data1);
+    var myLineChart2 = new Chart(ctx2).Line(data2);
+    var myLineChart3 = new Chart(ctx3).Line(data3);
+    var myLineChart4 = new Chart(ctx4).Line(data4);
+    var myLineChart5 = new Chart(ctx5).Line(data5);
+
+
   </script>
 </body>
 </html>
