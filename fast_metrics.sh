@@ -4,14 +4,14 @@ echo "Running all metrics scripts for repository: $1"
 
 docker volume create metrics
 
-# Run GitModule
-cd GitModule
-./metrics.sh $1
-cd ..
-
 # Run Issues
 cd Issues
 ./metrics.sh $1 $2
+cd ..
+
+# Run GitModule
+cd GitModule
+./metrics.sh $1
 cd ..
 
 # Run Issue_Spoilage
