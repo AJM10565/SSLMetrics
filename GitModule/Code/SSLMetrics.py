@@ -1,6 +1,6 @@
 import os
 import sys
-import datetime
+from datetime import datetime, timedelta
 from tqdm import tqdm
 import sqlite3
 
@@ -14,7 +14,6 @@ def main():
     repo_address = sys.argv[1]
     foo = repo_address.split("/")
     githubRepo = foo[-1]
-    print(githubRepo)
 
     cwd = os.getcwd()
     os.system("rm -rf temp")
@@ -59,7 +58,8 @@ def database_upload(counts, repo_name):
     cursor = connection.cursor()
 
     sql3 = "SELECT date FROM MASTER;"
-    datetimeList = cursor.execute(sql3)
+    cursor.execute(sql3)
+    datetimeList = cursor.fetchall()
 
     for key, value in counts.items():
         
@@ -80,12 +80,12 @@ def database_upload(counts, repo_name):
 
     for foo in datetimeList:
 
-        date = datetime.strptime(foo[:10], "%Y-%m-%d")
+        date = datetime.strptime(foo[0][:10], "%Y-%m-%d")
 
         date = str(date)
 
         cursor.execute(
-            "SELECT COUNT(*) FROM COMMITS WHERE date(committer_date) <= date('" + date + "');")
+            "SELECT COUNT(*) FROM COMMITS WHERE date(author_date) <= date('" + date + "');")
         rows = cursor.fetchall()
         commits = rows[0][0]
 
