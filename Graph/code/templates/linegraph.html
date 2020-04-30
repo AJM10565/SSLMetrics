@@ -11,10 +11,6 @@
   <canvas id="myChart4" width="1000" height="400"></canvas>
   <canvas id="myChart5" width="1000" height="400"></canvas>
 
-
-
-
-
   <script>
     // Get the context of the canvas element we want to select
     var ctx1 = document.getElementById("myChart1").getContext("2d");
@@ -22,6 +18,7 @@
     var ctx3 = document.getElementById("myChart3").getContext("2d");
     var ctx4 = document.getElementById("myChart4").getContext("2d");
     var ctx5 = document.getElementById("myChart5").getContext("2d");
+    //ctx1.globalAlpha = 0.2; experimenting with setting a transparency value for background color
 
     var date = {{date|safe}};
     var commits = {{commits|safe}};
@@ -30,16 +27,32 @@
     var issue_spoilage_avg = {{issue_spoilage_avg|safe}};
     var lines_of_code  = {{lines_of_code|safe}};
 
+    // generates random colors from hex values
+    function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+        }
+    return color;
+    }
+    // assigned colors for each of the metrics
+    randomColorC = getRandomColor()
+    randomColorI = getRandomColor()
+    randomColorDD = getRandomColor()
+    randomColorISA = getRandomColor()
+    randomColorLOC = getRandomColor()
+
     var data1 = {
         labels: date,
         datasets: [{
                 label: "My Commits",
-                fillColor: "rgba(220,220,220,0.2)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
+                fillColor: randomColorC,
+                strokeColor: randomColorC,
+                pointColor: randomColorC,
                 pointStrokeColor: "#fff",
                 pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(220,220,220,1)",
+                pointHighlightStroke: randomColorC,
                 data: commits
             }],
         options: {
@@ -62,12 +75,12 @@
         datasets: [
             {
                  label: "My Issues",
-                 fillColor: "rgba(151,187,205,0.2)",
-                 strokeColor: "rgba(151,187,205,1)",
-                 pointColor: "rgba(151,187,205,1)",
+                 fillColor: randomColorI,
+                 strokeColor: randomColorI,
+                 pointColor: randomColorI,
                  pointStrokeColor: "#fff",
                  pointHighlightFill: "#fff",
-                 pointHighlightStroke: "rgba(151,187,205,1)",
+                 pointHighlightStroke: randomColorI,
                  data: issues
              }
 
@@ -78,12 +91,12 @@
         datasets: [
             {
                  label: "My Defect_Density",
-                 fillColor: "rgba(151,187,205,0.2)",
-                 strokeColor: "rgba(151,187,205,1)",
-                 pointColor: "rgba(151,187,205,1)",
+                 fillColor: randomColorDD,
+                 strokeColor: randomColorDD,
+                 pointColor: randomColorDD,
                  pointStrokeColor: "#fff",
                  pointHighlightFill: "#fff",
-                 pointHighlightStroke: "rgba(151,187,205,1)",
+                 pointHighlightStroke: randomColorDD,
                  data: defect_density
              }
 
@@ -94,12 +107,12 @@
         datasets: [
             {
                  label: "My Issue_Spoilage_Avg",
-                 fillColor: "rgba(151,187,205,0.2)",
-                 strokeColor: "rgba(151,187,205,1)",
-                 pointColor: "rgba(151,187,205,1)",
+                 fillColor: randomColorISA,
+                 strokeColor: randomColorISA,
+                 pointColor: randomColorISA,
                  pointStrokeColor: "#fff",
                  pointHighlightFill: "#fff",
-                 pointHighlightStroke: "rgba(151,187,205,1)",
+                 pointHighlightStroke: randomColorISA,
                  data: issue_spoilage_avg
              }
 
@@ -111,11 +124,11 @@
             {
                  label: "My Lines_of_Code",
                  fillColor: "rgba(151,187,205,0.2)",
-                 strokeColor: "rgba(151,187,205,1)",
-                 pointColor: "rgba(151,187,205,1)",
+                 strokeColor: randomColorLOC,
+                 pointColor: randomColorLOC,
                  pointStrokeColor: "#fff",
                  pointHighlightFill: "#fff",
-                 pointHighlightStroke: "rgba(151,187,205,1)",
+                 pointHighlightStroke: randomColorLOC,
                  data: lines_of_code
              }
 
