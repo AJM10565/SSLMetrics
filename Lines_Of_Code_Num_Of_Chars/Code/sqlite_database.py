@@ -83,9 +83,8 @@ This is some SQL code that creates the tables and columns in a database named af
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS LINES_OF_CODE_NUM_OF_CHARS
             (date DATE,
-            oid VARCHAR(3000),
-            total_lines VARCHAR(3000),
-            total_chars VARCHAR(3000));''')
+            id VARCHAR(3000),
+            total_lines VARCHAR(3000));''')
 
 
     connection.commit()
