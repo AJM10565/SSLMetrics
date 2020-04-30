@@ -65,7 +65,7 @@ def database_upload(counts, repo_name):
         
         line_count = value[0]
         commit_count = value[1]
-        date = value[2]
+        date = datetime.strptime(value[2][:10], "%Y-%m-%d")
         message = value[3]
         author = value[4]
 
@@ -85,7 +85,7 @@ def database_upload(counts, repo_name):
         date = str(date)
 
         cursor.execute(
-            "SELECT COUNT(*) FROM COMMITS WHERE date(author_date) <= date('" + date + "');")
+            "SELECT count FROM COMMITS WHERE date(author_date) == (select date(max(author_date)) from COMMITS where date(author_date) <= date('" + date + "'));")
         rows = cursor.fetchall()
         commits = rows[0][0]
 
