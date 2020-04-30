@@ -10,6 +10,11 @@
   <canvas id="myChart3" width="1000" height="400"></canvas>
   <canvas id="myChart4" width="1000" height="400"></canvas>
   <canvas id="myChart5" width="1000" height="400"></canvas>
+  <style>
+     #myChart1, #myChart2, #myChart3, #myChart4, #myChart5 {
+        width:100%;
+    }
+  </style>
 
   <script>
     // Get the context of the canvas element we want to select
@@ -123,7 +128,7 @@
         datasets: [
             {
                  label: "My Lines_of_Code",
-                 fillColor: "rgba(151,187,205,0.2)",
+                 fillColor: randomColorLOC,
                  strokeColor: randomColorLOC,
                  pointColor: randomColorLOC,
                  pointStrokeColor: "#fff",
