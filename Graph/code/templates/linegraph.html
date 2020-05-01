@@ -260,6 +260,7 @@
             labels: date,
             datasets: [{
                 label: "Issue Spoilage",
+                yAxisID: 'Issue Spoilage',
                 borderColor: randomColorISA,
                 strokeColor: randomColorISA,
                 pointColor: randomColorISA,
@@ -269,6 +270,7 @@
             },
             {
                 label: "Defect Density",
+                yAxisID: 'Defect Density',
                 borderColor: randomColorDD,
                 strokeColor: randomColorDD,
                 pointColor: randomColorDD,
@@ -292,7 +294,19 @@
                             labelString: 'Date'
                         },
 
-                      }]
+                      }],
+                yAxes: [{
+                        id: 'Issue Spoilage',
+                        labelString: 'Issue Spoilage Avg',
+                        type: 'linear',
+                        position: 'left',
+                        },
+                        {
+                        id: 'Defect Density',
+                        labelString: 'Issue Spoilage Avg',
+                        type: 'linear',
+                        position: 'right'
+                        }]
                 }
             }
     });
