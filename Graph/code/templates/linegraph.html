@@ -10,8 +10,10 @@
   <canvas id="myChart3" width="1000" height="400"></canvas>
   <canvas id="myChart4" width="1000" height="400"></canvas>
   <canvas id="myChart5" width="1000" height="400"></canvas>
+  <canvas id="myChart6" width="1000" height="400"></canvas>
+  <canvas id="myChart7" width="1000" height="400"></canvas>
   <style>
-     #myChart1, #myChart2, #myChart3, #myChart4, #myChart5 {
+     #myChart1, #myChart2, #myChart3, #myChart4, #myChart5, #myChart6 #myChart7 {
         width:100%;
     }
   </style>
@@ -23,7 +25,8 @@
     var ctx3 = document.getElementById("myChart3").getContext("2d");
     var ctx4 = document.getElementById("myChart4").getContext("2d");
     var ctx5 = document.getElementById("myChart5").getContext("2d");
-    //ctx1.globalAlpha = 0.2; experimenting with setting a transparency value for background color*/
+    var ctx6 = document.getElementById("myChart6").getContext("2d");
+    var ctx7 = document.getElementById("myChart7").getContext("2d");
 
     var date = {{date|safe}};
     var commits = {{commits|safe}};
@@ -54,30 +57,36 @@
         data: {
             labels: date,
             datasets: [{
-                label: "My Commits",
-                backgroundColor: randomColorC,
+                label: "Commits",
+                borderColor: randomColorC,
                 strokeColor: randomColorC,
                 pointColor: randomColorC,
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: randomColorC,
+                pointHoverBorderColor: randomColorC,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: commits
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                'month':"MMM YYYY"
-                            },
-                        distribution: 'series'
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
                         }
-                         
-                }]
-                }
+                    },
+                    ticks: {
+                        source: 'auto'
+                    }
+                      }],
+            
             }
+        }
     });
 
     var myChart2 = new Chart(ctx2, {
@@ -86,26 +95,31 @@
             labels: date,
             datasets: [{
                 label: "Issues",
-                backgroundColor: randomColorI,
-                strokeColor: randomColorC,
-                pointColor: randomColorC,
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: randomColorC,
+                borderColor: randomColorI,
+                strokeColor: randomColorI,
+                pointColor: randomColorI,
+                pointHoverBorderColor: randomColorI,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: issues
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
                         }
-                         
+                    },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }]
                 }
             }
@@ -116,30 +130,35 @@
         data: {
             labels: date,
             datasets: [{
-                label: "Defect Density ",
-                backgroundColor: randomColorDD,
-                strokeColor: randomColorC,
-                pointColor: randomColorC,
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: randomColorC,
+                label: "Defect Density",
+                borderColor: randomColorDD,
+                strokeColor: randomColorDD,
+                pointColor: randomColorDD,
+                pointHoverBorderColor: randomColorDD,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: defect_density
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
                         }
-                         
+                    },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }]
                 }
-            }
+        }
     });
 
     var myChart4 = new Chart(ctx4, {
@@ -148,26 +167,31 @@
             labels: date,
             datasets: [{
                 label: "Lines of Code",
-                backgroundColor: randomColorLOC,
-                strokeColor: randomColorC,
-                pointColor: randomColorC,
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: randomColorC,
+                borderColor: randomColorLOC,
+                strokeColor: randomColorLOC,
+                pointColor: randomColorLOC,
+                pointHoverBorderColor: randomColorLOC,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: lines_of_code
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
                         }
-                         
+                    },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }]
                 }
             }
@@ -179,31 +203,127 @@
             labels: date,
             datasets: [{
                 label: "Issue Spoilage",
-                backgroundColor: randomColorISA,
-                strokeColor: randomColorC,
-                pointColor: randomColorC,
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: randomColorC,
+                borderColor: randomColorISA,
+                strokeColor: randomColorISA,
+                pointColor: randomColorISA,
+                pointHoverBorderColor: randomColorISA,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: issue_spoilage_avg
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
                         }
-                         
+                    },
+                    ticks: {
+                        source: 'auto'
+                    }
+                      }]
+                }
+            }
+    });
+    var myChart6 = new Chart(ctx6, {
+        type: "line",
+        data: {
+            labels: date,
+            datasets: [{
+                label: "Issue Spoilage",
+                borderColor: randomColorISA,
+                strokeColor: randomColorISA,
+                pointColor: randomColorISA,
+                pointHoverBorderColor: randomColorISA,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
+                data: issue_spoilage_avg
+            },
+            {
+                label: "Defect Density",
+                borderColor: randomColorDD,
+                strokeColor: randomColorDD,
+                pointColor: randomColorDD,
+                pointHoverBorderColor: randomColorDD,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
+                data: defect_density
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
+                        }
+                    },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }]
                 }
             }
     });
 
+
+    var myChart7 = new Chart(ctx7, {
+        type: "line",
+        data: {
+            labels: date,
+            datasets: [{
+                label: "Commits",
+                borderColor: randomColorC,
+                strokeColor: randomColorC,
+                pointColor: randomColorC,
+                pointHoverBorderColor: randomColorC,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
+                data: commits
+            },
+            {
+                label: "Issues",
+                borderColor: randomColorI,
+                strokeColor: randomColorI,
+                pointColor: randomColorI,
+                pointHoverBorderColor: randomColorI,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
+                data: issues
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
+                        }
+                    },
+                    ticks: {
+                        source: 'auto'
+                    }
+                      }]
+                }
+            }
+    });
 
   </script>
 </body>
