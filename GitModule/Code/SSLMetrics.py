@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from tqdm import tqdm
 import sqlite3
 import json
+import argparse
 
 """
     Assume input is of the form: python3 LOC.py github.com/owner/repo
@@ -13,32 +14,41 @@ import json
 """
 
 
+def get_argparser():
+    # Copied and Modified from https://github.com/gkthiruvathukal/wordcount-sliding-python/blob/master/sliding-wc.py
+    parser = argparse.ArgumentParser(description="Collect all data available via git")
+    parser.add_argument("-c", "--cloc", type=str, default="/app/cloc/cloc", help="path to cloc")
+    parser.add_argument("-u", "--url", type=str, default=None, help="url to process")
+
+    return parser
+
+
 def main():
-    print(sys.platform)
-    repo_address = sys.argv[1]
+    arg_parser = get_argparser()
+    args = arg_parser.parse_args()
+    cloc = args.cloc
+    print("cloc PATH: " + cloc)
+    repo_address = args.url
+    print("repo_address: " + repo_address)
     foo = repo_address.split("/")
     githubRepo = foo[-1]
-
     cwd = os.getcwd()
     os.system("rm -rf temp")
     os.system("mkdir temp")
     os.chdir("temp")
     os.system("git clone https://" + repo_address + " >/dev/null 2>&1")
-    # os.system("git clone https://github.com/AlDanial/cloc")
-    # os.system("export PATH=cloc:$PATH")
-
+    os.chdir(githubRepo)
     hashes = os.popen('git log --format="%H"').read().split('\n')[0:-1]
     line_counts = dict.fromkeys(hashes, None)
-    loop_part(hashes, line_counts)
+    loop_part(hashes, line_counts,cloc)
     # print_part(line_counts) # DEBUG: Check output
     database_upload(line_counts, githubRepo)
     os.chdir(cwd)
     os.system("rm -rf temp")
 
 
-def get_data(commit_hash):
-
-    all_line_count_data_json = os.popen('cloc --json ' + commit_hash).read()
+def get_data(commit_hash,cloc):
+    all_line_count_data_json = os.popen(cloc +' --json ' + commit_hash).read()
     all_line_count_data = json.loads(all_line_count_data_json)
     code_line_count = all_line_count_data["SUM"]["code"]
 
@@ -52,10 +62,10 @@ def get_data(commit_hash):
     return code_line_count, commit_count, date, message, author
 
 
-def loop_part(hash_list, counts):
+def loop_part(hash_list, counts, cloc):
     for commit in tqdm(hash_list):
         # os.system("git checkout " + hash + " >/dev/null 2>&1")
-        counts[commit] = get_data(commit)
+        counts[commit] = get_data(commit, cloc)
 
 
 def print_part(counts):

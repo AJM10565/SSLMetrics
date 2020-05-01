@@ -8,7 +8,7 @@
 
 # build and run docker, then get container id
 docker build . -t code
-docker run -v metrics:/metrics code $1
+docker run -v metrics:/metrics code --url="$1"
 CONTAINERID=$(docker ps -q -n 1)
 
 #copy volume data to current directory
