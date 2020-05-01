@@ -10,8 +10,9 @@
   <canvas id="myChart3" width="1000" height="400"></canvas>
   <canvas id="myChart4" width="1000" height="400"></canvas>
   <canvas id="myChart5" width="1000" height="400"></canvas>
+  <canvas id="myChart6" width="1000" height="400"></canvas>
   <style>
-     #myChart1, #myChart2, #myChart3, #myChart4, #myChart5 {
+     #myChart1, #myChart2, #myChart3, #myChart4, #myChart5, #myChart5 {
         width:100%;
     }
   </style>
@@ -23,6 +24,7 @@
     var ctx3 = document.getElementById("myChart3").getContext("2d");
     var ctx4 = document.getElementById("myChart4").getContext("2d");
     var ctx5 = document.getElementById("myChart5").getContext("2d");
+    var ctx6 = document.getElementById("myChart6").getContext("2d");
 
     var date = {{date|safe}};
     var commits = {{commits|safe}};
@@ -176,6 +178,43 @@
                 pointHoverBorderColor: randomColorISA,
                 pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
                 data: issue_spoilage_avg
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                        tick: 'data',
+                        type: 'time',
+                        time:{
+                            displayFormats:{
+                                month:""
+                            }
+                        } 
+                      }]
+                }
+            }
+    });
+    var myChart6 = new Chart(ctx6, {
+        type: "line",
+        data: {
+            labels: date,
+            datasets: [{
+                label: "Issue Spoilage",
+                borderColor: randomColorISA,
+                strokeColor: randomColorISA,
+                pointColor: randomColorISA,
+                pointHoverBorderColor: randomColorISA,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                data: issue_spoilage_avg
+            },
+            {
+                label: "Defect Density",
+                borderColor: randomColorDD,
+                strokeColor: randomColorDD,
+                pointColor: randomColorDD,
+                pointHoverBorderColor: randomColorDD,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                data: defect_density
             }]
         },
         options: {
