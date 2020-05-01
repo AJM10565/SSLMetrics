@@ -11,8 +11,10 @@
   <canvas id="myChart4" width="1000" height="400"></canvas>
   <canvas id="myChart5" width="1000" height="400"></canvas>
   <canvas id="myChart6" width="1000" height="400"></canvas>
+  <canvas id="myChart7" width="1000" height="400"></canvas>
+  <canvas id="myChart8" width="1000" height="400"></canvas>
   <style>
-     #myChart1, #myChart2, #myChart3, #myChart4, #myChart5, #myChart5 {
+     #myChart1, #myChart2, #myChart3, #myChart4, #myChart5, #myChart6, #myChart7, #myChart8 {
         width:100%;
     }
   </style>
@@ -25,6 +27,8 @@
     var ctx4 = document.getElementById("myChart4").getContext("2d");
     var ctx5 = document.getElementById("myChart5").getContext("2d");
     var ctx6 = document.getElementById("myChart6").getContext("2d");
+    var ctx7 = document.getElementById("myChart7").getContext("2d");
+    var ctx8 = document.getElementById("myChart8").getContext("2d");
 
     var date = {{date|safe}};
     var commits = {{commits|safe}};
@@ -51,16 +55,16 @@
 
 
     var myChart1 = new Chart(ctx1, {
-        type: "line",
+        type: 'line',
         data: {
             labels: date,
             datasets: [{
-                label: "My Commits",
+                label: 'My Commits',
                 borderColor: randomColorC,
                 strokeColor: randomColorC,
                 pointColor: randomColorC,
                 pointHoverBorderColor: randomColorC,
-                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
                 data: commits
             }]
         },
@@ -78,7 +82,6 @@
                             display: true,
                             labelString: 'Date'
                         },
-   
                       }],
                 yAxes: [{
                         scaleLabel: {
@@ -86,22 +89,21 @@
                         labelString: 'Number of Commits'
                         }
                     }]
-
                 }
             }
     });
 
     var myChart2 = new Chart(ctx2, {
-        type: "line",
+        type: 'line',
         data: {
             labels: date,
             datasets: [{
-                label: "Issues",
+                label: 'Issues',
                 borderColor: randomColorI,
                 strokeColor: randomColorI,
                 pointColor: randomColorI,
                 pointHoverBorderColor: randomColorI,
-                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
                 data: issues
             }]
         },
@@ -119,7 +121,6 @@
                             display: true,
                             labelString: 'Date'
                         },
- 
                       }],
                 yAxes: [{
                         scaleLabel: {
@@ -127,22 +128,21 @@
                         labelString: 'Number of Issues'
                         }
                     }]
-
                 }
             }
     });
 
     var myChart3 = new Chart(ctx3, {
-        type: "line",
+        type: 'line',
         data: {
             labels: date,
             datasets: [{
-                label: "Defect Density",
+                label: 'Defect Density',
                 borderColor: randomColorDD,
                 strokeColor: randomColorDD,
                 pointColor: randomColorDD,
                 pointHoverBorderColor: randomColorDD,
-                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
                 data: defect_density
             }]
         },
@@ -160,7 +160,6 @@
                             display: true,
                             labelString: 'Date'
                         },
-
                       }],
                 yAxes: [{
                         scaleLabel: {
@@ -168,7 +167,6 @@
                         labelString: 'Defect Density'
                         }
                     }]
-
                 }
             }
     });
@@ -178,12 +176,12 @@
         data: {
             labels: date,
             datasets: [{
-                label: "Lines of Code",
+                label: 'Lines of Code',
                 borderColor: randomColorLOC,
                 strokeColor: randomColorLOC,
                 pointColor: randomColorLOC,
                 pointHoverBorderColor: randomColorLOC,
-                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
                 data: lines_of_code
             }]
         },
@@ -201,7 +199,6 @@
                             display: true,
                             labelString: 'Date'
                         },
-
                       }],
                 yAxes: [{
                         scaleLabel: {
@@ -209,13 +206,12 @@
                         labelString: 'Lines of Code'
                         }
                     }]
-
                 }
             }
     });
 
     var myChart5 = new Chart(ctx5, {
-        type: "line",
+        type: 'line',
         data: {
             labels: date,
             datasets: [{
@@ -224,7 +220,7 @@
                 strokeColor: randomColorISA,
                 pointColor: randomColorISA,
                 pointHoverBorderColor: randomColorISA,
-                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
                 data: issue_spoilage_avg
             }]
         },
@@ -242,7 +238,6 @@
                             display: true,
                             labelString: 'Date'
                         },
- 
                       }],
                 yAxes: [{
                         scaleLabel: {
@@ -250,23 +245,147 @@
                         labelString: 'Issue Spoilage Avg'
                         }
                     }]
-
                 }
             }
     });
     var myChart6 = new Chart(ctx6, {
-        type: "line",
+        type: 'line',
         data: {
             labels: date,
             datasets: [{
-                label: "Issue Spoilage",
+                label: 'Issue Spoilage',
                 yAxisID: 'Issue Spoilage',
                 borderColor: randomColorISA,
                 strokeColor: randomColorISA,
                 pointColor: randomColorISA,
                 pointHoverBorderColor: randomColorISA,
-                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
                 data: issue_spoilage_avg
+            },
+            {
+                label: 'Defect Density',
+                yAxisID: 'Defect Density',
+                borderColor: randomColorDD,
+                strokeColor: randomColorDD,
+                pointColor: randomColorDD,
+                pointHoverBorderColor: randomColorDD,
+                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                data: defect_density
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                        tick: 'data',
+                        type: 'time',
+                        time:{
+                            displayFormats:{
+                                month:""
+                            }
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        },
+                      }],
+                yAxes: [{
+                        id: 'Issue Spoilage',
+                        type: 'linear',
+                        position: 'left',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Issue Spoilage Avg'
+                            }
+                        },
+                        {
+                        id: 'Defect Density',
+                        labelString: 'Defect Density',
+                        type: 'linear',
+                        position: 'right',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Defect Density'
+                            }
+                        }]
+                }
+            }
+    });
+
+    var myChart7 = new Chart(ctx7, {
+        type: "line",
+        data: {
+            labels: date,
+            datasets: [{
+                label: 'Defect Density',
+                yAxisID: 'Defect Density',
+                borderColor: randomColorDD,
+                strokeColor: randomColorDD,
+                pointColor: randomColorDD,
+                pointHoverBorderColor: randomColorDD,
+                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                data: defect_density
+            },
+            {
+                label: 'Lines of Code',
+                yAxisID: 'Lines of Code',
+                borderColor: randomColorLOC,
+                strokeColor: randomColorLOC,
+                pointColor: randomColorLOC,
+                pointHoverBorderColor: randomColorLOC,
+                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                data: lines_of_code
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                        tick: 'data',
+                        type: 'time',
+                        time:{
+                            displayFormats:{
+                                month:""
+                            }
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        },
+                      }],
+                yAxes: [{
+                        id: 'Defect Density',
+                        type: 'linear',
+                        position: 'left',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Defect Density'
+                            }
+                        },
+                        {
+                        id: 'Lines of Code',
+                        type: 'linear',
+                        position: 'right',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Lines of Code'
+                            }
+                        }]
+                }
+            }
+    });
+
+    var myChart8 = new Chart(ctx8, {
+        type: 'line',
+        data: {
+            labels: date,
+            datasets: [{
+                label: 'Issues',
+                yAxisID: 'Issues',
+                borderColor: randomColorI,
+                strokeColor: randomColorI,
+                pointColor: randomColorI,
+                pointHoverBorderColor: randomColorI,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                data: issues
             },
             {
                 label: "Defect Density",
@@ -293,19 +412,24 @@
                             display: true,
                             labelString: 'Date'
                         },
-
                       }],
                 yAxes: [{
-                        id: 'Issue Spoilage',
-                        labelString: 'Issue Spoilage Avg',
+                        id: 'Issues',
                         type: 'linear',
                         position: 'left',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Number of Issues'
+                            }
                         },
                         {
                         id: 'Defect Density',
-                        labelString: 'Issue Spoilage Avg',
                         type: 'linear',
-                        position: 'right'
+                        position: 'right',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Defect Density'
+                            }
                         }]
                 }
             }
