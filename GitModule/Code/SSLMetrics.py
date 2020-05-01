@@ -24,10 +24,9 @@ def main():
     os.system("mkdir temp")
     os.chdir("temp")
     os.system("git clone https://" + repo_address + " >/dev/null 2>&1")
-    os.chdir(githubRepo)
+    # os.system("git clone https://github.com/AlDanial/cloc")
+    # os.system("export PATH=cloc:$PATH")
 
-    """ 3) count lines of code
-        3.1) get list of all commit hashes"""
     hashes = os.popen('git log --format="%H"').read().split('\n')[0:-1]
     line_counts = dict.fromkeys(hashes, None)
     loop_part(hashes, line_counts)
