@@ -23,7 +23,6 @@
     var ctx3 = document.getElementById("myChart3").getContext("2d");
     var ctx4 = document.getElementById("myChart4").getContext("2d");
     var ctx5 = document.getElementById("myChart5").getContext("2d");
-    //ctx1.globalAlpha = 0.2; experimenting with setting a transparency value for background color*/
 
     var date = {{date|safe}};
     var commits = {{commits|safe}};
@@ -55,12 +54,11 @@
             labels: date,
             datasets: [{
                 label: "My Commits",
-                backgroundColor: randomColorC,
+                borderColor: randomColorC,
                 strokeColor: randomColorC,
                 pointColor: randomColorC,
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: randomColorC,
+                pointHoverBorderColor: randomColorC,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
                 data: commits
             }]
         },
@@ -73,8 +71,7 @@
                             displayFormats:{
                                 month:""
                             }
-                        }
-                         
+                        }   
                       }]
                 }
             }
@@ -86,12 +83,11 @@
             labels: date,
             datasets: [{
                 label: "Issues",
-                backgroundColor: randomColorI,
-                strokeColor: randomColorC,
-                pointColor: randomColorC,
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: randomColorC,
+                borderColor: randomColorI,
+                strokeColor: randomColorI,
+                pointColor: randomColorI,
+                pointHoverBorderColor: randomColorI,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
                 data: issues
             }]
         },
@@ -104,8 +100,7 @@
                             displayFormats:{
                                 month:""
                             }
-                        }
-                         
+                        }  
                       }]
                 }
             }
@@ -116,13 +111,12 @@
         data: {
             labels: date,
             datasets: [{
-                label: "Defect Density ",
-                backgroundColor: randomColorDD,
-                strokeColor: randomColorC,
-                pointColor: randomColorC,
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: randomColorC,
+                label: "Defect Density",
+                borderColor: randomColorDD,
+                strokeColor: randomColorDD,
+                pointColor: randomColorDD,
+                pointHoverBorderColor: randomColorDD,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
                 data: defect_density
             }]
         },
@@ -136,7 +130,6 @@
                                 month:""
                             }
                         }
-                         
                       }]
                 }
             }
@@ -148,12 +141,11 @@
             labels: date,
             datasets: [{
                 label: "Lines of Code",
-                backgroundColor: randomColorLOC,
-                strokeColor: randomColorC,
-                pointColor: randomColorC,
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: randomColorC,
+                borderColor: randomColorLOC,
+                strokeColor: randomColorLOC,
+                pointColor: randomColorLOC,
+                pointHoverBorderColor: randomColorLOC,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
                 data: lines_of_code
             }]
         },
@@ -166,8 +158,7 @@
                             displayFormats:{
                                 month:""
                             }
-                        }
-                         
+                        } 
                       }]
                 }
             }
@@ -179,12 +170,11 @@
             labels: date,
             datasets: [{
                 label: "Issue Spoilage",
-                backgroundColor: randomColorISA,
-                strokeColor: randomColorC,
-                pointColor: randomColorC,
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: randomColorC,
+                borderColor: randomColorISA,
+                strokeColor: randomColorISA,
+                pointColor: randomColorISA,
+                pointHoverBorderColor: randomColorISA,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
                 data: issue_spoilage_avg
             }]
         },
@@ -197,13 +187,11 @@
                             displayFormats:{
                                 month:""
                             }
-                        }
-                         
+                        } 
                       }]
                 }
             }
     });
-
 
   </script>
 </body>
