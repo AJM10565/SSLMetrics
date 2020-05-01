@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Bar Chart</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
 </head>
 <body>
   <canvas id="myChart1" width="1000" height="400"></canvas>
@@ -23,7 +23,7 @@
     var ctx3 = document.getElementById("myChart3").getContext("2d");
     var ctx4 = document.getElementById("myChart4").getContext("2d");
     var ctx5 = document.getElementById("myChart5").getContext("2d");
-    //ctx1.globalAlpha = 0.2; experimenting with setting a transparency value for background color
+    //ctx1.globalAlpha = 0.2; experimenting with setting a transparency value for background color*/
 
     var date = {{date|safe}};
     var commits = {{commits|safe}};
@@ -48,103 +48,161 @@
     randomColorISA = getRandomColor()
     randomColorLOC = getRandomColor()
 
-    var data1 = {
-        labels: date,
-        datasets: [{
+
+    var myChart1 = new Chart(ctx1, {
+        type: "line",
+        data: {
+            labels: date,
+            datasets: [{
                 label: "My Commits",
-                fillColor: randomColorC,
+                backgroundColor: randomColorC,
                 strokeColor: randomColorC,
                 pointColor: randomColorC,
                 pointStrokeColor: "#fff",
                 pointHighlightFill: "#fff",
                 pointHighlightStroke: randomColorC,
                 data: commits
-            }],
+            }]
+        },
         options: {
             scales: {
                 xAxes: [{
+                        tick: 'data',
                         type: 'time',
-                        position: 'bottom',
-                        time: {
-                          displayFormats: {'day': 'MM/YY'},
-                          tooltipFormat: 'DD/MM/YY',
-                          unit: 'month',
-                         }
-                      }],
+                        time:{
+                            displayFormats:{
+                                month:""
+                            }
+                        }
+                         
+                      }]
                 }
             }
-    };
+    });
 
-    var data2 = {
-        labels: date,
-        datasets: [
-            {
-                 label: "My Issues",
-                 fillColor: randomColorI,
-                 strokeColor: randomColorI,
-                 pointColor: randomColorI,
-                 pointStrokeColor: "#fff",
-                 pointHighlightFill: "#fff",
-                 pointHighlightStroke: randomColorI,
-                 data: issues
-             }
+    var myChart2 = new Chart(ctx2, {
+        type: "line",
+        data: {
+            labels: date,
+            datasets: [{
+                label: "Issues",
+                backgroundColor: randomColorI,
+                strokeColor: randomColorC,
+                pointColor: randomColorC,
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: randomColorC,
+                data: issues
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                        tick: 'data',
+                        type: 'time',
+                        time:{
+                            displayFormats:{
+                                month:""
+                            }
+                        }
+                         
+                      }]
+                }
+            }
+    });
 
-        ]
-    };
-    var data3 = {
-        labels: date,
-        datasets: [
-            {
-                 label: "My Defect_Density",
-                 fillColor: randomColorDD,
-                 strokeColor: randomColorDD,
-                 pointColor: randomColorDD,
-                 pointStrokeColor: "#fff",
-                 pointHighlightFill: "#fff",
-                 pointHighlightStroke: randomColorDD,
-                 data: defect_density
-             }
+    var myChart3 = new Chart(ctx3, {
+        type: "line",
+        data: {
+            labels: date,
+            datasets: [{
+                label: "Defect Density ",
+                backgroundColor: randomColorDD,
+                strokeColor: randomColorC,
+                pointColor: randomColorC,
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: randomColorC,
+                data: defect_density
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                        tick: 'data',
+                        type: 'time',
+                        time:{
+                            displayFormats:{
+                                month:""
+                            }
+                        }
+                         
+                      }]
+                }
+            }
+    });
 
-        ]
-    };
-    var data4 = {
-        labels: date,
-        datasets: [
-            {
-                 label: "My Issue_Spoilage_Avg",
-                 fillColor: randomColorISA,
-                 strokeColor: randomColorISA,
-                 pointColor: randomColorISA,
-                 pointStrokeColor: "#fff",
-                 pointHighlightFill: "#fff",
-                 pointHighlightStroke: randomColorISA,
-                 data: issue_spoilage_avg
-             }
+    var myChart4 = new Chart(ctx4, {
+        type: "line",
+        data: {
+            labels: date,
+            datasets: [{
+                label: "Lines of Code",
+                backgroundColor: randomColorLOC,
+                strokeColor: randomColorC,
+                pointColor: randomColorC,
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: randomColorC,
+                data: lines_of_code
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                        tick: 'data',
+                        type: 'time',
+                        time:{
+                            displayFormats:{
+                                month:""
+                            }
+                        }
+                         
+                      }]
+                }
+            }
+    });
 
-        ]
-    };
-    var data5 = {
-        labels: date,
-        datasets: [
-            {
-                 label: "My Lines_of_Code",
-                 fillColor: randomColorLOC,
-                 strokeColor: randomColorLOC,
-                 pointColor: randomColorLOC,
-                 pointStrokeColor: "#fff",
-                 pointHighlightFill: "#fff",
-                 pointHighlightStroke: randomColorLOC,
-                 data: lines_of_code
-             }
-
-        ]
-    };
-
-    var myLineChart1 = new Chart(ctx1).Line(data1);
-    var myLineChart2 = new Chart(ctx2).Line(data2);
-    var myLineChart3 = new Chart(ctx3).Line(data3);
-    var myLineChart4 = new Chart(ctx4).Line(data4);
-    var myLineChart5 = new Chart(ctx5).Line(data5);
+    var myChart5 = new Chart(ctx5, {
+        type: "line",
+        data: {
+            labels: date,
+            datasets: [{
+                label: "Issue Spoilage",
+                backgroundColor: randomColorISA,
+                strokeColor: randomColorC,
+                pointColor: randomColorC,
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: randomColorC,
+                data: issue_spoilage_avg
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                        tick: 'data',
+                        type: 'time',
+                        time:{
+                            displayFormats:{
+                                month:""
+                            }
+                        }
+                         
+                      }]
+                }
+            }
+    });
 
 
   </script>
