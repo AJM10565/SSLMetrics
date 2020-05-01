@@ -13,8 +13,9 @@
   <canvas id="myChart6" width="1000" height="400"></canvas>
   <canvas id="myChart7" width="1000" height="400"></canvas>
   <canvas id="myChart8" width="1000" height="400"></canvas>
+  <canvas id="myChart9" width="1000" height="400"></canvas>
   <style>
-     #myChart1, #myChart2, #myChart3, #myChart4, #myChart5, #myChart6, #myChart7, #myChart8 {
+     #myChart1, #myChart2, #myChart3, #myChart4, #myChart5, #myChart6, #myChart7, #myChart8, #myChart9 {
         width:100%;
     }
   </style>
@@ -29,6 +30,7 @@
     var ctx6 = document.getElementById("myChart6").getContext("2d");
     var ctx7 = document.getElementById("myChart7").getContext("2d");
     var ctx8 = document.getElementById("myChart8").getContext("2d");
+    var ctx9 = document.getElementById("myChart9").getContext("2d");
 
     var date = {{date|safe}};
     var commits = {{commits|safe}};
@@ -59,30 +61,38 @@
         data: {
             labels: date,
             datasets: [{
-                label: 'My Commits',
+                label: "Commits",
                 borderColor: randomColorC,
                 strokeColor: randomColorC,
                 pointColor: randomColorC,
                 pointHoverBorderColor: randomColorC,
-                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: commits
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
-                        },
-                        scaleLabel: {
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
+                        }
+                    },
+                    scaleLabel: {
                             display: true,
                             labelString: 'Date'
                         },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }],
+            
                 yAxes: [{
                         scaleLabel: {
                         display: true,
@@ -91,6 +101,7 @@
                     }]
                 }
             }
+        
     });
 
     var myChart2 = new Chart(ctx2, {
@@ -103,25 +114,33 @@
                 strokeColor: randomColorI,
                 pointColor: randomColorI,
                 pointHoverBorderColor: randomColorI,
-                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: issues
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
-                        },
-                        scaleLabel: {
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
+                        }
+                    },
+                    scaleLabel: {
                             display: true,
                             labelString: 'Date'
                         },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }],
+        
                 yAxes: [{
                         scaleLabel: {
                         display: true,
@@ -142,25 +161,33 @@
                 strokeColor: randomColorDD,
                 pointColor: randomColorDD,
                 pointHoverBorderColor: randomColorDD,
-                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: defect_density
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
-                        },
-                        scaleLabel: {
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
+                        }
+                    },
+                    scaleLabel: {
                             display: true,
                             labelString: 'Date'
                         },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }],
+                        
                 yAxes: [{
                         scaleLabel: {
                         display: true,
@@ -168,7 +195,7 @@
                         }
                     }]
                 }
-            }
+        }
     });
 
     var myChart4 = new Chart(ctx4, {
@@ -181,24 +208,31 @@
                 strokeColor: randomColorLOC,
                 pointColor: randomColorLOC,
                 pointHoverBorderColor: randomColorLOC,
-                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: lines_of_code
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
-                        },
-                        scaleLabel: {
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
+                        }
+                    },
+                    scaleLabel: {
                             display: true,
                             labelString: 'Date'
                         },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }],
                 yAxes: [{
                         scaleLabel: {
@@ -220,25 +254,33 @@
                 strokeColor: randomColorISA,
                 pointColor: randomColorISA,
                 pointHoverBorderColor: randomColorISA,
-                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: issue_spoilage_avg
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
-                        },
-                        scaleLabel: {
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
+                        }
+                    },
+                    scaleLabel: {
                             display: true,
                             labelString: 'Date'
                         },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }],
+                        
                 yAxes: [{
                         scaleLabel: {
                         display: true,
@@ -259,7 +301,8 @@
                 strokeColor: randomColorISA,
                 pointColor: randomColorISA,
                 pointHoverBorderColor: randomColorISA,
-                pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: issue_spoilage_avg
             },
             {
@@ -270,23 +313,30 @@
                 pointColor: randomColorDD,
                 pointHoverBorderColor: randomColorDD,
                 pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill:false,
                 data: defect_density
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
-                        },
-                        scaleLabel: {
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
+                        }
+                    },
+                    scaleLabel: {
                             display: true,
                             labelString: 'Date'
                         },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }],
                 yAxes: [{
                         id: 'Issue Spoilage',
@@ -323,6 +373,7 @@
                 pointColor: randomColorDD,
                 pointHoverBorderColor: randomColorDD,
                 pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill:false,
                 data: defect_density
             },
             {
@@ -333,23 +384,30 @@
                 pointColor: randomColorLOC,
                 pointHoverBorderColor: randomColorLOC,
                 pointHoverBackgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill:false,
                 data: lines_of_code
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
-                        },
-                        scaleLabel: {
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
+                        }
+                    },
+                    scaleLabel: {
                             display: true,
                             labelString: 'Date'
                         },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }],
                 yAxes: [{
                         id: 'Defect Density',
@@ -385,6 +443,7 @@
                 pointColor: randomColorI,
                 pointHoverBorderColor: randomColorI,
                 pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: issues
             },
             {
@@ -395,31 +454,38 @@
                 pointColor: randomColorDD,
                 pointHoverBorderColor: randomColorDD,
                 pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
                 data: defect_density
             }]
         },
         options: {
             scales: {
                 xAxes: [{
-                        tick: 'data',
-                        type: 'time',
-                        time:{
-                            displayFormats:{
-                                month:""
-                            }
-                        },
-                        scaleLabel: {
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
+                        }
+                    },
+                    scaleLabel: {
                             display: true,
                             labelString: 'Date'
                         },
+                    ticks: {
+                        source: 'auto'
+                    }
                       }],
                 yAxes: [{
-                        id: 'Issues',
-                        type: 'linear',
-                        position: 'left',
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Number of Issues'
+                    id: 'Issues',
+                    type: 'linear',
+                    position: 'left',
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Number of Issues'
                             }
                         },
                         {
@@ -429,6 +495,77 @@
                         scaleLabel: {
                             display: true,
                             labelString: 'Defect Density'
+                            }
+                        }]
+                }
+            }
+    });
+
+
+    var myChart9 = new Chart(ctx9, {
+        type: "line",
+        data: {
+            labels: date,
+            datasets: [{
+                label: "Commits",
+                yAxisID: 'Commits',
+                borderColor: randomColorC,
+                strokeColor: randomColorC,
+                pointColor: randomColorC,
+                pointHoverBorderColor: randomColorC,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
+                data: commits
+            },
+            {
+                label: "Issues",
+                yAxisID: 'Issues',
+                borderColor: randomColorI,
+                strokeColor: randomColorI,
+                pointColor: randomColorI,
+                pointHoverBorderColor: randomColorI,
+                pointHoverBackgroundColor: "rgba(75, 192, 192, 0.2)",
+                fill:false,
+                data: issues
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    distribution: 'series',
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD HH:mm:ss',
+                        unit: 'month',
+                        displayFormats: {
+                            'month': 'YYYY MMM DD',
+                            'year': 'YYYY MMM DD'
+                        }
+                    },
+                    scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        },
+                    ticks: {
+                        source: 'auto'
+                    }
+                      }],
+                yAxes: [{
+                        id: 'Commits',
+                        type: 'linear',
+                        position: 'left',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Number of Commits'
+                            }
+                        },
+                        {
+                        id: 'Issues',
+                        type: 'linear',
+                        position: 'right',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Number of Issues'
                             }
                         }]
                 }
