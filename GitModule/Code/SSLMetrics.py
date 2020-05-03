@@ -42,95 +42,74 @@ def get_argparser():
 
 
 def main():
-    # SETUP
     arg_parser = get_argparser()
     args = arg_parser.parse_args()
     repo_address = args.url
-    # print("repo_address: " + repo_address)
     githubRepo = repo_address.split("/")[-1]
     cwd = os.getcwd()
     pDir = "multi_p"
     os.system(f"rm -rf {pDir}")
     os.system(f"mkdir {pDir}")
     os.chdir(pDir)
-
-    print(f"cloning {repo_address}")
     os.system("git clone https://" + repo_address + " >/dev/null 2>&1")
-    print(f"finished cloning {repo_address}")
     os.chdir(githubRepo)
 
     hashes = os.popen('git log --format="%H"').read().split('\n')[0:-1]
-    line_counts = dict.fromkeys(hashes, None)
+    line_counts = dict.fromkeys(hashes, [None, None, None, None, None])
     counts.update(line_counts)
 
-    with mp.Pool(processes=8) as pool:
-        pool.starmap_async(do_cloc_and_process, zip(hashes, itertools.repeat(counts)))
-        pool.close()
-        pool.join()
+    performPool(do_Cloc_and_process, hashes)
+    performPool(do_Commits_and_process, hashes)
+    performPool(do_AuthorDateMessage_and_process, hashes)
 
-    with mp.Pool(processes=8) as p:
-        p.map_async(do_commitCount, hashes)
-
-    print_part(counts)  # DEBUG: Check output
-    # database_upload(line_counts, githubRepo)
-    # CLEANUP
+    # print_part(counts)  # DEBUG: Check output
+    database_upload(counts, githubRepo)
     os.chdir(cwd)
     os.system(f"rm -rf {pDir}")
 
 
-def do_cloc_and_process(commit_hash, line_counts):
-    print(datetime.now())
+def performPool(function, hashes):
+    with mp.Pool(processes=8) as pool:
+        pool.starmap_async(function, zip(hashes, itertools.repeat(counts)))
+        pool.close()
+        pool.join()
+
+
+def do_Cloc_and_process(commit_hash, storage):
+    # print(datetime.now())
     # print("analysing:" + commit_hash)
     cloc = os.popen(f'cloc --json {commit_hash}').read()
     loc = json.loads(cloc)["SUM"]["code"]
-    line_counts[commit_hash] = loc
-    print(f"{commit_hash}: {loc}")
+    # print(type(line_counts[commit_hash]))
+    # line_counts[commit_hash][0] = loc
+    values = storage[commit_hash]
+    values[0] = loc
+    storage[commit_hash] = values
+    # print(f"{commit_hash}: {loc}")
     # Update progress bar tqdm
 
 
-def do_cloc(commit_hash):
-    print(datetime.now())
-    print("analysing:" + commit_hash)
-    # Implementing f string idiom
-    cloc = os.popen(f'cloc --json {commit_hash}').read()
-    # result = os.system(f'cloc --json {commit_hash} --out= {commit_hash}.json')
-    out = cloc, commit_hash
-    print(out)
-    return out
-
-
-def process_cloc(result):
-    cloc, commit_hash = result
-    loc = json.loads(cloc)["SUM"]["code"]
-    arr = line_counts[commit_hash]
-    arr[0] = loc
-    line_counts[commit_hash] = arr
-    print(f"{commit_hash}: {loc}")
-
-
-def do_commitCount(commit_hash):
-    print(datetime.now())
-    print("analysing:" + commit_hash)
+def do_Commits_and_process(commit_hash, storage):
+    # print(datetime.now())
+    # print("analysing:" + commit_hash)
     commit_count = len(os.popen(f'git log --format="%H" {commit_hash}').read().split('\n'))
+    values = storage[commit_hash]
+    values[1] = commit_count
+    storage[commit_hash] = values
 
 
-# def get_data(commit_hash, cloc):
-#     os.system(cloc + ' --json ' + commit_hash + " --out=" + commit_hash + ".json")
-#
-#     # commit_count = len(os.popen('git log --format="%H" ' + commit_hash).read().split('\n'))
-#     #
-#     # values = os.popen('git show -s --format="%ae/t%ci/t%B" ' + commit_hash).read().split("/t")
-#     # author = values[0].split('@')[0]
-#     # date = values[1]
-#     # message = " ".join(values[2:])
-#
-#     # return code_line_count, commit_count, date, message, author
-
-
-# def loop_part(hash_list, counts, cloc):
-#     for commit in hash_list:
-#         # os.system("git checkout " + hash + " >/dev/null 2>&1")
-#         counts[commit] = get_data(commit, cloc)
+def do_AuthorDateMessage_and_process(commit_hash, storage):
+    # print(datetime.now())
+    # print("analysing:" + commit_hash)
+    result = os.popen('git show -s --format="%ae/t%ci/t%B" ' + commit_hash).read().split("/t")
+    author = result[0].split('@')[0]
+    date = result[1]
+    message = " ".join(result[2:])
+    values = storage[commit_hash]
+    values[2] = date
+    values[3] = message
+    values[4] = author
+    storage[commit_hash] = values
 
 
 def print_part(counts):
@@ -194,7 +173,6 @@ def database_upload(counts, repo_name):
 
 
 if __name__ == "__main__":
-    # os.system("cloc .")
     manager = mp.Manager()
     counts = manager.dict()
     main()
