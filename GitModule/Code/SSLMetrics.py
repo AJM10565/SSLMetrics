@@ -1,23 +1,41 @@
 import os
 import sys
 from datetime import datetime, timedelta
+from typing import Dict, List
+
 from tqdm import tqdm
 import sqlite3
 import json
 import argparse
+import multiprocessing as mp
+import itertools
 
 """
     Assume input is of the form: python3 LOC.py github.com/owner/repo
     Example: python3 LOC.py github.com/AJM10565/SSLMetrics
     Key:Value pairs are of the form => CommitHash:(Line_count,Commit_count,date,message,author)
     Requirements: git and tqdm
+    
+    TODO's
+    ------ 
+    TODO #1:
+    [May 1 11:01 PM] Thiruvathukal, George
+    Take a look at https://docs.python.org/3/library/multiprocessing.html again. I think what we really 
+    want is pool.apply_async(). It behaves like a future!
+    res = pool.apply_async(f, (20,))      # runs in *only* one process
+    print(res.get(timeout=1))             # prints "400"
+    So you can just generate the JSON w/o writing files. Then you can collect and merge the results 
+    from all the "get()" calls.
+
+    
+    
+    
 """
 
 
 def get_argparser():
     # Copied and Modified from https://github.com/gkthiruvathukal/wordcount-sliding-python/blob/master/sliding-wc.py
     parser = argparse.ArgumentParser(description="Collect all data available via git")
-    parser.add_argument("-c", "--cloc", type=str, default="/app/cloc/cloc", help="path to cloc")
     parser.add_argument("-u", "--url", type=str, default=None, help="url to process")
 
     return parser
@@ -26,46 +44,72 @@ def get_argparser():
 def main():
     arg_parser = get_argparser()
     args = arg_parser.parse_args()
-    cloc = args.cloc
-    print("cloc PATH: " + cloc)
     repo_address = args.url
-    print("repo_address: " + repo_address)
-    foo = repo_address.split("/")
-    githubRepo = foo[-1]
+    githubRepo = repo_address.split("/")[-1]
     cwd = os.getcwd()
-    os.system("rm -rf temp")
-    os.system("mkdir temp")
-    os.chdir("temp")
+    pDir = "multi_p"
+    os.system(f"rm -rf {pDir}")
+    os.system(f"mkdir {pDir}")
+    os.chdir(pDir)
     os.system("git clone https://" + repo_address + " >/dev/null 2>&1")
     os.chdir(githubRepo)
+
     hashes = os.popen('git log --format="%H"').read().split('\n')[0:-1]
-    line_counts = dict.fromkeys(hashes, None)
-    loop_part(hashes, line_counts,cloc)
-    # print_part(line_counts) # DEBUG: Check output
-    database_upload(line_counts, githubRepo)
+    line_counts = dict.fromkeys(hashes, [None, None, None, None, None])
+    counts.update(line_counts)
+
+    performPool(do_Cloc_and_process, hashes)
+    performPool(do_Commits_and_process, hashes)
+    performPool(do_AuthorDateMessage_and_process, hashes)
+
+    # print_part(counts)  # DEBUG: Check output
+    database_upload(counts, githubRepo)
     os.chdir(cwd)
-    os.system("rm -rf temp")
+    os.system(f"rm -rf {pDir}")
 
 
-def get_data(commit_hash,cloc):
-    all_line_count_data_json = os.popen(cloc +' --json ' + commit_hash).read()
-    all_line_count_data = json.loads(all_line_count_data_json)
-    code_line_count = all_line_count_data["SUM"]["code"]
-
-    commit_count = len(os.popen('git log --format="%H" ' + commit_hash).read().split('\n'))
-
-    values = os.popen('git show -s --format="%ae/t%ci/t%B" ' + commit_hash).read().split("/t")
-    author = values[0].split('@')[0]
-    date = values[1]
-    message = " ".join(values[2:])
-
-    return code_line_count, commit_count, date, message, author
+def performPool(function, hashes):
+    with mp.Pool(processes=8) as pool:
+        pool.starmap_async(function, zip(hashes, itertools.repeat(counts)))
+        pool.close()
+        pool.join()
 
 
-def loop_part(hash_list, counts, cloc):
-    for commit in tqdm(hash_list):
-        # os.system("git checkout " + hash + " >/dev/null 2>&1")
-        counts[commit] = get_data(commit, cloc)
+def do_Cloc_and_process(commit_hash, storage):
+    # print(datetime.now())
+    # print("analysing:" + commit_hash)
+    cloc = os.popen(f'cloc --json {commit_hash}').read()
+    loc = json.loads(cloc)["SUM"]["code"]
+    # print(type(line_counts[commit_hash]))
+    # line_counts[commit_hash][0] = loc
+    values = storage[commit_hash]
+    values[0] = loc
+    storage[commit_hash] = values
+    # print(f"{commit_hash}: {loc}")
+    # Update progress bar tqdm
+
+
+def do_Commits_and_process(commit_hash, storage):
+    # print(datetime.now())
+    # print("analysing:" + commit_hash)
+    commit_count = len(os.popen(f'git log --format="%H" {commit_hash}').read().split('\n'))
+    values = storage[commit_hash]
+    values[1] = commit_count
+    storage[commit_hash] = values
+
+
+def do_AuthorDateMessage_and_process(commit_hash, storage):
+    # print(datetime.now())
+    # print("analysing:" + commit_hash)
+    result = os.popen('git show -s --format="%ae/t%ci/t%B" ' + commit_hash).read().split("/t")
+    author = result[0].split('@')[0]
+    date = result[1]
+    message = " ".join(result[2:])
+    values = storage[commit_hash]
+    values[2] = date
+    values[3] = message
+    values[4] = author
+    storage[commit_hash] = values
 
 
 def print_part(counts):
@@ -129,4 +173,6 @@ def database_upload(counts, repo_name):
 
 
 if __name__ == "__main__":
+    manager = mp.Manager()
+    counts = manager.dict()
     main()
