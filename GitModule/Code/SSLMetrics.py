@@ -78,7 +78,11 @@ def performPool(function, hashes):
 def do_Cloc_and_process(commit_hash, storage):
     # print(datetime.now())
     # print("analysing:" + commit_hash)
-    cloc = os.popen(f'cloc --json {commit_hash}').read()
+    timeout = 100
+    command = f'cloc --json {commit_hash} --timeout {timeout}'
+    # print(f"command: {command}")
+    cloc = os.popen(command).read()
+    print(cloc)
     loc = json.loads(cloc)["SUM"]["code"]
     # print(type(line_counts[commit_hash]))
     # line_counts[commit_hash][0] = loc
