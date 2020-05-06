@@ -35,7 +35,7 @@ def stacked_bar_chart():
     df = pd.read_sql_query("SELECT * from MASTER ORDER BY date ASC", con)
 
     # verify that result of SQL query is stored in the dataframe
-    print(df.to_json())
+    # print(df.to_json())
 
     con.close()
 

@@ -9,6 +9,7 @@ import json
 import argparse
 import multiprocessing as mp
 import itertools
+from tqdm.contrib.concurrent import process_map
 
 """
     Assume input is of the form: python3 LOC.py github.com/owner/repo
@@ -58,9 +59,9 @@ def main():
     line_counts = dict.fromkeys(hashes, [None, None, None, None, None])
     counts.update(line_counts)
 
-    performPool(do_Cloc_and_process, hashes)
-    performPool(do_Commits_and_process, hashes)
-    performPool(do_AuthorDateMessage_and_process, hashes)
+    performPool(do_Cloc_and_process, hashes, "Cloc")
+    performPool(do_Commits_and_process, hashes, "Commits")
+    performPool(do_AuthorDateMessage_and_process, hashes, "AuthorDateMessage")
 
     # print_part(counts)  # DEBUG: Check output
     database_upload(counts, githubRepo)
@@ -68,32 +69,36 @@ def main():
     os.system(f"rm -rf {pDir}")
 
 
-def performPool(function, hashes):
-    with mp.Pool(processes=8) as pool:
-        pool.starmap_async(function, zip(hashes, itertools.repeat(counts)))
-        pool.close()
-        pool.join()
+def performPool(function, hashes, Title):
+    print(Title)
+    intermediate_var = list(zip(hashes, itertools.repeat(counts)))
+    process_map(function, intermediate_var, max_workers=8)
 
 
-def do_Cloc_and_process(commit_hash, storage):
+def do_Cloc_and_process(fn_args):
+    # print(f"inputs: {inputs}")
+    commit_hash, storage = fn_args
     # print(datetime.now())
     # print("analysing:" + commit_hash)
     timeout = 100
-    command = f'cloc --json {commit_hash} --timeout {timeout}'
+    # command = f'cloc --json {commit_hash} --timeout {timeout}'
+    command = f'cloc --json {commit_hash}'
     # print(f"command: {command}")
     cloc = os.popen(command).read()
-    print(cloc)
+    # print(cloc)
     loc = json.loads(cloc)["SUM"]["code"]
     # print(type(line_counts[commit_hash]))
     # line_counts[commit_hash][0] = loc
     values = storage[commit_hash]
     values[0] = loc
     storage[commit_hash] = values
+
     # print(f"{commit_hash}: {loc}")
     # Update progress bar tqdm
 
 
-def do_Commits_and_process(commit_hash, storage):
+def do_Commits_and_process(fn_args):
+    commit_hash, storage = fn_args
     # print(datetime.now())
     # print("analysing:" + commit_hash)
     commit_count = len(os.popen(f'git log --format="%H" {commit_hash}').read().split('\n'))
@@ -102,7 +107,8 @@ def do_Commits_and_process(commit_hash, storage):
     storage[commit_hash] = values
 
 
-def do_AuthorDateMessage_and_process(commit_hash, storage):
+def do_AuthorDateMessage_and_process(fn_args):
+    commit_hash, storage = fn_args
     # print(datetime.now())
     # print("analysing:" + commit_hash)
     result = os.popen('git show -s --format="%ae/t%ci/t%B" ' + commit_hash).read().split("/t")
